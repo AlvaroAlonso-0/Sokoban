@@ -1,4 +1,6 @@
-package es.upm.pproject.sokoban.models;
+package es.upm.pproject.sokoban.models.utils;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -7,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import es.upm.pproject.sokoban.interfaces.Coordinates;
 
 @DisplayName("Class to test the Coordinates")
-public class CoordinatesTest {
+class CoordinatesTest {
     private Coordinates coords;
     
     @BeforeEach
@@ -18,8 +20,8 @@ public class CoordinatesTest {
     @Test
     @DisplayName("Tests the Coordinates constructor")
     void constTest(){
-        assert coords.getX() == 5;
-        assert coords.getY() == 9;
+        assertEquals(5, coords.getX());
+        assertEquals(9, coords.getY());
     }
 
 }

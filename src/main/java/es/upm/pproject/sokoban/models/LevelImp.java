@@ -22,9 +22,10 @@ public class LevelImp implements Level{
     private Tile[][] board;
     private List<Box> boxList;
 
-    public LevelImp(String levelTxt){
-        try(FileReader lvlFile = new FileReader(new File(levelTxt)); BufferedReader br = new BufferedReader(lvlFile)){
-
+    public LevelImp(String levelTxt) throws IOException {
+        FileReader lvlFile = new FileReader(new File(levelTxt)); 
+        BufferedReader br = new BufferedReader(lvlFile);
+        try{
             // Read first line and obtain the number of rows and the number of columns
             String[] firstLine = br.readLine().split(" ");
             int rows = Integer.parseInt(firstLine[0]);
@@ -53,14 +54,16 @@ public class LevelImp implements Level{
                             board[row][column] = null;
                             boxList.add(new Box(row, column));
                             break;
-                        default:
+                        case '+':
                             board[row][column] = Tile.WALL;
                             break;
+                        default:
+                            throw new IOException();
                     }
                 }
             }
-        } catch (IOException e){
-            System.err.printf("Error reading level file %s\n", levelTxt);
+        }finally{
+            br.close();
         }
     }
 
@@ -68,7 +71,20 @@ public class LevelImp implements Level{
         return board[row][column];
     }
 
+    public Player getPlayer(){
+        return player;
+    }
+
+    public Box getBox(int index){
+        return boxList.get(index);
+    }
+
     public boolean checkStatus(){
+        for(Box box : boxList){
+            if(!box.isOnGoal()){
+                return false;
+            }
+        }
         return true;
     }
 }

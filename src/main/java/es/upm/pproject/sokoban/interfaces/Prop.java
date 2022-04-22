@@ -6,7 +6,7 @@ package es.upm.pproject.sokoban.interfaces;
  * @version 1.0
  * @since 22/04/2022
  */
-public interface Prop {
+public interface Prop extends Resetable, Movable {
 
     /**
      * returns the current coordinates of the prop

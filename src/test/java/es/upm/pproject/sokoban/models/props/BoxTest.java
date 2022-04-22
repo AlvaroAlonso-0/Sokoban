@@ -1,11 +1,13 @@
 package es.upm.pproject.sokoban.models.props;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("Class to test the Player")
-public class BoxTest {
+class BoxTest {
     private Box box;
     
     @BeforeEach
@@ -16,8 +18,21 @@ public class BoxTest {
     @Test
     @DisplayName("Tests the Box")
     void constTest(){
-        assert box.currentPos().getX() == 7;
-        assert box.currentPos().getY() == 1;
+        assertEquals(7,box.currentPos().getX());
+        assertEquals(1,box.currentPos().getY());
+        assertEquals(false, box.isOnGoal());
     }
 
+    @Test
+    @DisplayName("Tests the setOnGoal method")
+    void setOnGoalTest(){
+        box.setOnGoal(true);
+        assertEquals(true, box.isOnGoal());
+    }
+
+    @Test
+    @DisplayName("Tests the isOnGoal method")
+    void isOnGoalTest(){
+        assertEquals(false, box.isOnGoal());
+    }
 }
