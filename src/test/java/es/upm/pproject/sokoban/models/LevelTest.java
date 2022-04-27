@@ -4,12 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import es.upm.pproject.sokoban.interfaces.Level;
+import es.upm.pproject.sokoban.interfaces.Coordinates;
 
 @DisplayName("Class to test hte level")
 class LevelTest {
@@ -17,16 +18,18 @@ class LevelTest {
     
     @BeforeEach
     void init() throws IOException{
-        level = new LevelImp("resources/level1.txt");
+        level = new Level("resources/level_1.txt");
     }
 
     @Test
     @DisplayName("Test the level constructor")
     void constTest(){
-        assertEquals(4, level.getPlayer().currentPos().getX());
-        assertEquals(2, level.getPlayer().currentPos().getY());
-        assertEquals(4, level.getBox(0).currentPos().getX());
-        assertEquals(5, level.getBox(0).currentPos().getY());
+        assertEquals("Level One", level.getName());
+        assertEquals(4, level.getPlayerCoords().getX());
+        assertEquals(2, level.getPlayerCoords().getY());
+        List<Coordinates> boxCoords = level.getBoxListCoordinates();
+        assertEquals(4, boxCoords.get(0).getX());
+        assertEquals(5, boxCoords.get(0).getY());
         assertEquals(Tile.WALL, level.getTile(0,0));
         assertEquals(Tile.GOAL, level.getTile(4,3));
         assertEquals(null, level.getTile(1, 2));
@@ -36,7 +39,7 @@ class LevelTest {
     @DisplayName("Test the level constructor with a wrong file")
     void constTestWrongFile(){
         assertThrows(IOException.class, () -> {
-            new LevelImp("resources/level0empty.txt");
+            new Level("resources/level0empty.txt");
         });
     }
 
@@ -44,7 +47,5 @@ class LevelTest {
     @DisplayName("Test checkStatus")
     void checkStatusTest(){
         assertEquals(false, level.checkStatus());
-        level.getBox(0).setOnGoal(true);
-        assertEquals(true, level.checkStatus());
     }
 }

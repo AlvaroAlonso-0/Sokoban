@@ -7,29 +7,34 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import es.upm.pproject.sokoban.interfaces.Level;
+import es.upm.pproject.sokoban.interfaces.Coordinates;
 import es.upm.pproject.sokoban.models.props.*;
 
 
 /**
  * Class that represents a level.
  * @author Alvaro Alonso
- * @version 1.0
+ * @version 1.1
  * @since 22/04/2022
  */
-public class LevelImp implements Level{
+public class Level{
     private Player player;
     private Tile[][] board;
     private List<Box> boxList;
+    private String name;
 
-    public LevelImp(String levelTxt) throws IOException {
+    /**
+     * Constructor of the class.
+     * @param fileName Name of the file that contains the level.
+     */
+    public Level(String levelTxt) throws IOException {
         FileReader lvlFile = new FileReader(new File(levelTxt)); 
         BufferedReader br = new BufferedReader(lvlFile);
         try{
-            // Read first line and obtain the number of rows and the number of columns
-            String[] firstLine = br.readLine().split(" ");
-            int rows = Integer.parseInt(firstLine[0]);
-            int cols = Integer.parseInt(firstLine[1]);
+            name = br.readLine();
+            String[] numbersLine = br.readLine().split(" ");
+            int rows = Integer.parseInt(numbersLine[0]);
+            int cols = Integer.parseInt(numbersLine[1]);
 
             board = new Tile[rows][cols];
             boxList = new ArrayList<>();
@@ -67,18 +72,48 @@ public class LevelImp implements Level{
         }
     }
 
+    /**
+     * Method that returns the name of the level.
+     * @return Name of the level.
+     */
+    public String getName(){
+        return name;
+    }
+
+    /**
+     * Returns the tile at the specified position.
+     * @param row Row of the tile.
+     * @param column Column of the tile.
+     * @return The tile at the specified position.
+     */
     public Tile getTile(int row, int column){
         return board[row][column];
     }
 
-    public Player getPlayer(){
-        return player;
+    /**
+     * Method that returns the player coordinates.
+     * @return Coordinates of the player position.
+     */
+    public Coordinates getPlayerCoords(){
+        return player.currentPos();
     }
 
-    public Box getBox(int index){
-        return boxList.get(index);
+    /**
+     * Method that returns all the boxes coordinates.
+     * @return List of all the boxes coordinates.
+     */
+    public List<Coordinates> getBoxListCoordinates(){
+        List<Coordinates> boxListCoordinates = new ArrayList<>();
+        for(Box box : boxList){
+            boxListCoordinates.add(box.currentPos());
+        }
+        return boxListCoordinates;
     }
 
+    /**
+     * Returns if a level is completed.
+     * @return true if the level is completed, false otherwise.
+     */
     public boolean checkStatus(){
         for(Box box : boxList){
             if(!box.isOnGoal()){

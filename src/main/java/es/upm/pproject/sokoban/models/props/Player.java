@@ -1,6 +1,11 @@
 package es.upm.pproject.sokoban.models.props;
 
-public class Player extends PropImp{
+/**
+ * Class that implements a prop entity.
+ * @author Alvaro Alonso
+ * @since 22/04/2022
+ */
+public class Player extends Prop{
     public Player(int initialStateX, int initialStateY) {
         super(initialStateX, initialStateY);
     }
