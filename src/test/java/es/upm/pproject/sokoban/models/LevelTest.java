@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import es.upm.pproject.sokoban.interfaces.Coordinates;
+import es.upm.pproject.sokoban.models.utils.Coordinates;
 
 @DisplayName("Class to test hte level")
 class LevelTest {

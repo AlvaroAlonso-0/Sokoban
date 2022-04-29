@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import es.upm.pproject.sokoban.interfaces.Coordinates;
 import es.upm.pproject.sokoban.models.props.*;
+import es.upm.pproject.sokoban.models.utils.Coordinates;
 
 
 /**

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import es.upm.pproject.sokoban.interfaces.Coordinates;
+
 
 @DisplayName("Class to test the Coordinates")
 class CoordinatesTest {
@@ -14,7 +14,7 @@ class CoordinatesTest {
     
     @BeforeEach
     void init(){
-        coords = new CoordinatesImp(5,9);
+        coords = new Coordinates(5,9);
     }
 
     @Test

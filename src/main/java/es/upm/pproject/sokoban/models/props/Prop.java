@@ -1,17 +1,16 @@
 package es.upm.pproject.sokoban.models.props;
 
-import es.upm.pproject.sokoban.interfaces.Coordinates;
 import es.upm.pproject.sokoban.interfaces.Movable;
 import es.upm.pproject.sokoban.interfaces.Resetable;
-import es.upm.pproject.sokoban.models.utils.CoordinatesImp;
+import es.upm.pproject.sokoban.models.utils.Coordinates;
 
 
 /**
  * Class that implements a prop entity.
  * @author Alvaro Alonso
  * @author Idir Carlos Aliane Crespo
- * @version 1.3
- * @since 27/04/2022
+ * @version 1.4
+ * @since 29/04/2022
  */
 public abstract class Prop implements Movable, Resetable{
     private int initialStateX;
@@ -36,7 +35,7 @@ public abstract class Prop implements Movable, Resetable{
      * @return The prop's current coordinates.
      */
     public Coordinates currentPos() {
-        return new CoordinatesImp(this.currentPositionX,this.currentPositionY);
+        return new Coordinates(this.currentPositionX,this.currentPositionY);
     }
 
     public void reset() {
