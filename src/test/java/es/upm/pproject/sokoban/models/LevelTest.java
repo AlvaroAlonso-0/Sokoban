@@ -48,4 +48,19 @@ class LevelTest {
     void checkStatusTest(){
         assertEquals(false, level.checkStatus());
     }
+
+    @Test
+    @DisplayName("Test toString")
+    void toStringTest(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("++++    \n")
+        .append("+  +    \n")
+        .append("+  +++++\n")
+        .append("+      +\n")
+        .append("++W*+# +\n")
+        .append("+   +  +\n")
+        .append("+   ++++\n")
+        .append("+++++   ");
+        assertEquals(sb.toString(), level.toString());
+    }
 }
