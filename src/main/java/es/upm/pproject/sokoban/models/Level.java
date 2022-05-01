@@ -7,13 +7,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.upm.pproject.sokoban.exceptions.WrongLevelFormatException;
 import es.upm.pproject.sokoban.models.props.*;
 import es.upm.pproject.sokoban.models.utils.Coordinates;
 
 
 /**
 * Class that represents a level.
-* @author Alvaro Alonso
+* @author Alvaro Alonso Miguel
 * @author Rafael Alonso Sirera
 * @author Raul Casamayor Navas
 * @version 1.3
@@ -34,9 +35,10 @@ public class Level{
     * Constructor of the class.
     * @param fileName Name of the file that contains the level.
     */
-    public Level(String levelTxt) throws IOException {
+    public Level(String levelTxt) throws IOException, WrongLevelFormatException {
         FileReader lvlFile = new FileReader(new File(levelTxt)); 
         BufferedReader br = new BufferedReader(lvlFile);
+        int nGoals = 0;
         try{
             name = br.readLine();
             String[] numbersLine = br.readLine().split(" ");
@@ -61,6 +63,7 @@ public class Level{
                         break;
                         case '*':
                         board[row][column] = Tile.GOAL;
+                        nGoals++;
                         break;
                         case '#':
                         board[row][column] = null;
@@ -76,6 +79,16 @@ public class Level{
             }
         }finally{
             br.close();
+        }
+        // Check if the level is correct
+        if(player == null){
+            throw new WrongLevelFormatException("The level must contain a player");
+        }
+        if(boxList.isEmpty()){
+            throw new WrongLevelFormatException("The level must contain at least one box");
+        }
+        if(nGoals != boxList.size()){
+            throw new WrongLevelFormatException("The number of goals must be equal to the number of boxes");
         }
     }
     

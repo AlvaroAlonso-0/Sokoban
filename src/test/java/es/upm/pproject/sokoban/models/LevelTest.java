@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
+import es.upm.pproject.sokoban.exceptions.WrongLevelFormatException;
 import es.upm.pproject.sokoban.models.utils.Coordinates;
 
 @DisplayName("Class to test hte level")
@@ -23,7 +24,7 @@ class LevelTest {
     private Level level;
     
     @BeforeEach
-    void init() throws IOException{
+    void init() throws IOException, WrongLevelFormatException {
         level = new Level("resources/level_1.txt");
     }
     
@@ -48,12 +49,37 @@ class LevelTest {
             new Level("resources/level0empty.txt");
         });
     }
-    
+
     @Test
-    @DisplayName("Test checkStatus")
-    void checkStatusTest(){
-        assertEquals(false, level.checkStatus());
+    @DisplayName("Test the level constructor without any player")
+    void constTestWrongFileFormatPlayer(){
+        Exception e = assertThrows(WrongLevelFormatException.class, () -> {
+            new Level("resources/level0wrongPlayer.txt");
+        });
+
+        assertEquals("The level must contain a player", e.getMessage());
     }
+
+    @Test
+    @DisplayName("Test the level constructor without any box")
+    void constTestWrongFileFormatBox(){
+        Exception e = assertThrows(WrongLevelFormatException.class, () -> {
+            new Level("resources/level0wrongBox.txt");
+        });
+
+        assertEquals("The level must contain at least one box", e.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test the level constructor with different number of goals and boxes")
+    void constTestWrongFileFormatGoalsBoxes(){
+        Exception e = assertThrows(WrongLevelFormatException.class, () -> {
+            new Level("resources/level0wrongGoal.txt");
+        });
+
+        assertEquals("The number of goals must be equal to the number of boxes", e.getMessage());
+    }
+
     
     @Test
     @DisplayName("Test toString")
@@ -137,7 +163,7 @@ class LevelTest {
         }
         
         @BeforeEach
-        void restart() throws IOException{
+        void restart() throws IOException, WrongLevelFormatException{
             lvl = new Level("resources/level_1.txt");
         }
         
@@ -180,5 +206,49 @@ class LevelTest {
             assertFalse(lvl.movePlayer('D'));
             assertEquals(boxMove, lvl.toString());
         }
+    }
+
+
+    @Test
+    @DisplayName("Test checkStatus")
+    void checkStatusTest(){
+        assertEquals(false, level.checkStatus());
+
+        level.movePlayer('u');
+        level.movePlayer('r');
+        level.movePlayer('r');
+        level.movePlayer('r');
+        level.movePlayer('r');
+        level.movePlayer('d');
+        level.movePlayer('d');
+        level.movePlayer('l');
+        level.movePlayer('u');
+        level.movePlayer('r');
+        level.movePlayer('u');
+        level.movePlayer('l');
+        level.movePlayer('l');
+        level.movePlayer('l');
+        level.movePlayer('d');
+        level.movePlayer('l');
+        level.movePlayer('u');
+        level.movePlayer('l');
+        level.movePlayer('u');
+        level.movePlayer('u');
+        level.movePlayer('r');
+        level.movePlayer('d');
+        level.movePlayer('d');
+        level.movePlayer('d');
+        level.movePlayer('r');
+        level.movePlayer('d');
+        level.movePlayer('d');
+        level.movePlayer('l');
+        level.movePlayer('l');
+        level.movePlayer('u');
+        level.movePlayer('r');
+        level.movePlayer('d');
+        level.movePlayer('r');
+        level.movePlayer('u');
+
+        assertEquals(true, level.checkStatus());
     }
 }
