@@ -7,7 +7,7 @@ import es.upm.pproject.sokoban.models.utils.Coordinates;
 
 /**
  * Class that implements a prop entity.
- * @author Alvaro Alonso
+ * @author Alvaro Alonso Miguel
  * @author Idir Carlos Aliane Crespo
  * @version 1.4
  * @since 29/04/2022

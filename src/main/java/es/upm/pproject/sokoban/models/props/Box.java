@@ -2,7 +2,7 @@ package es.upm.pproject.sokoban.models.props;
 
 /**
  * Class that represents a box.
- * @author Alvaro Alonso
+ * @author Alvaro Alonso Miguel
  * @version 1.1
  * @since 22/04/2022
  */
