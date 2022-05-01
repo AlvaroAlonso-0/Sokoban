@@ -15,10 +15,16 @@ import es.upm.pproject.sokoban.models.utils.Coordinates;
 * Class that represents a level.
 * @author Alvaro Alonso
 * @author Rafael Alonso Sirera
-* @version 1.2
-* @since 22/04/2022
+* @author Raul Casamayor Navas
+* @version 1.3
+* @since 01/05/2022
 */
 public class Level{
+    private static final char UP = 'U';
+    private static final char DOWN = 'D';
+    private static final char LEFT = 'L';
+    private static final char RIGHT = 'R';
+    
     private Player player;
     private Tile[][] board;
     private List<Box> boxList;
@@ -153,4 +159,51 @@ public class Level{
         res.setLength(res.length()-1);
         return res.toString();
     }
+    
+    public boolean movePlayer(char dir){
+        dir = Character.toUpperCase(dir);
+        Coordinates newCoords = generateNewCoords(player.currentPos(), dir);
+        if(newCoords == null) return false;
+        MoveOrBox mob = canMoveElement(newCoords);
+        if(mob.canMove == null){
+            Coordinates newBoxCoords = generateNewCoords(mob.box.currentPos(), dir);
+            if(newBoxCoords == null || !Boolean.TRUE.equals(canMoveElement(newBoxCoords).canMove) ) return false;
+            mob.box.move(dir);
+            mob.box.setOnGoal(board[newBoxCoords.getX()][newBoxCoords.getY()] == Tile.GOAL);
+        }else if(Boolean.FALSE.equals(mob.canMove)) return false;
+        player.move(dir);
+        return true;
+    }
+       
+    private MoveOrBox canMoveElement(Coordinates newCoords){
+        if(board[newCoords.getX()][newCoords.getY()] == Tile.WALL){
+            return new MoveOrBox(false, null);
+        }
+        for (Box box : boxList) {
+            if(box.currentPos().equals(newCoords)){
+                return new MoveOrBox(null, box);
+            }
+        }
+        return new MoveOrBox(true, null);
+    }
+    
+    private Coordinates generateNewCoords(Coordinates oldCoords, char dir){
+        switch (dir) {
+            case UP: return new Coordinates(oldCoords.getX() - 1, oldCoords.getY());
+            case DOWN: return new Coordinates(oldCoords.getX() + 1, oldCoords.getY());
+            case RIGHT: return new Coordinates(oldCoords.getX(), oldCoords.getY() + 1);
+            case LEFT: return new Coordinates(oldCoords.getX(), oldCoords.getY() - 1);
+            default: return null;
+        }
+    }
+    
+    private class MoveOrBox {
+        Boolean canMove;
+        Box box;
+        
+        public MoveOrBox(Boolean canMove, Box box){
+            this.canMove = canMove;
+            this.box = box;
+        }
+    }    
 }

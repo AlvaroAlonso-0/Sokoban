@@ -4,8 +4,9 @@ package es.upm.pproject.sokoban.models.utils;
  * Class that represents a pair of coordinates x and y.
  * @author Alvaro Alonso
  * @author Idir Carlos Aliane Crespo
- * @version 2.0
- * @since 29/04/2022
+ * @author Raul Casamayor Navas
+ * @version 2.1
+ * @since 01/05/2022
  */
 public class Coordinates{
     private int x;
@@ -31,5 +32,15 @@ public class Coordinates{
     public int getY() {
         return y;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null && (obj.getClass() == Coordinates.class) &&
+                this.x==((Coordinates)obj).x && this.y==((Coordinates)obj).y;
+    }
     
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

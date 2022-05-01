@@ -1,6 +1,7 @@
 package es.upm.pproject.sokoban.models.utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,4 +25,21 @@ class CoordinatesTest {
         assertEquals(9, coords.getY());
     }
 
+    @Test
+    @DisplayName("Overrride hashCode test")
+    void hash(){
+        assertEquals(((Object)coords).hashCode(), coords.hashCode());
+    }
+
+    @Test
+    @DisplayName("Overrride equals test")
+    void equalsTest(){
+        assertNotEquals(null, coords);
+        assertNotEquals(new int[2], coords);
+        assertEquals(coords, coords);
+        assertEquals(coords, new Coordinates(5, 9));
+        Coordinates coords2 = new Coordinates(4, 8);
+        assertNotEquals(coords, coords2);
+        assertEquals(coords2, coords2);
+    }
 }
