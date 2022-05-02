@@ -12,10 +12,11 @@ import es.upm.pproject.sokoban.models.Level;
 /**
 * Class for the GUI of the applicaton.
 * @author Idir Carlos Aliane Crespo
-* @version 1.0
-* @since 01/05/2022
+* @version 1.1
+* @since 02/05/2022
 */
 public class GUI {
+
     private static final int MAX_WIDTH = 700;
     private static final int MAX_HEIGHT = 700;
     private static final int SPRITE_SIZE = 50;
@@ -24,7 +25,6 @@ public class GUI {
     private ImagePanel [][] sprites;  // Floor
     private Level level;
     
-
     /**
     * Constructor of the class.
     */
@@ -38,7 +38,6 @@ public class GUI {
         frame.getContentPane().add(background);
         ImageIcon icon = new ImageIcon("resources/warehouseman.jpg");
         frame.setIconImage(icon.getImage());
-        
     }
 
     /**
@@ -47,14 +46,13 @@ public class GUI {
      */
     public void init(Level lvl){
         this.level = lvl;
-        String boardLvl = lvl.toString();
-        paint(boardLvl);
     }
 
      /**
      * Displays a frame with the current state of the GUI
      */
     public void show(){
+        paint(level.toString());
         frame.pack();
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
