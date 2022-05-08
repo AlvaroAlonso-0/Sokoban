@@ -7,23 +7,20 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import es.upm.pproject.sokoban.models.Level;
-
 /**
 * Class for the GUI of the applicaton.
 * @author Idir Carlos Aliane Crespo
-* @version 1.1
-* @since 02/05/2022
+* @version 1.2
+* @since 08/05/2022
 */
 public class GUI {
 
-    private static final int MAX_WIDTH = 700;
-    private static final int MAX_HEIGHT = 700;
+    private static final int MAX_WIDTH = 900;
+    private static final int MAX_HEIGHT = 900;
     private static final int SPRITE_SIZE = 50;
     private JFrame frame;
     private JPanel background;
     private ImagePanel [][] sprites;  // Floor
-    private Level level;
     
     /**
     * Constructor of the class.
@@ -40,19 +37,11 @@ public class GUI {
         frame.setIconImage(icon.getImage());
     }
 
-    /**
-     * initialize the GUI with the level indicated
-     * @param lvl the level to be initialized
-     */
-    public void init(Level lvl){
-        this.level = lvl;
-    }
-
      /**
      * Displays a frame with the current state of the GUI
      */
-    public void show(){
-        paint(level.toString());
+    public void show(String boardLvl){
+        paint(boardLvl);
         frame.pack();
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -61,8 +50,7 @@ public class GUI {
     /**
      * Repaints the frame with the new state of the GUI
      */
-    public void repaint(){
-        String boardLvl = level.toString();
+    public void repaint(String boardLvl){
         background.removeAll();
         paint(boardLvl);
         background.repaint();
@@ -98,7 +86,7 @@ public class GUI {
                         i++;
                     }
                     else {  // it is '\n' so we dont increse the counter and wait until the entire row is painted with floor sprites
-                        sprites[x][y] = new ImagePanel("resources/floor.jpg"); 
+                        sprites[x][y] = new ImagePanel("resources/amongus.png"); 
                     }
                     sprites[x][y].setBounds(y*SPRITE_SIZE,x*SPRITE_SIZE,sprites[x][y].getWidth(),sprites[x][y].getHeight());
                     background.add(sprites[x][y]); // Floor or Floor + Goal
