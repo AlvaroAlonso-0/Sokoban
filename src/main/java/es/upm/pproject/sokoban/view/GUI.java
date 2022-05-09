@@ -17,7 +17,7 @@ public class GUI {
 
     private static final int MAX_WIDTH = 900;
     private static final int MAX_HEIGHT = 900;
-    private static final int SPRITE_SIZE = 50;
+    protected static final int SPRITE_SIZE = 50;
     private JFrame frame;
     private JPanel background;
     private ImagePanel [][] sprites;  // Floor

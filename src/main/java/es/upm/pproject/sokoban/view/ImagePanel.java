@@ -9,15 +9,15 @@ import java.awt.Graphics;
 /**
 * Class that extends a JPanel for displaying a sprite in it.
 * @author Idir Carlos Aliane Crespo
-* @version 1.0
-* @since 01/05/2022
+* @version 1.1
+* @since 08/05/2022
 */
 public class ImagePanel extends JPanel{
     private Image img;
 
     public ImagePanel(String spritePath) {
       img = new ImageIcon(spritePath).getImage();
-      Dimension size = new Dimension(50,50);
+      Dimension size = new Dimension(GUI.SPRITE_SIZE,GUI.SPRITE_SIZE);
       setPreferredSize(size);
       setMinimumSize(size);
       setMaximumSize(size);
