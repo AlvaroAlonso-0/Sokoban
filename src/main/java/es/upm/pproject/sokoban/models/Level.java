@@ -2,6 +2,7 @@ package es.upm.pproject.sokoban.models;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,10 +18,12 @@ import es.upm.pproject.sokoban.models.utils.Coordinates;
 * @author Alvaro Alonso Miguel
 * @author Rafael Alonso Sirera
 * @author Raul Casamayor Navas
-* @version 1.3
+* @version 1.4
 * @since 01/05/2022
 */
 public class Level{
+    public static final String LEVEL_FILE_NAME_FORMAT = "resources/level_%d.txt";
+
     private static final char UP = 'U';
     private static final char DOWN = 'D';
     private static final char LEFT = 'L';
@@ -35,7 +38,7 @@ public class Level{
     * Constructor of the class.
     * @param fileName Name of the file that contains the level.
     */
-    public Level(String levelTxt) throws IOException, WrongLevelFormatException {
+    public Level(String levelTxt) throws FileNotFoundException, WrongLevelFormatException {
         FileReader lvlFile = new FileReader(new File(levelTxt)); 
         BufferedReader br = new BufferedReader(lvlFile);
         int nGoals = 0;
@@ -80,7 +83,9 @@ public class Level{
         }catch(IOException e){
             throw new WrongLevelFormatException("Error reading the file");
         }finally{
-            br.close();
+            try{
+                br.close();
+            }catch(IOException e){/*Close br in case its open */}
         }
         // Check if the level is correct
         if(player == null){
