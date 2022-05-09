@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -43,11 +44,21 @@ class LevelTest {
     }
     
     @Test
+    @DisplayName("Test the level constructor with non existent file")
+    void constTest2() {
+        assertThrows(FileNotFoundException.class, () -> {
+            new Level("resources/level_not_existent.txt");
+        });
+    }
+
+    @Test
     @DisplayName("Test the level constructor with a wrong file")
     void constTestWrongFile(){
-        assertThrows(IOException.class, () -> {
+        Exception e = assertThrows(WrongLevelFormatException.class, () -> {
             new Level("resources/level0empty.txt");
         });
+
+        assertEquals("Error reading the file", e.getMessage());
     }
 
     @Test

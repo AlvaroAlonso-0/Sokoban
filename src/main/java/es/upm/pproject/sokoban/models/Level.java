@@ -77,6 +77,8 @@ public class Level{
                     }
                 }
             }
+        }catch(IOException e){
+            throw new WrongLevelFormatException("Error reading the file");
         }finally{
             br.close();
         }
