@@ -28,7 +28,7 @@ class GamesTest {
         @Test
         @DisplayName("Test the game object playing and solving with just one game")
         void playGameTest() throws WrongLevelFormatException{  
-            String levelBoardFormat = (new StringBuilder("Level 1\n"))
+            String levelBoardFormat = (new StringBuilder("Level 1%n"))
             .append("++++    \n")
             .append("+  +    \n")
             .append("+  +++++\n")
