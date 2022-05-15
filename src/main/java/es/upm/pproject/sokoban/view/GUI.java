@@ -1,12 +1,16 @@
 package es.upm.pproject.sokoban.view;
 
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridLayout;
+import java.awt.Font;
 import java.awt.event.*;
+import java.awt.GridLayout;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 import es.upm.pproject.sokoban.Controller;
 
@@ -22,8 +26,14 @@ public class GUI {
     private static final int MAX_WIDTH = 900;
     private static final int MAX_HEIGHT = 900;
     protected static final int SPRITE_SIZE = 50;
+    private static final int INFO_PANEL_WIDTH = MAX_WIDTH;
+    private static final int INFO_PANEL_HEIGHT = SPRITE_SIZE*2;
     private JFrame frame;
+    private JPanel info;
+    private JLabel score;
+    private JLabel levelName;
     private JPanel background;
+    
     private Controller controller;
     private ImagePanel [][] sprites;  // Floor
     
@@ -35,10 +45,28 @@ public class GUI {
         frame = new JFrame("Sokoban");
         frame.setSize(new Dimension(MAX_WIDTH, MAX_HEIGHT));
         frame.setResizable(false);
-        background = new JPanel(new GridLayout(MAX_WIDTH/SPRITE_SIZE, MAX_HEIGHT/SPRITE_SIZE,0,0));
+        background = new JPanel();
         sprites = new ImagePanel [MAX_WIDTH/SPRITE_SIZE][MAX_HEIGHT/SPRITE_SIZE];
-        background.setPreferredSize(new Dimension(MAX_WIDTH, MAX_HEIGHT));
+        frame.getContentPane().setPreferredSize(new Dimension(MAX_WIDTH, MAX_HEIGHT));
+        background.setBounds(INFO_PANEL_WIDTH, INFO_PANEL_HEIGHT, MAX_WIDTH, MAX_HEIGHT);
+        background.setBackground(Color.blue);
+        info = new JPanel(new GridLayout(1,2));
+        info.setSize(INFO_PANEL_WIDTH,INFO_PANEL_HEIGHT);
+        info.setBorder(new EmptyBorder(10, 20, 0, 20));
+        background.setLayout(null);
+        info.setBackground(new Color(187, 162, 232));
+        info.setBounds(0,0,INFO_PANEL_WIDTH,INFO_PANEL_HEIGHT);
+        score = new JLabel("Score: 0", JLabel.LEFT);
+        levelName = new JLabel("Level: level_name", JLabel.RIGHT);
+        score.setFont(new Font("Calibri", Font.BOLD, 30));
+        score.setBounds(0,25,0,0);
+        levelName.setFont(new Font("Calibri", Font.BOLD, 30));
+        levelName.setBounds(0,25,0,0);
+        info.add(score);
+        info.add(levelName);
+        frame.getContentPane().add(info);
         frame.getContentPane().add(background);
+        
         frame.addKeyListener(new KeyListener(){
             @Override
             public void keyPressed(KeyEvent e) {
@@ -61,10 +89,10 @@ public class GUI {
     * Displays a frame with the current state of the GUI
     */
     public void show(String boardLvl){
-        paint(boardLvl);
+        paint(boardLvl);   
         frame.pack();
-        frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);  
     }
     
     /**
@@ -73,6 +101,7 @@ public class GUI {
     public void repaint(String boardLvl){
         background.removeAll();
         paint(boardLvl);
+        info.repaint();
         background.repaint();
     }
     
@@ -106,18 +135,18 @@ public class GUI {
                         i++;
                     }
                     else {  // it is '\n' so we dont increse the counter and wait until the entire row is painted with floor sprites
-                    sprites[x][y] = new ImagePanel("resources/amongus.png"); 
+                        sprites[x][y] = new ImagePanel("resources/floor.jpg"); 
+                    }
+                    sprites[x][y].setBounds((y)*SPRITE_SIZE,(x+2)*SPRITE_SIZE,sprites[x][y].getWidth(),sprites[x][y].getHeight());
+                    background.add(sprites[x][y]); // Floor or Floor + Goal
                 }
-                sprites[x][y].setBounds(y*SPRITE_SIZE,x*SPRITE_SIZE,sprites[x][y].getWidth(),sprites[x][y].getHeight());
-                background.add(sprites[x][y]); // Floor or Floor + Goal
+                else{   // rest of the floor sprites
+                    sprites[x][y] = new ImagePanel("resources/floor.jpg");
+                    sprites[x][y].setBounds((y)*SPRITE_SIZE,(x+2)*SPRITE_SIZE,sprites[x][y].getWidth(),sprites[x][y].getHeight());
+                    background.add(sprites[x][y]); // Floor or Floor + Goal
+                }
             }
-            else{   // rest of the floor sprites
-                sprites[x][y] = new ImagePanel("resources/floor.jpg");
-                sprites[x][y].setBounds(y*SPRITE_SIZE,x*SPRITE_SIZE,sprites[x][y].getWidth(),sprites[x][y].getHeight());
-                background.add(sprites[x][y]); // Floor or Floor + Goal
-            }
+            i++;
         }
-        i++;
     }
-}
 }
