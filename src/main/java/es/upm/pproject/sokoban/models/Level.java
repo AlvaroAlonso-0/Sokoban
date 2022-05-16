@@ -23,7 +23,7 @@ import es.upm.pproject.sokoban.models.utils.Coordinates;
 */
 public class Level{
     public static final String LEVEL_FILE_NAME_FORMAT = "resources/level_%d.txt";
-
+    
     private static final char UP = 'U';
     private static final char DOWN = 'D';
     private static final char LEFT = 'L';
@@ -153,38 +153,30 @@ public class Level{
     @Override
     public String toString() {
         StringBuilder res = new StringBuilder();
-        Integer[][] playnbox = new Integer[board.length][board.length];
+        Integer[] playnbox = new Integer[board.length*board[0].length];
         for(int b=0; b<boxList.size();b++){
             Box box = boxList.get(b);
-            playnbox[box.currentPos().getX()][box.currentPos().getY()] = 1;
+            playnbox[box.currentPos().getX()*board[0].length+box.currentPos().getY()] = 1;
         }
-        playnbox[player.currentPos().getX()][player.currentPos().getY()] = 0;
-        for(int i=0; i<board.length; i++){
-            for(int j=0; j<board[0].length; j++){
-                if(playnbox[i][j]!=null){
-                    res.append(playnbox[i][j]==1 ? "#":"W");
-                }
-                else{
-                    if(board[i][j]==null){
-                        res.append(" ");
-                    }
-                    else{
-                        res.append(board[i][j]==Tile.WALL ? "+":"*");
-                    }
-                    
-                }
+        playnbox[player.currentPos().getX()*board[0].length+player.currentPos().getY()] = 0;
+        for(int i=0; i<playnbox.length; i++){
+            if(i!=0 && (i%board[0].length)==0){
+                res.append("\n");
             }
-            res.append("\n");
+            if(playnbox[i]!=null){
+                res.append(playnbox[i]==1 ? "#":"W");
+                continue;
+            }
+            res.append(getStringRepresentation(board[i/board[0].length][i%board[0].length]));
         }
-        res.setLength(res.length()-1);
         return res.toString();
     }
     
     /**
-     * This method moves the warehouse man one tile in the specified direction.
-     * @param dir Movement direction
-     * @return If the player did the movement
-     */
+    * This method moves the warehouse man one tile in the specified direction.
+    * @param dir Movement direction
+    * @return If the player did the movement
+    */
     public boolean movePlayer(char dir){
         dir = Character.toUpperCase(dir);
         Coordinates newCoords = generateNewCoords(player.currentPos(), dir);
@@ -201,10 +193,10 @@ public class Level{
     }
     
     /**
-     * Private method use to determine if a coordinate is avaible as destination of a movement.
-     * @param newCoords Destination to check
-     * @return If the tile is avaible to move or the box that is placed on newCoords
-     */
+    * Private method use to determine if a coordinate is avaible as destination of a movement.
+    * @param newCoords Destination to check
+    * @return If the tile is avaible to move or the box that is placed on newCoords
+    */
     private MoveOrBox canMoveElement(Coordinates newCoords){
         if(board[newCoords.getX()][newCoords.getY()] == Tile.WALL){
             return new MoveOrBox(false, null);
@@ -218,11 +210,11 @@ public class Level{
     }
     
     /**
-     * Private method used to update a coordinate with a move.
-     * @param oldCoords Current coordinates
-     * @param dir Direction of the movement
-     * @return Destination coordinates
-     */
+    * Private method used to update a coordinate with a move.
+    * @param oldCoords Current coordinates
+    * @param dir Direction of the movement
+    * @return Destination coordinates
+    */
     private Coordinates generateNewCoords(Coordinates oldCoords, char dir){
         switch (dir) {
             case UP: return new Coordinates(oldCoords.getX() - 1, oldCoords.getY());
@@ -233,16 +225,27 @@ public class Level{
         }
     }
     
-    /**
-     * Private class needed in canMoveElement method to return a Boolean and a Box object.
-     */
-    private class MoveOrBox {
-        Boolean canMove;
-        Box box;
-        
-        public MoveOrBox(Boolean canMove, Box box){
-            this.canMove = canMove;
-            this.box = box;
+    private String getStringRepresentation (Tile tile){
+        if(tile==null){
+            return " ";
         }
-    }    
+        if(tile==Tile.WALL){
+            return "+";
+        }
+        return "*";
+    }
+
+
+/**
+* Private class needed in canMoveElement method to return a Boolean and a Box object.
+*/
+private class MoveOrBox {
+    Boolean canMove;
+    Box box;
+    
+    public MoveOrBox(Boolean canMove, Box box){
+        this.canMove = canMove;
+        this.box = box;
+    }
+}    
 }
