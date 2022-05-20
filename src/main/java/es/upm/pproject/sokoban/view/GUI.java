@@ -30,7 +30,7 @@ public class GUI {
     protected static final int SPRITE_SIZE = 50;
     private static final int INFO_PANEL_WIDTH = MAX_WIDTH;
     private static final int INFO_PANEL_HEIGHT = SPRITE_SIZE*2;
-    private static final String FLOOR_SPRITE = "resources/sprites/default/floor.jpg";
+    private static final String FLOOR_SPRITE = "src/resources/sprites/default/floor.jpg";
     private static final Color INFO_PANEL_COLOR = new Color (187, 162, 232);
 
     private JFrame frame;
@@ -86,7 +86,7 @@ public class GUI {
                 //This method is not required
             }
         });
-        ImageIcon icon = new ImageIcon("resources/sprites/default/warehouseman.jpg");
+        ImageIcon icon = new ImageIcon("src/resources/sprites/default/warehouseman.jpg");
         frame.setIconImage(icon.getImage());
     }
     
@@ -121,16 +121,16 @@ public class GUI {
                 if (boardLvl.length()-1 >= i){
                     switch(boardLvl.charAt(i)){
                         case '*':
-                            sprites[x][y] = new ImagePanel("resources/sprites/default/goal.jpg");
+                            sprites[x][y] = new ImagePanel("src/resources/sprites/default/goal.jpg");
                             break;
                         case '+':
-                            sprites[x][y] = new ImagePanel("resources/sprites/default/rock.jpg");
+                            sprites[x][y] = new ImagePanel("src/resources/sprites/default/rock.jpg");
                             break;
                         case 'W':
-                            sprites[x][y] = new ImagePanel("resources/sprites/default/warehouseman.jpg");
+                            sprites[x][y] = new ImagePanel("src/resources/sprites/default/warehouseman.jpg");
                             break;
                         case '#':
-                            sprites[x][y] = new ImagePanel("resources/sprites/default/box.jpg");
+                            sprites[x][y] = new ImagePanel("src/resources/sprites/default/box.jpg");
                             break;
                         case ' ':
                             sprites[x][y] = new ImagePanel(FLOOR_SPRITE);

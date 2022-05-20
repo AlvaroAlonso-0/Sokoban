@@ -26,7 +26,7 @@ class LevelTest {
     
     @BeforeEach
     void init() throws IOException, WrongLevelFormatException {
-        level = new Level("resources/level_1.txt");
+        level = new Level("src/resources/levels/level_1.txt");
     }
     
     @Test
@@ -47,7 +47,7 @@ class LevelTest {
     @DisplayName("Test the level constructor with non existent file")
     void constTest2() {
         assertThrows(FileNotFoundException.class, () -> {
-            new Level("resources/level_not_existent.txt");
+            new Level("src/resources/levels4Testing/level_not_existent.txt");
         });
     }
 
@@ -55,7 +55,7 @@ class LevelTest {
     @DisplayName("Test the level constructor with a wrong file")
     void constTestWrongFile(){
         Exception e = assertThrows(WrongLevelFormatException.class, () -> {
-            new Level("resources/level0empty.txt");
+            new Level("src/resources/levels4Testing/level0empty.txt");
         });
 
         assertEquals("Error reading the file", e.getMessage());
@@ -65,7 +65,7 @@ class LevelTest {
     @DisplayName("Test the level constructor without any player")
     void constTestWrongFileFormatPlayer(){
         Exception e = assertThrows(WrongLevelFormatException.class, () -> {
-            new Level("resources/level0wrongPlayer.txt");
+            new Level("src/resources/levels4Testing/level0wrongPlayer.txt");
         });
 
         assertEquals("The level must contain a player", e.getMessage());
@@ -75,7 +75,7 @@ class LevelTest {
     @DisplayName("Test the level constructor without any box")
     void constTestWrongFileFormatBox(){
         Exception e = assertThrows(WrongLevelFormatException.class, () -> {
-            new Level("resources/level0wrongBox.txt");
+            new Level("src/resources/levels4Testing/level0wrongBox.txt");
         });
 
         assertEquals("The level must contain at least one box", e.getMessage());
@@ -85,7 +85,7 @@ class LevelTest {
     @DisplayName("Test the level constructor with different number of goals and boxes")
     void constTestWrongFileFormatGoalsBoxes(){
         Exception e = assertThrows(WrongLevelFormatException.class, () -> {
-            new Level("resources/level0wrongGoal.txt");
+            new Level("src/resources/levels4Testing/level0wrongGoal.txt");
         });
 
         assertEquals("The number of goals must be equal to the number of boxes", e.getMessage());
@@ -175,7 +175,7 @@ class LevelTest {
         
         @BeforeEach
         void restart() throws IOException, WrongLevelFormatException{
-            lvl = new Level("resources/level_1.txt");
+            lvl = new Level("src/resources/levels/level_1.txt");
         }
         
         @Test
@@ -331,7 +331,7 @@ class LevelTest {
 
         @BeforeEach
         void restart() throws IOException, WrongLevelFormatException{
-            lvl = new Level("resources/level_1.txt");
+            lvl = new Level("src/resources/levels/level_1.txt");
         }
 
         @Test
@@ -386,7 +386,7 @@ class LevelTest {
         @Test
         @DisplayName("Undo with multiple boxes level")
         void multipleBoxes() throws IOException, WrongLevelFormatException{
-            lvl = new Level("resources/levelTwoBoxes.txt");
+            lvl = new Level("src/resources/levels4Testing/levelTwoBoxes.txt");
             assertTrue(lvl.movePlayer('r'));
             assertTrue(lvl.movePlayer('d'));
             assertTrue(lvl.movePlayer('r'));

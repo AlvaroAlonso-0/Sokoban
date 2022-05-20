@@ -25,7 +25,7 @@ import es.upm.pproject.sokoban.models.utils.Coordinates;
 * @since 20/05/2022
 */
 public class Level{
-    public static final String LEVEL_FILE_NAME_FORMAT = "resources/level_%d.txt";
+    public static final String LEVEL_FILE_NAME_FORMAT = "src/resources/levels/level_%d.txt";
     
     private static final char UP = 'U';
     private static final char DOWN = 'D';
