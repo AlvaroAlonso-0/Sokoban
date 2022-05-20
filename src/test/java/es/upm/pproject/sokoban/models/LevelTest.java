@@ -262,4 +262,136 @@ class LevelTest {
 
         assertEquals(true, level.checkStatus());
     }
+
+    @Nested
+    @TestInstance(Lifecycle.PER_CLASS)
+    @DisplayName("Undo method test")
+    class UndoTest{
+        Level lvl;
+        String defaultLevel, oneStep, twoSteps, threeSteps, prevBoxMove,
+            boxMove;
+        
+        @BeforeAll
+        void init(){
+            defaultLevel = (new StringBuilder()).append("++++    \n")
+            .append("+  +    \n")
+            .append("+  +++++\n")
+            .append("+      +\n")
+            .append("++W*+# +\n")
+            .append("+   +  +\n")
+            .append("+   ++++\n")
+            .append("+++++   ")
+            .toString();
+            oneStep = (new StringBuilder()).append("++++    \n")
+            .append("+  +    \n")
+            .append("+  +++++\n")
+            .append("+      +\n")
+            .append("++ *+# +\n")
+            .append("+ W +  +\n")
+            .append("+   ++++\n")
+            .append("+++++   ")
+            .toString();
+            twoSteps = (new StringBuilder()).append("++++    \n")
+            .append("+  +    \n")
+            .append("+  +++++\n")
+            .append("+      +\n")
+            .append("++ *+# +\n")
+            .append("+  W+  +\n")
+            .append("+   ++++\n")
+            .append("+++++   ")
+            .toString();
+            threeSteps = (new StringBuilder()).append("++++    \n")
+            .append("+  +    \n")
+            .append("+  +++++\n")
+            .append("+      +\n")
+            .append("++ W+# +\n")
+            .append("+   +  +\n")
+            .append("+   ++++\n")
+            .append("+++++   ")
+            .toString();
+            prevBoxMove = (new StringBuilder()).append("++++    \n")
+            .append("+  +    \n")
+            .append("+  +++++\n")
+            .append("+    W +\n")
+            .append("++ *+# +\n")
+            .append("+   +  +\n")
+            .append("+   ++++\n")
+            .append("+++++   ")
+            .toString();
+            boxMove = (new StringBuilder()).append("++++    \n")
+            .append("+  +    \n")
+            .append("+  +++++\n")
+            .append("+      +\n")
+            .append("++ *+W +\n")
+            .append("+   +# +\n")
+            .append("+   ++++\n")
+            .append("+++++   ")
+            .toString();
+        }
+
+        @BeforeEach
+        void restart() throws IOException, WrongLevelFormatException{
+            lvl = new Level("resources/level_1.txt");
+        }
+
+        @Test
+        @DisplayName("Undo with one step")
+        void firstMove(){
+            assertFalse(lvl.undoMove());
+            assertTrue(lvl.movePlayer('d'));
+            assertEquals(oneStep, lvl.toString());
+            assertTrue(lvl.undoMove());
+            assertEquals(defaultLevel, lvl.toString());
+            assertFalse(lvl.undoMove());
+        }
+
+        @Test
+        @DisplayName("Undo with multiple steps")
+        void multipleMoves(){
+            assertTrue(lvl.movePlayer('d'));
+            assertTrue(lvl.movePlayer('r'));
+            assertTrue(lvl.movePlayer('u'));
+            assertTrue(lvl.movePlayer('l'));
+            assertEquals(defaultLevel, lvl.toString());
+            assertTrue(lvl.undoMove());
+            assertEquals(threeSteps, lvl.toString());
+            assertTrue(lvl.undoMove());
+            assertEquals(twoSteps, lvl.toString());
+            assertTrue(lvl.undoMove());
+            assertEquals(oneStep, lvl.toString());
+            assertTrue(lvl.undoMove());
+            assertEquals(defaultLevel, lvl.toString());
+            assertFalse(lvl.undoMove());
+        }
+
+        @Test
+        @DisplayName("Undo with box moving")
+        void boxMoving(){
+            char[] moves = {'u', 'r', 'r', 'r'};
+            for (char c : moves) {
+                lvl.movePlayer(c);
+            }
+            assertEquals(prevBoxMove, lvl.toString());
+            assertTrue(lvl.movePlayer('d'));
+            assertEquals(boxMove, lvl.toString());
+            assertTrue(lvl.undoMove());
+            assertEquals(prevBoxMove, lvl.toString());
+            for(int i = 0; i < 4; i++){
+                assertTrue(lvl.undoMove());
+            }
+            assertFalse(lvl.undoMove());
+            
+        }
+
+        @Test
+        @DisplayName("Undo with multiple boxes level")
+        void multipleBoxes() throws IOException, WrongLevelFormatException{
+            lvl = new Level("resources/levelTwoBoxes.txt");
+            assertTrue(lvl.movePlayer('r'));
+            assertTrue(lvl.movePlayer('d'));
+            assertTrue(lvl.movePlayer('r'));
+            assertTrue(lvl.movePlayer('u'));
+            assertTrue(lvl.undoMove());
+        }
+    }
 }

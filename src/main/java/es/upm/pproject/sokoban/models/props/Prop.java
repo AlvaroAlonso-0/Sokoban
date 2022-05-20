@@ -44,6 +44,7 @@ public abstract class Prop implements Movable, Resetable{
     }
 
     public void move(char dir) {
+        dir = Character.toUpperCase(dir);
         // U = Up, D = Down, L = Left, R = Right
         switch (dir) {
             case 'L':

@@ -3,12 +3,13 @@ package es.upm.pproject.sokoban.models.props;
 /**
  * Class that represents a box.
  * @author Alvaro Alonso Miguel
- * @version 1.1
+ * @version 1.2
  * @since 22/04/2022
  */
 
 public class Box extends Prop{
-    boolean isOnGoal;
+    private boolean isOnGoal;
+
     public Box(int initialStateX, int initialStateY) {
         super(initialStateX, initialStateY);
         this.isOnGoal = false;

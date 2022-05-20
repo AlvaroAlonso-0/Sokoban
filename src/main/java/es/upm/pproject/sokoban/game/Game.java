@@ -8,8 +8,8 @@ import es.upm.pproject.sokoban.models.Level;
 /**
 * Class that represents a Sokoban game
 * @author Raul Casamayor Navas
-* @version 1.0
-* @since 09/05/2022
+* @version 1.1
+* @since 20/05/2022
 */
 public class Game {
     
@@ -37,6 +37,14 @@ public class Game {
             levelLoad();
         }
         return true;
+    }
+    /**
+     * Method used to revert the las movement of the warehouse man in the current level.
+     * @return If a move has been undone
+     */
+    public boolean undo(){
+        if(gameFinished) return false;
+        return lvl.undoMove();
     }
 
     /**

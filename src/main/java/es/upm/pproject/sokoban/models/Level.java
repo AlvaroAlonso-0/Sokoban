@@ -5,7 +5,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.Iterator;
 import java.util.List;
 
 import es.upm.pproject.sokoban.exceptions.WrongLevelFormatException;
@@ -18,8 +21,8 @@ import es.upm.pproject.sokoban.models.utils.Coordinates;
 * @author Alvaro Alonso Miguel
 * @author Rafael Alonso Sirera
 * @author Raul Casamayor Navas
-* @version 1.4
-* @since 01/05/2022
+* @version 1.5
+* @since 20/05/2022
 */
 public class Level{
     public static final String LEVEL_FILE_NAME_FORMAT = "resources/level_%d.txt";
@@ -33,6 +36,7 @@ public class Level{
     private Tile[][] board;
     private List<Box> boxList;
     private String name;
+    private Deque<Character> movements;
     
     /**
     * Constructor of the class.
@@ -97,6 +101,7 @@ public class Level{
         if(nGoals != boxList.size()){
             throw new WrongLevelFormatException("The number of goals must be equal to the number of boxes");
         }
+        movements = new ArrayDeque<>();
     }
     
     /**
@@ -187,11 +192,38 @@ public class Level{
             if(newBoxCoords == null || !Boolean.TRUE.equals(canMoveElement(newBoxCoords).canMove) ) return false;
             mob.box.move(dir);
             mob.box.setOnGoal(board[newBoxCoords.getX()][newBoxCoords.getY()] == Tile.GOAL);
+            dir = Character.toLowerCase(dir);
         }else if(Boolean.FALSE.equals(mob.canMove)) return false;
         player.move(dir);
+        movements.push(dir);
         return true;
     }
     
+    /**
+     * Method that reverts the last movement of the warehouse man
+     * @return If a movement could be undone
+     */
+    public boolean undoMove(){
+        if(movements.isEmpty()) return false;
+        char dir = movements.pop();
+        char unDir = reverseDir(dir);
+        if(Character.isLowerCase(dir)){
+            Coordinates boxCoords = generateNewCoords(player.currentPos(), dir);
+            Iterator<Box> it = boxList.iterator();
+            boolean found = false;
+            while(it.hasNext() && !found){
+                Box b = it.next();
+                if(b.currentPos().equals(boxCoords)){
+                    b.move(unDir);
+                    b.setOnGoal(board[b.currentPos().getX()][b.currentPos().getY()] == Tile.GOAL);
+                    found = true;
+                }
+            }
+        }
+        player.move(unDir);
+        return true;
+    }
+
     /**
     * Private method use to determine if a coordinate is avaible as destination of a movement.
     * @param newCoords Destination to check
@@ -216,12 +248,28 @@ public class Level{
     * @return Destination coordinates
     */
     private Coordinates generateNewCoords(Coordinates oldCoords, char dir){
+        dir = Character.toUpperCase(dir);
         switch (dir) {
             case UP: return new Coordinates(oldCoords.getX() - 1, oldCoords.getY());
             case DOWN: return new Coordinates(oldCoords.getX() + 1, oldCoords.getY());
             case RIGHT: return new Coordinates(oldCoords.getX(), oldCoords.getY() + 1);
             case LEFT: return new Coordinates(oldCoords.getX(), oldCoords.getY() - 1);
             default: return null;
+        }
+    }
+
+    /**
+     * Private method used to retrive the reverse direction to the given one.
+     * @param dir Direction to get the reverse
+     * @return The reverse direction
+     */
+    private char reverseDir(char dir){
+        dir = Character.toUpperCase(dir);
+        switch (dir) {
+            case UP: return DOWN;
+            case DOWN: return UP;
+            case RIGHT: return LEFT;
+            default: return RIGHT;
         }
     }
     
@@ -234,18 +282,17 @@ public class Level{
         }
         return "*";
     }
-
-
-/**
-* Private class needed in canMoveElement method to return a Boolean and a Box object.
-*/
-private class MoveOrBox {
-    Boolean canMove;
-    Box box;
     
-    public MoveOrBox(Boolean canMove, Box box){
-        this.canMove = canMove;
-        this.box = box;
-    }
-}    
+    /**
+    * Private class needed in canMoveElement method to return a Boolean and a Box object.
+    */
+    private class MoveOrBox {
+        Boolean canMove;
+        Box box;
+        
+        public MoveOrBox(Boolean canMove, Box box){
+            this.canMove = canMove;
+            this.box = box;
+        }
+    }    
 }

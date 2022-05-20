@@ -1,8 +1,8 @@
 package es.upm.pproject.sokoban;
 
 import es.upm.pproject.sokoban.exceptions.WrongLevelFormatException;
-import es.upm.pproject.sokoban.game.GameStatusGUI;
 import es.upm.pproject.sokoban.view.GUI;
+import es.upm.pproject.sokoban.game.GameStatusGUI;
 
 /**
 * Class for the Controller of the application.
@@ -30,15 +30,26 @@ public class Controller{
             case 'A': dir='L'; break;
             case 'S': dir='D'; break;
             case 'D': dir='R'; break;
+            case 'U': undo(); return;
             default: dir='E';  break;
         }
         try{
             if(game.movePlayer(dir)){
-                gui.repaint(game.getBoardToString());
+                repaint();
             }
         }
         catch(WrongLevelFormatException e){
             //TODO implement GUI error message method
         }
+    }
+
+    private void undo(){
+        if(game.undo()){
+            repaint();
+        }
+    }
+
+    private void repaint(){
+        gui.repaint(game.getBoardToString());
     }
 }
