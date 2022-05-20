@@ -1,4 +1,4 @@
-package es.upm.pproject.sokoban.models;
+package es.upm.pproject.sokoban.models.level;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

@@ -1,6 +1,7 @@
-package es.upm.pproject.sokoban.game;
+package es.upm.pproject.sokoban.view;
 
 import es.upm.pproject.sokoban.exceptions.WrongLevelFormatException;
+import es.upm.pproject.sokoban.models.Game;
 
 /**
 * Class that represents a Sokoban game used by the controller of the app.

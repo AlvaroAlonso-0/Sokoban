@@ -14,7 +14,7 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
-import es.upm.pproject.sokoban.Controller;
+import es.upm.pproject.sokoban.controller.Controller;
 
 /**
 * Class for the GUI of the application.

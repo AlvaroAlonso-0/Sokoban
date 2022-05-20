@@ -1,4 +1,4 @@
-package es.upm.pproject.sokoban.game;
+package es.upm.pproject.sokoban.models;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import es.upm.pproject.sokoban.exceptions.WrongLevelFormatException;
+import es.upm.pproject.sokoban.view.GameStatusGUI;
 
 @DisplayName("Class to test the games objects")
 class GamesTest {

@@ -1,9 +1,9 @@
-package es.upm.pproject.sokoban.game;
+package es.upm.pproject.sokoban.models;
 
 import java.io.FileNotFoundException;
 
 import es.upm.pproject.sokoban.exceptions.WrongLevelFormatException;
-import es.upm.pproject.sokoban.models.Level;
+import es.upm.pproject.sokoban.models.level.Level;
 
 /**
 * Class that represents a Sokoban game

@@ -1,4 +1,4 @@
-package es.upm.pproject.sokoban.models;
+package es.upm.pproject.sokoban.models.level;
 
 import java.io.BufferedReader;
 import java.io.File;

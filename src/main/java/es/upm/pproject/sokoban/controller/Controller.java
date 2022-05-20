@@ -1,8 +1,8 @@
-package es.upm.pproject.sokoban;
+package es.upm.pproject.sokoban.controller;
 
 import es.upm.pproject.sokoban.exceptions.WrongLevelFormatException;
 import es.upm.pproject.sokoban.view.GUI;
-import es.upm.pproject.sokoban.game.GameStatusGUI;
+import es.upm.pproject.sokoban.view.GameStatusGUI;
 
 /**
 * Class for the Controller of the application.
