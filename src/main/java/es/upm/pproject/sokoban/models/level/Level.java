@@ -11,6 +11,11 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
 import es.upm.pproject.sokoban.exceptions.WrongLevelFormatException;
 import es.upm.pproject.sokoban.models.props.*;
 import es.upm.pproject.sokoban.models.utils.Coordinates;
@@ -21,9 +26,11 @@ import es.upm.pproject.sokoban.models.utils.Coordinates;
 * @author Alvaro Alonso Miguel
 * @author Rafael Alonso Sirera
 * @author Raul Casamayor Navas
-* @version 1.5
-* @since 20/05/2022
+* @version 1.6
+* @since 23/05/2022
 */
+@XmlRootElement(name="level")
+@XmlType(propOrder = {"player","board","boxList","name","movements"})
 public class Level{
     public static final String LEVEL_FILE_NAME_FORMAT = "src/resources/levels/level_%d.txt";
     
@@ -37,6 +44,8 @@ public class Level{
     private List<Box> boxList;
     private String name;
     private Deque<Character> movements;
+
+    public Level(){}
     
     /**
     * Constructor of the class.
@@ -102,14 +111,6 @@ public class Level{
             throw new WrongLevelFormatException("The number of goals must be equal to the number of boxes");
         }
         movements = new ArrayDeque<>();
-    }
-    
-    /**
-    * Method that returns the name of the level.
-    * @return Name of the level.
-    */
-    public String getName(){
-        return name;
     }
     
     /**
@@ -294,5 +295,52 @@ public class Level{
             this.canMove = canMove;
             this.box = box;
         }
+    }
+
+    /* Getters and setters needed for xml binding*/
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    @XmlElementWrapper(name="board")
+    @XmlElement(name="tile")
+    public Tile[][] getBoard() {
+        return board;
+    }
+
+    public void setBoard(Tile[][] board) {
+        this.board = board;
+    }
+
+    @XmlElementWrapper(name="boxList")
+    @XmlElement(name="box")
+    public List<Box> getBoxList() {
+        return boxList;
+    }
+
+    public void setBoxList(List<Box> boxList) {
+        this.boxList = boxList;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @XmlElementWrapper(name="movements")
+    public Deque<Character> getMovements() {
+        return movements;
+    }
+
+    public void setMovements(Deque<Character> movements) {
+        this.movements = movements;
     }    
 }

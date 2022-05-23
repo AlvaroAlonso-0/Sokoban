@@ -1,6 +1,7 @@
 package es.upm.pproject.sokoban.models.props;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -60,5 +61,12 @@ class BoxTest {
         box.reset();
         assertEquals(7, box.currentPos().getX());
         assertEquals(1, box.currentPos().getY());
+    }
+
+    @Test
+    @DisplayName("Empty constructor")
+    void empConst(){
+        box  = new Box();
+        assertFalse(box.isOnGoal());
     }
 }

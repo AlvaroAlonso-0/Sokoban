@@ -7,6 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -18,11 +21,49 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 import es.upm.pproject.sokoban.exceptions.WrongLevelFormatException;
+import es.upm.pproject.sokoban.models.props.Box;
+import es.upm.pproject.sokoban.models.props.Player;
 import es.upm.pproject.sokoban.models.utils.Coordinates;
 
 @DisplayName("Class to test hte level")
 class LevelTest {
     private Level level;
+
+    @Nested
+    @DisplayName("Empty constructor test")
+    class emptyConstructor{
+        private Level level;
+
+        @BeforeEach
+        void init(){
+            level = new Level();
+        }
+
+        @Test
+        @DisplayName("Getters and setters")
+        void gsTest(){
+            Player pl = new Player(1, 2);
+            level.setPlayer(pl);
+            assertEquals(pl, level.getPlayer());
+            Tile[][] board = new Tile[2][2];
+            board[0][0] = Tile.WALL;
+            board[0][1] = Tile.GOAL;
+            board[1][0] = null;
+            board[1][1] = Tile.WALL;
+            level.setBoard(board);
+            assertEquals(board, level.getBoard());
+            List<Box> boxes = new ArrayList<>();
+            boxes.add(new Box());
+            level.setBoxList(boxes);
+            assertEquals(boxes, level.getBoxList());
+            level.setName("Test");
+            assertEquals("Test", level.getName());
+            Deque<Character> moves = new ArrayDeque<>();
+            moves.add('C');
+            level.setMovements(moves);
+            assertEquals(moves, level.getMovements());
+        }
+    }
     
     @BeforeEach
     void init() throws IOException, WrongLevelFormatException {

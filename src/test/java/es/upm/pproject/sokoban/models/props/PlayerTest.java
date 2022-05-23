@@ -22,4 +22,18 @@ class PlayerTest {
         assertEquals(2,player.currentPos().getY());
     }
 
+    @Test
+    @DisplayName("Getters and setters")
+    void empConst(){
+        player = new Player();
+        player.setCurrentPositionX(3);
+        player.setCurrentPositionY(4);
+        assertEquals(3, player.getCurrentPositionX());
+        assertEquals(4, player.getCurrentPositionY());
+        player.setInitialStateX(1);
+        player.setInitialStateY(0);
+        assertEquals(1, player.getInitialStateX());
+        assertEquals(0, player.getInitialStateY());
+    }
+
 }

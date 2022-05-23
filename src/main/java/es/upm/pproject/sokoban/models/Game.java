@@ -8,14 +8,14 @@ import es.upm.pproject.sokoban.models.level.Level;
 /**
 * Class that represents a Sokoban game
 * @author Raul Casamayor Navas
-* @version 1.1
-* @since 20/05/2022
+* @version 1.2
+* @since 23/05/2022
 */
 public class Game {
     
-    private Level lvl;
-    private int levelNumber;
-    private boolean gameFinished;
+    protected Level lvl;
+    protected int levelNumber;
+    protected boolean gameFinished;
 
     public Game() throws WrongLevelFormatException{
         levelNumber = 1;
@@ -65,14 +65,6 @@ public class Game {
         }catch (FileNotFoundException e){
             gameFinished = true;
         }
-    }
-
-    /**
-     * Protected method to give access to the level object.
-     * @return The current level
-     */
-    protected Level getLevel(){
-        return lvl;
     }
 
     @Override
