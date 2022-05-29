@@ -93,7 +93,7 @@
 				<version>3.0.0</version>
 				<configuration>
 				  <!-- Set the class with your main method --> 
-				  <mainClass>es.upm.pproject.App</mainClass>
+				  <mainClass>es.upm.pproject.sokoban.App</mainClass>
 				</configuration>
 			</plugin>
             <plugin>
