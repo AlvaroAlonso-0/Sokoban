@@ -40,6 +40,17 @@ class GamesTest {
         @Test
         @DisplayName("Test the game object playing and solving with just one game")
         void playGameTest() throws WrongLevelFormatException{  
+            String levelTwo = (new StringBuilder("Level 2\n"))
+            .append(" ++++++\n")
+            .append(" +    +\n")
+            .append("++# * +\n")
+            .append("+  W  +\n")
+            .append("+ #+* +\n")
+            .append("+  ++++\n")
+            .append("++++   ")
+            .toString();
+
+
             assertEquals(String.format(levelBoardFormat, 'W','#',' ',' '), g.toString());
             assertFalse(g.isFinished());
             assertFalse(g.movePlayer('o') || g.movePlayer('l'));
@@ -63,8 +74,8 @@ class GamesTest {
             assertTrue(g.movePlayer('l') && g.movePlayer('L'));
             assertTrue(g.movePlayer('U') && g.movePlayer('r') && g.movePlayer('d') && g.movePlayer('r'));
             assertEquals(String.format(levelBoardFormat, ' ',' ','#','W'), g.toString());
-            assertTrue(g.movePlayer('u') && g.isFinished());
-            assertFalse(g.movePlayer('d'));
+            assertTrue(g.movePlayer('u'));
+            assertEquals(levelTwo, g.toString());
         }
 
         @Test
