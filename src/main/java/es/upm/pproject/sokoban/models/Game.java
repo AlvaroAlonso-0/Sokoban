@@ -10,7 +10,7 @@ import es.upm.pproject.sokoban.models.level.Level;
 * Class that represents a Sokoban game
 * @author Raul Casamayor Navas
 * @author Rafael Alonso Sirera
-* @version 1.3
+* @version 1.4
 * @since 04/06/2022
 */
 public class Game implements Resetable{
@@ -20,9 +20,7 @@ public class Game implements Resetable{
     protected boolean gameFinished;
 
     public Game() throws WrongLevelFormatException{
-        levelNumber = 1;
-        gameFinished = false;
-        levelLoad();
+        newGame();
     }
 
     /**
@@ -77,5 +75,11 @@ public class Game implements Resetable{
     @Override
     public void reset() {
         lvl.reset();
+    }
+
+    public void newGame() throws WrongLevelFormatException{
+        levelNumber = 1;
+        gameFinished = false;
+        levelLoad();
     }
 }
