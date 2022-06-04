@@ -28,17 +28,17 @@ import es.upm.pproject.sokoban.models.utils.Coordinates;
 @DisplayName("Class to test hte level")
 class LevelTest {
     private Level level;
-
+    
     @Nested
     @DisplayName("Empty constructor test")
     class emptyConstructor{
         private Level level;
-
+        
         @BeforeEach
         void init(){
             level = new Level();
         }
-
+        
         @Test
         @DisplayName("Getters and setters")
         void gsTest(){
@@ -91,47 +91,47 @@ class LevelTest {
             new Level("src/resources/levels4Testing/level_not_existent.txt");
         });
     }
-
+    
     @Test
     @DisplayName("Test the level constructor with a wrong file")
     void constTestWrongFile(){
         Exception e = assertThrows(WrongLevelFormatException.class, () -> {
             new Level("src/resources/levels4Testing/level0empty.txt");
         });
-
+        
         assertEquals("Error reading the file", e.getMessage());
     }
-
+    
     @Test
     @DisplayName("Test the level constructor without any player")
     void constTestWrongFileFormatPlayer(){
         Exception e = assertThrows(WrongLevelFormatException.class, () -> {
             new Level("src/resources/levels4Testing/level0wrongPlayer.txt");
         });
-
+        
         assertEquals("The level must contain a player", e.getMessage());
     }
-
+    
     @Test
     @DisplayName("Test the level constructor without any box")
     void constTestWrongFileFormatBox(){
         Exception e = assertThrows(WrongLevelFormatException.class, () -> {
             new Level("src/resources/levels4Testing/level0wrongBox.txt");
         });
-
+        
         assertEquals("The level must contain at least one box", e.getMessage());
     }
-
+    
     @Test
     @DisplayName("Test the level constructor with different number of goals and boxes")
     void constTestWrongFileFormatGoalsBoxes(){
         Exception e = assertThrows(WrongLevelFormatException.class, () -> {
             new Level("src/resources/levels4Testing/level0wrongGoal.txt");
         });
-
+        
         assertEquals("The number of goals must be equal to the number of boxes", e.getMessage());
     }
-
+    
     
     @Test
     @DisplayName("Test toString")
@@ -148,13 +148,33 @@ class LevelTest {
         assertEquals(sb.toString(), level.toString());
     }
     
+    @Test
+    @DisplayName("Test reset")
+    void testReset(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("++++    \n")
+        .append("+  +    \n")
+        .append("+  +++++\n")
+        .append("+      +\n")
+        .append("++W*+# +\n")
+        .append("+   +  +\n")
+        .append("+   ++++\n")
+        .append("+++++   ");
+        level.getPlayer().setCurrentPositionX(3);
+        level.getPlayer().setCurrentPositionX(5);
+        level.getBoxList().get(0).setCurrentPositionX(1);
+        level.getBoxList().get(0).setCurrentPositionY(1);
+        level.reset();
+        assertEquals(sb.toString(), level.toString());
+    }
+    
     @Nested
     @TestInstance(Lifecycle.PER_CLASS)
     @DisplayName("Move player test")
     class MovePlayerTest{
         Level lvl;
         String defaultLevel, oneStep, twoSteps, threeSteps, prevBoxMove,
-            boxMove;
+        boxMove;
         
         @BeforeAll
         void init(){
@@ -229,7 +249,7 @@ class LevelTest {
             assertFalse(lvl.movePlayer('O'));
             assertEquals(defaultLevel, lvl.toString());
         }
-
+        
         @Test
         @DisplayName("Testing simple moves without touching boxes")
         void movesWithoutBoxes(){
@@ -244,7 +264,7 @@ class LevelTest {
             assertTrue(lvl.movePlayer('u'));
             assertEquals(threeSteps, lvl.toString());
         }
-
+        
         @Test
         @DisplayName("Testing moves with boxes")
         void movingBoxes(){
@@ -259,13 +279,13 @@ class LevelTest {
             assertEquals(boxMove, lvl.toString());
         }
     }
-
-
+    
+    
     @Test
     @DisplayName("Test checkStatus")
     void checkStatusTest(){
         assertEquals(false, level.checkStatus());
-
+        
         level.movePlayer('u');
         level.movePlayer('r');
         level.movePlayer('r');
@@ -300,17 +320,17 @@ class LevelTest {
         level.movePlayer('d');
         level.movePlayer('r');
         level.movePlayer('u');
-
+        
         assertEquals(true, level.checkStatus());
     }
-
+    
     @Nested
     @TestInstance(Lifecycle.PER_CLASS)
     @DisplayName("Undo method test")
     class UndoTest{
         Level lvl;
         String defaultLevel, oneStep, twoSteps, threeSteps, prevBoxMove,
-            boxMove;
+        boxMove;
         
         @BeforeAll
         void init(){
@@ -369,12 +389,12 @@ class LevelTest {
             .append("+++++   ")
             .toString();
         }
-
+        
         @BeforeEach
         void restart() throws IOException, WrongLevelFormatException{
             lvl = new Level("src/resources/levels/level_1.txt");
         }
-
+        
         @Test
         @DisplayName("Undo with one step")
         void firstMove(){
@@ -385,7 +405,7 @@ class LevelTest {
             assertEquals(defaultLevel, lvl.toString());
             assertFalse(lvl.undoMove());
         }
-
+        
         @Test
         @DisplayName("Undo with multiple steps")
         void multipleMoves(){
@@ -404,7 +424,7 @@ class LevelTest {
             assertEquals(defaultLevel, lvl.toString());
             assertFalse(lvl.undoMove());
         }
-
+        
         @Test
         @DisplayName("Undo with box moving")
         void boxMoving(){
@@ -423,7 +443,7 @@ class LevelTest {
             assertFalse(lvl.undoMove());
             
         }
-
+        
         @Test
         @DisplayName("Undo with multiple boxes level")
         void multipleBoxes() throws IOException, WrongLevelFormatException{

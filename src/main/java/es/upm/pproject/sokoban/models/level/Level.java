@@ -17,6 +17,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import es.upm.pproject.sokoban.exceptions.WrongLevelFormatException;
+import es.upm.pproject.sokoban.interfaces.Resetable;
 import es.upm.pproject.sokoban.models.props.*;
 import es.upm.pproject.sokoban.models.utils.Coordinates;
 
@@ -26,12 +27,12 @@ import es.upm.pproject.sokoban.models.utils.Coordinates;
 * @author Alvaro Alonso Miguel
 * @author Rafael Alonso Sirera
 * @author Raul Casamayor Navas
-* @version 1.6
-* @since 23/05/2022
+* @version 1.7
+* @since 04/06/2022
 */
 @XmlRootElement(name="level")
 @XmlType(propOrder = {"player","board","boxList","name","movements"})
-public class Level{
+public class Level implements Resetable{
     public static final String LEVEL_FILE_NAME_FORMAT = "src/resources/levels/level_%d.txt";
     
     private static final char UP = 'U';
@@ -44,7 +45,7 @@ public class Level{
     private List<Box> boxList;
     private String name;
     private Deque<Character> movements;
-
+    
     public Level(){}
     
     /**
@@ -155,6 +156,18 @@ public class Level{
         }
         return true;
     }
+
+    /**
+     * Method to reset a level
+     */
+    @Override
+    public void reset(){
+        for (int i=0; i<boxList.size(); i++){
+            boxList.get(i).reset();
+        }
+        player.reset();
+        movements.clear();
+    }
     
     @Override
     public String toString() {
@@ -201,9 +214,9 @@ public class Level{
     }
     
     /**
-     * Method that reverts the last movement of the warehouse man
-     * @return If a movement could be undone
-     */
+    * Method that reverts the last movement of the warehouse man
+    * @return If a movement could be undone
+    */
     public boolean undoMove(){
         if(movements.isEmpty()) return false;
         char dir = movements.pop();
@@ -224,7 +237,7 @@ public class Level{
         player.move(unDir);
         return true;
     }
-
+    
     /**
     * Private method use to determine if a coordinate is avaible as destination of a movement.
     * @param newCoords Destination to check
@@ -258,12 +271,12 @@ public class Level{
             default: return null;
         }
     }
-
+    
     /**
-     * Private method used to retrive the reverse direction to the given one.
-     * @param dir Direction to get the reverse
-     * @return The reverse direction
-     */
+    * Private method used to retrive the reverse direction to the given one.
+    * @param dir Direction to get the reverse
+    * @return The reverse direction
+    */
     private char reverseDir(char dir){
         dir = Character.toUpperCase(dir);
         switch (dir) {
@@ -296,50 +309,50 @@ public class Level{
             this.box = box;
         }
     }
-
+    
     /* Getters and setters needed for xml binding*/
-
+    
     public Player getPlayer() {
         return player;
     }
-
+    
     public void setPlayer(Player player) {
         this.player = player;
     }
-
+    
     @XmlElementWrapper(name="board")
     @XmlElement(name="tile")
     public Tile[][] getBoard() {
         return board;
     }
-
+    
     public void setBoard(Tile[][] board) {
         this.board = board;
     }
-
+    
     @XmlElementWrapper(name="boxList")
     @XmlElement(name="box")
     public List<Box> getBoxList() {
         return boxList;
     }
-
+    
     public void setBoxList(List<Box> boxList) {
         this.boxList = boxList;
     }
-
+    
     public String getName() {
         return name;
     }
-
+    
     public void setName(String name) {
         this.name = name;
     }
-
+    
     @XmlElementWrapper(name="movements")
     public Deque<Character> getMovements() {
         return movements;
     }
-
+    
     public void setMovements(Deque<Character> movements) {
         this.movements = movements;
     }    

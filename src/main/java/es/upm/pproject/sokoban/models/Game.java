@@ -3,15 +3,17 @@ package es.upm.pproject.sokoban.models;
 import java.io.FileNotFoundException;
 
 import es.upm.pproject.sokoban.exceptions.WrongLevelFormatException;
+import es.upm.pproject.sokoban.interfaces.Resetable;
 import es.upm.pproject.sokoban.models.level.Level;
 
 /**
 * Class that represents a Sokoban game
 * @author Raul Casamayor Navas
-* @version 1.2
-* @since 23/05/2022
+* @author Rafael Alonso Sirera
+* @version 1.3
+* @since 04/06/2022
 */
-public class Game {
+public class Game implements Resetable{
     
     protected Level lvl;
     protected int levelNumber;
@@ -70,5 +72,10 @@ public class Game {
     @Override
     public String toString() {
         return String.format("Level %d%n%s", levelNumber, lvl);
+    }
+
+    @Override
+    public void reset() {
+        lvl.reset();
     }
 }
