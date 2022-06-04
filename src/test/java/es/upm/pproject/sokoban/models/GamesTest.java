@@ -21,6 +21,7 @@ class GamesTest {
     class GameTest{
         private Game g;
         private String levelBoardFormat;
+        private String levelTwo;
         
         @BeforeEach
         void init(){
@@ -35,12 +36,8 @@ class GamesTest {
             .append("+  %c++++\n")
             .append("+++++   ")
             .toString();
-        }
-        
-        @Test
-        @DisplayName("Test the game object playing and solving with just one game")
-        void playGameTest() throws WrongLevelFormatException{  
-            String levelTwo = (new StringBuilder("Level 2\n"))
+
+            levelTwo = (new StringBuilder("Level 2%n"))
             .append(" ++++++\n")
             .append(" +    +\n")
             .append("++# * +\n")
@@ -49,8 +46,11 @@ class GamesTest {
             .append("+  ++++\n")
             .append("++++   ")
             .toString();
-
-
+        }
+        
+        @Test
+        @DisplayName("Test the game object playing and solving with just one game")
+        void playGameTest() throws WrongLevelFormatException{  
             assertEquals(String.format(levelBoardFormat, 'W','#',' ',' '), g.toString());
             assertFalse(g.isFinished());
             assertFalse(g.movePlayer('o') || g.movePlayer('l'));
@@ -75,17 +75,17 @@ class GamesTest {
             assertTrue(g.movePlayer('U') && g.movePlayer('r') && g.movePlayer('d') && g.movePlayer('r'));
             assertEquals(String.format(levelBoardFormat, ' ',' ','#','W'), g.toString());
             assertTrue(g.movePlayer('u'));
-            assertEquals(levelTwo, g.toString());
+            assertEquals(String.format(levelTwo), g.toString());
         }
-
+        
         @Test
         @DisplayName("Undo method test")
         void undoTest() throws WrongLevelFormatException{
             char[] moves = {'u', 'r', 'r', 'r', 'r', 'r', 'd', 'd',
-                            'l', 'u', 'r', 'u', 'l', 'l', 'l', 'd',
-                            'l', 'u', 'l', 'u', 'u', 'r', 'd', 'd',
-                            'd', 'r', 'd', 'd', 'l', 'l', 'u', 'r',
-                            'd', 'r'};
+            'l', 'u', 'r', 'u', 'l', 'l', 'l', 'd',
+            'l', 'u', 'l', 'u', 'u', 'r', 'd', 'd',
+            'd', 'r', 'd', 'd', 'l', 'l', 'u', 'r',
+            'd', 'r'};
             for (char dir : moves) {
                 g.movePlayer(dir);
             }
@@ -95,6 +95,45 @@ class GamesTest {
             g.movePlayer('u');
             assertFalse(g.undo());
         }
+        
+        @Test
+        @DisplayName("Test reset")
+        void testReset() throws WrongLevelFormatException{
+            StringBuilder sb = new StringBuilder();
+            sb.append("++++    \n")
+            .append("+  +    \n")
+            .append("+  +++++\n")
+            .append("+      +\n")
+            .append("++W*+# +\n")
+            .append("+   +  +\n")
+            .append("+   ++++\n")
+            .append("+++++   ");
+            g.movePlayer('u');
+            g.movePlayer('r');
+            g.movePlayer('r');
+            g.movePlayer('u');
+            g.reset();
+            assertEquals(String.format(levelBoardFormat, 'W','#',' ',' '), g.toString());
+        }
+
+        @Test
+        @DisplayName("New game method test")
+        void newGameTest() throws WrongLevelFormatException{
+            char[] moves = {'u', 'r', 'r', 'r', 'r', 'r', 'd', 'd',
+            'l', 'u', 'r', 'u', 'l', 'l', 'l', 'd',
+            'l', 'u', 'l', 'u', 'u', 'r', 'd', 'd',
+            'd', 'r', 'd', 'd', 'l', 'l', 'u', 'r',
+            'd', 'r', 'u'};
+            for (char dir : moves) {
+                g.movePlayer(dir);
+            }
+            assertEquals(String.format(levelTwo), g.toString());
+            g.newGame();
+            assertEquals(String.format(levelBoardFormat, 'W','#',' ',' '), g.toString());
+
+        }
+
+        
     }
     
     @Nested
@@ -106,7 +145,7 @@ class GamesTest {
         void init(){
             assertDoesNotThrow(() -> {g = new GameStatusGUI();});
         }
-
+        
         @Test
         @DisplayName("Testing string board getter")
         void getBoardToStringTest(){
