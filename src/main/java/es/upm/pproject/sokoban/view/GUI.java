@@ -3,9 +3,9 @@ package es.upm.pproject.sokoban.view;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.*;
 import java.awt.GridLayout;
-import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 
 import javax.swing.BorderFactory;
@@ -17,7 +17,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
-import javax.swing.SpringLayout.Constraints;
 import javax.swing.border.EmptyBorder;
 
 import es.upm.pproject.sokoban.controller.Controller;
@@ -31,13 +30,14 @@ import es.upm.pproject.sokoban.controller.Controller;
 */
 public class GUI {
     
-    private static final int MAX_WIDTH = 900;
-    private static final int MAX_HEIGHT = 900;
     protected static final int SPRITE_SIZE = 50;
+    private static final int MAX_WIDTH = 900 + SPRITE_SIZE;
+    private static final int MAX_HEIGHT = 900;
     private static final int INFO_PANEL_WIDTH = MAX_WIDTH;
-    private static final int INFO_PANEL_HEIGHT = SPRITE_SIZE*2;
+    private static final int INFO_PANEL_HEIGHT = SPRITE_SIZE;
     private static final String FLOOR_SPRITE = "src/resources/sprites/default/floor.jpg";
     private static final Color INFO_PANEL_COLOR = new Color (187, 162, 232);
+    Color colorLabel = new Color(229, 243, 255);
 
     private JFrame frame;
     private JMenuBar menuBar;
@@ -55,21 +55,18 @@ public class GUI {
     * Constructor of the class.
     */
     public GUI(Controller control){
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.weightx = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
         controller = control;
         frame = new JFrame("Sokoban");
         frame.setSize(new Dimension(MAX_WIDTH, MAX_HEIGHT));
         frame.setResizable(false);
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        frame.setLocation(dim.width/2-frame.getSize().width/2, dim.height/2-frame.getSize().height/2 - 35);
         grid = new JPanel();
-        sprites = new ImagePanel [MAX_WIDTH/SPRITE_SIZE][MAX_HEIGHT/SPRITE_SIZE];
+        sprites = new ImagePanel [MAX_HEIGHT/SPRITE_SIZE][MAX_WIDTH/SPRITE_SIZE];
         frame.getContentPane().setPreferredSize(new Dimension(MAX_WIDTH, MAX_HEIGHT));
-
+        grid.setBounds(0, INFO_PANEL_HEIGHT, MAX_WIDTH, MAX_HEIGHT - INFO_PANEL_HEIGHT);
         grid.setBackground(Color.RED);
         info = new JPanel(new GridLayout(1,2));
-        info.setSize(INFO_PANEL_WIDTH,INFO_PANEL_HEIGHT);
         info.setBorder(new EmptyBorder(10, 20, 0, 20));
         grid.setLayout(null);
         info.setBackground(INFO_PANEL_COLOR);
@@ -107,13 +104,11 @@ public class GUI {
     */
     public void repaint(String boardLvl){
         grid.removeAll();
-
         info.removeAll();
-        
-        
         info.add(score);
         info.add(levelName);
         paint(boardLvl);
+        //paintUpdatedCell(16, 17,2);
         grid.repaint();
         info.repaint();
         frame.pack();
@@ -126,7 +121,7 @@ public class GUI {
     private void paint(String boardLvl){
         int i = 0;
         grid.setBounds(INFO_PANEL_WIDTH, INFO_PANEL_HEIGHT, MAX_WIDTH - INFO_PANEL_WIDTH, MAX_HEIGHT - INFO_PANEL_HEIGHT);
-        for (int x = 0; x < MAX_WIDTH/SPRITE_SIZE; x++){
+        for (int x = 0; x < MAX_HEIGHT/SPRITE_SIZE; x++){
             for (int y = 0; y < MAX_WIDTH/SPRITE_SIZE; y++){
                 if (boardLvl.length()-1 >= i){
                     switch(boardLvl.charAt(i)){
@@ -154,7 +149,7 @@ public class GUI {
                             i--;
                     }
                     i++;
-                    sprites[x][y].setBounds((y)*SPRITE_SIZE,(x+2)*SPRITE_SIZE,
+                    sprites[x][y].setBounds((y)*SPRITE_SIZE,(x+INFO_PANEL_HEIGHT/SPRITE_SIZE)*SPRITE_SIZE,
                                             sprites[x][y].getWidth(),sprites[x][y].getHeight());
                     // Floor or Floor + Goal
                     grid.add(sprites[x][y]); 
@@ -162,7 +157,7 @@ public class GUI {
                 // rest of the floor sprites
                 else{   
                     sprites[x][y] = new ImagePanel(FLOOR_SPRITE);
-                    sprites[x][y].setBounds((y)*SPRITE_SIZE,(x+2)*SPRITE_SIZE,
+                    sprites[x][y].setBounds((y)*SPRITE_SIZE,(x+INFO_PANEL_HEIGHT/SPRITE_SIZE)*SPRITE_SIZE,
                                             sprites[x][y].getWidth(),sprites[x][y].getHeight());
                     // Floor or Floor + Goal
                     grid.add(sprites[x][y]); 
@@ -172,60 +167,96 @@ public class GUI {
         }
     }
 
+    public void paintUpdatedCell(int x, int y, int sprite){
+        grid.remove(sprites[x][y]);
+        switch(sprite){
+            case 0: sprites[x][y] = new ImagePanel("src/resources/sprites/default/box.jpg"); break;
+            case 1: sprites[x][y] = new ImagePanel("src/resources/sprites/default/warehouseman.jpg"); break;
+            case 2: sprites[x][y] = new ImagePanel("src/resources/sprites/default/floor.jpg"); break;
+        }
+        sprites[x][y].setBounds((y)*SPRITE_SIZE,(x+INFO_PANEL_HEIGHT/SPRITE_SIZE)*SPRITE_SIZE,sprites[x][y].getWidth(),
+        sprites[x][y].getHeight());
+        grid.add(sprites[x][y]);
+    }
+
     private void addListeners(){
+        Color borderColor  = new Color(153, 209, 255);
+        Color pressedColor = new Color(204, 232, 255);
         loadItem.addMouseListener(new MouseAdapter(){  
             public void mouseReleased(MouseEvent e){
-                System.out.println(controller.loadGame("test"));
-                loadItem.setOpaque(false);
-                loadItem.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
+                launchLoadMenu();
+                loadItem.setBackground(colorLabel);
 
             } 
             public void mousePressed(MouseEvent e){
                 loadItem.setOpaque(true);
-                loadItem.setBorder(BorderFactory.createMatteBorder(1,1,1,1,new Color(128, 126, 126)));
-
+                loadItem.setBackground(pressedColor);
+            }
+            public void mouseEntered(MouseEvent e){
+                loadItem.setOpaque(true);
+                loadItem.setBorder(BorderFactory.createMatteBorder(1,1,1,1,borderColor));
+            }
+            public void mouseExited(MouseEvent e){
+                loadItem.setOpaque(false);
+                loadItem.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
             }
         });
 
         saveItem.addMouseListener(new MouseAdapter(){  
             public void mouseReleased(MouseEvent e){ 
-                System.out.println(controller.saveGame("test"));
                 launchSaveMenu();
-                saveItem.setOpaque(false);
-                saveItem.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
-
+                saveItem.setBackground(colorLabel);
             } 
             public void mousePressed(MouseEvent e){
                 saveItem.setOpaque(true);
-                saveItem.setBorder(BorderFactory.createMatteBorder(1,1,1,1,new Color(128, 126, 126)));
-
+                saveItem.setBackground(pressedColor);
+            }
+            public void mouseEntered(MouseEvent e){
+                saveItem.setOpaque(true);
+                saveItem.setBorder(BorderFactory.createMatteBorder(1,1,1,1,borderColor));
+            }
+            public void mouseExited(MouseEvent e){
+                saveItem.setOpaque(false);
+                saveItem.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
             }
         });
 
         undoLabel.addMouseListener(new MouseAdapter(){  
             public void mouseReleased(MouseEvent e){  
                 controller.keyTyped('U');
-                undoLabel.setOpaque(false);
-                undoLabel.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
+                undoLabel.setBackground(colorLabel);
 
             } 
             public void mousePressed(MouseEvent e){
                 undoLabel.setOpaque(true);
-                undoLabel.setBorder(BorderFactory.createMatteBorder(1,1,1,1,new Color(128, 126, 126)));
-
+                undoLabel.setBackground(pressedColor);
+            }
+            public void mouseEntered(MouseEvent e){
+                undoLabel.setOpaque(true);
+                undoLabel.setBorder(BorderFactory.createMatteBorder(1,1,1,1,borderColor));
+            }
+            public void mouseExited(MouseEvent e){
+                undoLabel.setOpaque(false);
+                undoLabel.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
             }
         });
 
         resetItem.addMouseListener(new MouseAdapter(){  
             public void mouseReleased(MouseEvent e){  
-                resetItem.setOpaque(false);
-                resetItem.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
+                resetItem.setBackground(colorLabel);
 
             } 
             public void mousePressed(MouseEvent e){
                 resetItem.setOpaque(true);
-                resetItem.setBorder(BorderFactory.createMatteBorder(1,1,1,1,new Color(128, 126, 126)));
-
+                resetItem.setBackground(pressedColor);
+            }
+            public void mouseEntered(MouseEvent e){
+                resetItem.setOpaque(true);
+                resetItem.setBorder(BorderFactory.createMatteBorder(1,1,1,1,borderColor));
+            }
+            public void mouseExited(MouseEvent e){
+                resetItem.setOpaque(false);
+                resetItem.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
             }
         });
 
@@ -236,7 +267,20 @@ public class GUI {
             }
             @Override
             public void keyTyped(KeyEvent e) {
-                controller.keyTyped(Character.toUpperCase(e.getKeyChar()));
+                if (e.isControlDown()){
+                    switch((int)e.getKeyChar()){
+                        // CTRL + Z -> Undo 
+                        case 26: controller.keyTyped('U'); break;
+                        // CTRL + S -> Save
+                        case 19: launchSaveMenu(); break;
+                        // CTRL + L -> Load
+                        case 12: launchLoadMenu(); break;
+                    }
+                    System.out.println((int)e.getKeyChar());
+                }
+                else {
+                    controller.keyTyped(Character.toUpperCase(e.getKeyChar()));
+                }
             }
             @Override
             public void keyReleased(KeyEvent e) {
@@ -247,7 +291,7 @@ public class GUI {
 
     private void giveStyleToComponents(){
         Font font = new Font("Arial", Font.PLAIN, 12);
-        Color color = new Color(163, 184, 204);
+        
         gameMenu.setFont(font);
         loadItem.setFont(font);
         saveItem.setFont(font);
@@ -259,13 +303,13 @@ public class GUI {
         resetItem.setFont(font);
 
         menuBar.setBorder(BorderFactory.createMatteBorder(0,0,1,0,new Color(128, 126, 126)));
-        loadItem.setBackground(color);
+        loadItem.setBackground(colorLabel);
         loadItem.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
-        saveItem.setBackground(color);
+        saveItem.setBackground(colorLabel);
         saveItem.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
-        undoLabel.setBackground(color);
+        undoLabel.setBackground(colorLabel);
         undoLabel.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
-        resetItem.setBackground(color);
+        resetItem.setBackground(colorLabel);
         resetItem.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
     }
 
@@ -293,12 +337,10 @@ public class GUI {
     }
 
     private void launchSaveMenu(){
-        JFrame saveFrame = new JFrame("Save game");
-        saveFrame.setSize(new Dimension(MAX_WIDTH/2, MAX_HEIGHT/2));
-        saveFrame.setResizable(false);
-        saveFrame.getContentPane().setPreferredSize(new Dimension(MAX_WIDTH/2, MAX_HEIGHT/2));
-        saveFrame.pack();
-        saveFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        saveFrame.setVisible(true);  
+        new SaveFrame(frame, controller);
+    }
+
+    private void launchLoadMenu(){
+        new LoadFrame(frame, controller);
     }
 }
