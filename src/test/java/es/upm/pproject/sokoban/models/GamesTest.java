@@ -89,7 +89,9 @@ class GamesTest {
             for (char dir : moves) {
                 g.movePlayer(dir);
             }
+            assertEquals(33, g.getScore());
             assertTrue(g.undo());
+            assertEquals(32, g.getScore());
             assertTrue(g.movePlayer('r'));
             assertEquals(String.format(levelBoardFormat, ' ', ' ', '#', 'W'), g.toString());
             g.movePlayer('u');
@@ -114,6 +116,7 @@ class GamesTest {
             g.movePlayer('u');
             g.reset();
             assertEquals(String.format(levelBoardFormat, 'W','#',' ',' '), g.toString());
+            assertEquals(0, g.getScore());
         }
 
         @Test
