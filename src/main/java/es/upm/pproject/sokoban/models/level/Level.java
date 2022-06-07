@@ -27,8 +27,8 @@ import es.upm.pproject.sokoban.models.utils.Coordinates;
 * @author Alvaro Alonso Miguel
 * @author Rafael Alonso Sirera
 * @author Raul Casamayor Navas
-* @version 1.7
-* @since 04/06/2022
+* @version 1.8
+* @since 07/06/2022
 */
 @XmlRootElement(name="level")
 @XmlType(propOrder = {"player","board","boxList","name","movements"})
@@ -45,6 +45,7 @@ public class Level implements Resetable{
     private List<Box> boxList;
     private String name;
     private Deque<Character> movements;
+    private int score;
     
     public Level(){}
     
@@ -112,6 +113,7 @@ public class Level implements Resetable{
             throw new WrongLevelFormatException("The number of goals must be equal to the number of boxes");
         }
         movements = new ArrayDeque<>();
+        score = 0;
     }
     
     /**
@@ -165,6 +167,7 @@ public class Level implements Resetable{
         for (int i=0; i<boxList.size(); i++){
             boxList.get(i).reset();
         }
+        score=0;
         player.reset();
         movements.clear();
     }
@@ -210,6 +213,7 @@ public class Level implements Resetable{
         }else if(Boolean.FALSE.equals(mob.canMove)) return false;
         player.move(dir);
         movements.push(dir);
+        score++;
         return true;
     }
     
@@ -235,6 +239,7 @@ public class Level implements Resetable{
             }
         }
         player.move(unDir);
+        score--;
         return true;
     }
     
@@ -355,5 +360,9 @@ public class Level implements Resetable{
     
     public void setMovements(Deque<Character> movements) {
         this.movements = movements;
-    }    
+    }   
+    
+    public int getScore(){
+        return score;
+    }
 }

@@ -82,6 +82,7 @@ class LevelTest {
         assertEquals(Tile.WALL, level.getTile(0,0));
         assertEquals(Tile.GOAL, level.getTile(4,3));
         assertEquals(null, level.getTile(1, 2));
+        assertEquals(0,level.getScore());
     }
     
     @Test
@@ -166,6 +167,7 @@ class LevelTest {
         level.getBoxList().get(0).setCurrentPositionY(1);
         level.reset();
         assertEquals(sb.toString(), level.toString());
+        assertEquals(0, level.getScore());
     }
     
     @Nested
@@ -279,7 +281,6 @@ class LevelTest {
             assertEquals(boxMove, lvl.toString());
         }
     }
-    
     
     @Test
     @DisplayName("Test checkStatus")
@@ -453,6 +454,47 @@ class LevelTest {
             assertTrue(lvl.movePlayer('r'));
             assertTrue(lvl.movePlayer('u'));
             assertTrue(lvl.undoMove());
+        }
+    }
+
+    @Nested
+    @DisplayName("Score test")
+    class ScoreTest{
+        @Test
+        @DisplayName("Good move score test")
+        void upScoreTest(){
+            level.movePlayer('u');
+            level.movePlayer('r');
+            level.movePlayer('r');
+            assertEquals(3, level.getScore());
+        }
+
+        @Test
+        @DisplayName("Bad move score test")
+        void noScoreTest(){
+            level.movePlayer('u');
+            assertEquals(1, level.getScore());
+            level.movePlayer('w');
+            assertEquals(1, level.getScore());
+        }
+
+        @Test
+        @DisplayName("Test undo and score")
+        void undoScore(){
+            level.movePlayer('u');
+            level.movePlayer('r');
+            level.movePlayer('r');
+            level.undoMove();
+            assertEquals(2, level.getScore());
+        }
+
+        @Test
+        @DisplayName("Test score with all moves undone plus one")
+        void allMovesUndo(){
+            level.movePlayer('u');
+            level.undoMove();
+            level.undoMove();
+            assertEquals(0, level.getScore());
         }
     }
 }
