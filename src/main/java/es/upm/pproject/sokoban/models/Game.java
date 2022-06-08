@@ -11,14 +11,15 @@ import es.upm.pproject.sokoban.models.level.Level;
 * @author Raul Casamayor Navas
 * @author Rafael Alonso Sirera
 * @author Alvaro Alonso Miguel
-* @version 1.5
-* @since 07/06/2022
+* @version 1.51
+* @since 08/06/2022
 */
 public class Game implements Resetable{
     
     protected Level lvl;
     protected int levelNumber;
     protected boolean gameFinished;
+    protected int score;
 
     public Game() throws WrongLevelFormatException{
         newGame();
@@ -35,6 +36,7 @@ public class Game implements Resetable{
         if(gameFinished || !lvl.movePlayer(dir)) return false;
         if(lvl.checkStatus()){
             levelNumber++;
+            score += lvl.getScore();
             levelLoad();
         }
         return true;
@@ -85,6 +87,6 @@ public class Game implements Resetable{
     }
 
     public int getScore(){
-        return lvl.getScore();
+        return this.score + lvl.getScore();
     }
 }

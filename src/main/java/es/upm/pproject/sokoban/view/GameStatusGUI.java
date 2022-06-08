@@ -10,8 +10,9 @@ import es.upm.pproject.sokoban.models.level.Level;
 /**
 * Class that represents a Sokoban game used by the controller of the app.
 * @author Raul Casamayor Navas
-* @version 1.1
-* @since 23/05/2022
+* @author Alvaro Alonso Miguel
+* @version 1.2
+* @since 08/06/2022
 */
 @XmlRootElement(name="game")
 public class GameStatusGUI extends Game{
@@ -58,4 +59,12 @@ public class GameStatusGUI extends Game{
         this.gameFinished = gameFinished;
     }
     
+    @Override
+    public int getScore(){
+        return this.score + lvl.getScore();
+    }
+
+    public void setScore(int score){
+        this.score = score;
+    }
 }

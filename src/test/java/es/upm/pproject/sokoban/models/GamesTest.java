@@ -77,6 +77,19 @@ class GamesTest {
             assertTrue(g.movePlayer('u'));
             assertEquals(String.format(levelTwo), g.toString());
         }
+
+        @Test
+        @DisplayName("Testing the score with multiple levels solved")
+        void ScoreTwoLevels() throws WrongLevelFormatException{
+            char[] moves = {'u', 'r', 'r', 'r', 'r', 'd', 'd', 'l', 'u', 'r',
+            'u', 'l', 'l', 'l', 'd', 'l', 'u', 'l', 'u', 'u',
+            'r', 'd', 'd', 'd', 'r', 'd', 'd', 'l', 'l', 'u',
+            'r', 'd', 'r', 'u', 'l', 'l', 'l'};
+            for(char c : moves){
+                g.movePlayer(c);
+            }
+            assertEquals(36, g.getScore());
+        } 
         
         @Test
         @DisplayName("Undo method test")
