@@ -11,8 +11,8 @@ import es.upm.pproject.sokoban.models.level.Level;
 * @author Raul Casamayor Navas
 * @author Rafael Alonso Sirera
 * @author Alvaro Alonso Miguel
-* @version 1.51
-* @since 08/06/2022
+* @version 1.5.2
+* @since 11/06/2022
 */
 public class Game implements Resetable{
     
@@ -86,7 +86,7 @@ public class Game implements Resetable{
         levelLoad();
     }
 
-    public int getScore(){
+    public int getTotalScore(){
         return this.score + lvl.getScore();
     }
 }
