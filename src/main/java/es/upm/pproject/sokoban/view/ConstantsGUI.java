@@ -10,11 +10,13 @@ public class ConstantsGUI {
 
     private ConstantsGUI(){ }
 
-    public static final String WAREHOUSEMAN_SPRITE = "src/resources/sprites/default/warehouseman.jpg";
-    public static final String FLOOR_SPRITE = "src/resources/sprites/default/floor.jpg";
-    public static final String GOAL_SPRITE = "src/resources/sprites/default/goal.jpg";
-    public static final String BOX_SPRITE = "src/resources/sprites/default/box.jpg";
-    public static final String ROCK_SPRITE = "src/resources/sprites/default/rock.jpg";
+    public static final String SPRITE_FOLDER_PATH = "src/main/resources/sprites";
+
+    public static final String WAREHOUSEMAN_SPRITE = SPRITE_FOLDER_PATH + "/default/warehouseman.jpg";
+    public static final String FLOOR_SPRITE = SPRITE_FOLDER_PATH + "/default/floor.jpg";
+    public static final String GOAL_SPRITE = SPRITE_FOLDER_PATH + "/default/goal.jpg";
+    public static final String BOX_SPRITE = SPRITE_FOLDER_PATH + "/default/box.jpg";
+    public static final String ROCK_SPRITE = SPRITE_FOLDER_PATH + "/default/rock.jpg";
 
     public static final Color INFO_PANEL_COLOR = new Color (187, 162, 232);
     public static final Color LABEL_COLOR = new Color(229, 243, 255);

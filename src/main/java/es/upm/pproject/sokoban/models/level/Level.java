@@ -33,7 +33,7 @@ import es.upm.pproject.sokoban.models.utils.Coordinates;
 @XmlRootElement(name="level")
 @XmlType(propOrder = {"player","board","boxList","name","movements","score"})
 public class Level implements Resetable{
-    public static final String LEVEL_FILE_NAME_FORMAT = "src/resources/levels/level_%d.txt";
+    public static final String LEVEL_FILE_NAME_FORMAT = "src/main/resources/levels/level_%d.txt";
     
     private static final char UP = 'U';
     private static final char DOWN = 'D';
