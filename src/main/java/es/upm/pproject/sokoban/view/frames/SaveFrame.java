@@ -1,33 +1,35 @@
-package es.upm.pproject.sokoban.view;
+package es.upm.pproject.sokoban.view.frames;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Toolkit;
 import java.awt.event.*;
 import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.WindowConstants;
 
 import es.upm.pproject.sokoban.controller.Controller;
+import es.upm.pproject.sokoban.view.ConstantsGUI;
+import es.upm.pproject.sokoban.view.utils.UtilsGUI;
 
+/**
+* Class that represents a frame for saving a game.
+* @author Idir Carlos Aliane Crespo
+* @version 1.0
+* @since 6/06/2022
+*/
 public class SaveFrame {
 
     private static final int MAX_WIDTH = 400;
     private static final int MAX_HEIGHT = 150;
-    private static final Color colorLabel = new Color(229, 243, 255);
 
     private Controller controller;
     private JFrame mainFrame;
 
-    private JFrame saveFrame;
+    private JFrame frame;
     private JPanel background;
     private JLabel nameLabel;
     private JTextField nameText;
@@ -35,7 +37,7 @@ public class SaveFrame {
     private JLabel accept;
 
     public SaveFrame(JFrame mainFrame, Controller controller){
-        setupFrame();
+        frame = UtilsGUI.createAndSetupFrame("Save game", MAX_WIDTH, MAX_HEIGHT);
         this.controller = controller;
         this.mainFrame  = mainFrame;
         mainFrame.setEnabled(false);
@@ -46,10 +48,10 @@ public class SaveFrame {
         nameText = new JTextField();
         accept = new JLabel("Save");
         cancel = new JLabel("Cancel");
-        nameLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        nameText.setFont(new Font("Arial", Font.PLAIN, 14));
-        accept.setFont(new Font("Arial", Font.PLAIN, 14));
-        cancel.setFont(new Font("Arial", Font.PLAIN, 14));
+        nameLabel.setFont(ConstantsGUI.DEAULT_FONT);
+        nameText.setFont(ConstantsGUI.DEAULT_FONT);
+        accept.setFont(ConstantsGUI.DEAULT_FONT);
+        cancel.setFont(ConstantsGUI.DEAULT_FONT);
         nameLabel.setBounds(MAX_WIDTH/8 + MAX_WIDTH/15, 27, 80, 25);
         nameText.setBounds(185, 27, 175, 25);
         
@@ -58,88 +60,84 @@ public class SaveFrame {
         cancel.setBackground(new Color(229, 243, 255));
         cancel.setBorder(BorderFactory.createMatteBorder(1,1,1,1,new Color(153, 209, 255)));
         cancel.setOpaque(true);
-        cancel.setBackground(colorLabel);
+        cancel.setBackground(ConstantsGUI.LABEL_COLOR);
         cancel.setHorizontalAlignment(SwingConstants.CENTER);
 
         accept.setBounds(MAX_WIDTH/2 + MAX_WIDTH/16, MAX_HEIGHT/2 + 10, MAX_WIDTH/4, 30);
         accept.setBackground(new Color(229, 243, 255));
         accept.setBorder(BorderFactory.createMatteBorder(1,1,1,1,new Color(153, 209, 255)));
         accept.setOpaque(true);
-        accept.setBackground(colorLabel);
+        accept.setBackground(ConstantsGUI.LABEL_COLOR);
         accept.setHorizontalAlignment(SwingConstants.CENTER);
         background.add(nameLabel);
         background.add(nameText);
         background.add(cancel);
         background.add(accept);
-        saveFrame.getContentPane().add(background);
+        frame.getContentPane().add(background);
         setupListeners();
     }
 
-    private void setupFrame(){
-        saveFrame = new JFrame("Save game");
-        saveFrame.setSize(new Dimension(MAX_WIDTH, MAX_HEIGHT));
-        saveFrame.setResizable(false);
-        saveFrame.getContentPane().setPreferredSize(new Dimension(MAX_WIDTH, MAX_HEIGHT));
-        saveFrame.pack();
-        saveFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-        saveFrame.setVisible(true);
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        saveFrame.setLocation(dim.width/2-saveFrame.getSize().width/2, dim.height/2-saveFrame.getSize().height/2 - 35);
-    }
-
     public void setupListeners(){
-        Color pressedColor = new Color(204, 232, 255);
         accept.addMouseListener(new MouseAdapter(){  
+            @Override
             public void mouseReleased(MouseEvent e){
-                accept.setBackground(colorLabel);
+                accept.setBackground(ConstantsGUI.LABEL_COLOR);
                 if (!nameText.getText().isBlank()){
                     if (nameAlreadyExists(nameText.getText()+".xml")){
-                        new OverwriteFrame(controller, mainFrame, saveFrame, nameText.getText());
+                        new OverwriteFrame(controller, mainFrame, frame, nameText.getText());
                     }
                     else {
                         if(controller.saveGame(nameText.getText())){
                             mainFrame.setEnabled(true);
                             mainFrame.toFront();
-                            saveFrame.setVisible(false);
-                            saveFrame.dispose();
+                            frame.setVisible(false);
+                            frame.dispose();
                         }
                     }
                 }
                 else {
-                    new BlankFrame(saveFrame);
+                    new BlankFrame(frame);
                 }
             } 
+            @Override
             public void mousePressed(MouseEvent e){
-                accept.setBackground(pressedColor);                
+                accept.setBackground(ConstantsGUI.PRESSED_COLOR);                
             }
+            @Override
             public void mouseEntered(MouseEvent e){
-                accept.setBackground(new Color(218, 234, 247));
+                accept.setBackground(ConstantsGUI.HOLDED_COLOR);
             }
+            @Override
             public void mouseExited(MouseEvent e){
-                accept.setBackground(colorLabel);
+                accept.setBackground(ConstantsGUI.LABEL_COLOR);
             }
         });
 
-        cancel.addMouseListener(new MouseAdapter(){  
+        cancel.addMouseListener(new MouseAdapter(){ 
+            @Override 
             public void mouseReleased(MouseEvent e){
-                cancel.setBackground(colorLabel);
+                cancel.setBackground(ConstantsGUI.LABEL_COLOR);
                 mainFrame.setEnabled(true);
                 mainFrame.toFront();
-                saveFrame.setVisible(false);
-                saveFrame.dispose();
+                frame.setVisible(false);
+                frame.dispose();
             } 
+            @Override
             public void mousePressed(MouseEvent e){
-                cancel.setBackground(pressedColor);                
+                cancel.setBackground(ConstantsGUI.PRESSED_COLOR);                
             }
+            @Override
             public void mouseEntered(MouseEvent e){
-                cancel.setBackground(new Color(218, 234, 247));
+                cancel.setBackground(ConstantsGUI.HOLDED_COLOR);
             }
+            @Override
             public void mouseExited(MouseEvent e){
-                cancel.setBackground(colorLabel);
+                cancel.setBackground(ConstantsGUI.LABEL_COLOR);
             }
         });
 
-        saveFrame.addWindowListener(new WindowAdapter(){
+        frame.addWindowListener(new WindowAdapter(){
+            @Override
             public void windowClosing(WindowEvent e){
                 mainFrame.setEnabled(true);
                 mainFrame.toFront();
@@ -159,3 +157,5 @@ public class SaveFrame {
         return exists;
     }
 }
+
+

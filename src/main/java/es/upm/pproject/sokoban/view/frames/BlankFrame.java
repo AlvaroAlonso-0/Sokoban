@@ -1,23 +1,25 @@
-package es.upm.pproject.sokoban.view;
+package es.upm.pproject.sokoban.view.frames;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Toolkit;
 import java.awt.event.*;
 
-import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.WindowConstants;
 
+import es.upm.pproject.sokoban.view.ConstantsGUI;
+import es.upm.pproject.sokoban.view.utils.UtilsGUI;
+
+/**
+* Class that represents an alert frame when the user attempts to save a level with an empty name.
+* @author Idir Carlos Aliane Crespo
+* @version 1.0
+* @since 6/06/2022
+*/
 public class BlankFrame {
 
-    private final static int MAX_WIDTH = 350;
-    private final static int MAX_HEIGHT = 100;
-    private static final Color colorLabel = new Color(229, 243, 255);
+    private static final int MAX_WIDTH = 350;
+    private static final int MAX_HEIGHT = 100;
 
     private JFrame saveFrame;
 
@@ -30,24 +32,24 @@ public class BlankFrame {
         this.saveFrame = saveFrame;
         saveFrame.setEnabled(false);
         
-        setupFrame();
+        informationFrame = UtilsGUI.createAndSetupFrame("Invalid name", MAX_WIDTH, MAX_HEIGHT);
         informationFrame.toFront();
         background = new JPanel();
         background.setBounds(0,0, MAX_WIDTH, MAX_HEIGHT);
         background.setLayout(null);
         informationLabel = new JLabel("Name cannot be blank!");
         acceptLabel = new JLabel("Accept");
-        informationLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        acceptLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        informationLabel.setFont(ConstantsGUI.DEAULT_FONT);
+        acceptLabel.setFont(ConstantsGUI.DEAULT_FONT);
 
         informationLabel.setBounds(0, 12, MAX_WIDTH, 25);
         informationLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         acceptLabel.setBounds(MAX_WIDTH/4, MAX_HEIGHT/2, MAX_WIDTH/2, 30);
-        acceptLabel.setBackground(new Color(229, 243, 255));
-        acceptLabel.setBorder(BorderFactory.createMatteBorder(1,1,1,1,new Color(153, 209, 255)));
+        acceptLabel.setBackground(ConstantsGUI.LABEL_COLOR);
+        acceptLabel.setBorder(ConstantsGUI.DEFAULT_BORDER);
         acceptLabel.setOpaque(true);
-        acceptLabel.setBackground(colorLabel);
+        acceptLabel.setBackground(ConstantsGUI.LABEL_COLOR);
         acceptLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         background.add(informationLabel);
@@ -56,36 +58,27 @@ public class BlankFrame {
         setupListeners();
     }
 
-    private void setupFrame(){
-        informationFrame = new JFrame("Invalid name");
-        informationFrame.setSize(new Dimension(MAX_WIDTH, MAX_HEIGHT));
-        informationFrame.setResizable(false);
-        informationFrame.getContentPane().setPreferredSize(new Dimension(MAX_WIDTH, MAX_HEIGHT));
-        informationFrame.pack();
-        informationFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-        informationFrame.setVisible(true);
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        informationFrame.setLocation(dim.width/2-informationFrame.getSize().width/2, dim.height/2-informationFrame.getSize().height/2 - 35);
-    }
-
     public void setupListeners(){
-        Color pressedColor = new Color(204, 232, 255);
         acceptLabel.addMouseListener(new MouseAdapter(){  
+            @Override
             public void mouseReleased(MouseEvent e){
-                acceptLabel.setBackground(colorLabel);
+                acceptLabel.setBackground(ConstantsGUI.LABEL_COLOR);
                 saveFrame.setEnabled(true);
                 saveFrame.toFront();
                 informationFrame.setVisible(false);
                 informationFrame.dispose();
             } 
+            @Override
             public void mousePressed(MouseEvent e){
-                acceptLabel.setBackground(pressedColor);                
+                acceptLabel.setBackground(ConstantsGUI.PRESSED_COLOR);                
             }
+            @Override
             public void mouseEntered(MouseEvent e){
-                acceptLabel.setBackground(new Color(218, 234, 247));
+                acceptLabel.setBackground(ConstantsGUI.HOLDED_COLOR);
             }
+            @Override
             public void mouseExited(MouseEvent e){
-                acceptLabel.setBackground(colorLabel);
+                acceptLabel.setBackground(ConstantsGUI.LABEL_COLOR);
             }
         });
     }

@@ -1,7 +1,10 @@
-package es.upm.pproject.sokoban.view;
+package es.upm.pproject.sokoban.view.panels;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+
+import es.upm.pproject.sokoban.view.GUI;
+
 import java.awt.Image;
 import java.awt.Dimension;
 import java.awt.Graphics;

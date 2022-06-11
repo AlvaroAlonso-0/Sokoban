@@ -37,7 +37,7 @@
 		<!-- Files to be excluded from coverage -->
         <sonar.coverage.exclusions>
             **/App.java ,
-            **/view/*,
+            **/view/**,
             **/Controller.java
         </sonar.coverage.exclusions>
 		<jacoco.version>0.8.6</jacoco.version>
