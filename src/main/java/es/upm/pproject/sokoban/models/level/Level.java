@@ -16,6 +16,11 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
+
 import es.upm.pproject.sokoban.exceptions.WrongLevelFormatException;
 import es.upm.pproject.sokoban.interfaces.Resetable;
 import es.upm.pproject.sokoban.models.props.*;
@@ -33,6 +38,9 @@ import es.upm.pproject.sokoban.models.utils.Coordinates;
 @XmlRootElement(name="level")
 @XmlType(propOrder = {"player","board","boxList","name","movements","score"})
 public class Level implements Resetable{
+    private static final Logger logger = LoggerFactory.getLogger(Level.class);
+    private static final Marker levelMarker = MarkerFactory.getMarker("LEVEL");
+
     public static final String LEVEL_FILE_NAME_FORMAT = "src/main/resources/levels/level_%d.txt";
     
     private static final char UP = 'U';
@@ -114,6 +122,8 @@ public class Level implements Resetable{
         }
         movements = new ArrayDeque<>();
         score = 0;
+        String logMsg = String.format("New level (%s) has been loaded ", name);
+        logger.info(levelMarker, logMsg);
     }
     
     /**
@@ -170,6 +180,8 @@ public class Level implements Resetable{
         score=0;
         player.reset();
         movements.clear();
+        logger.info(levelMarker, "Current level has been reset");
+
     }
     
     @Override
@@ -214,6 +226,9 @@ public class Level implements Resetable{
         player.move(dir);
         movements.push(dir);
         score++;
+        String logMsg = String.format("Warehouse man has been move into tile [%d,%d]",
+        newCoords.getX(), newCoords.getY());
+        logger.trace(levelMarker, logMsg);
         return true;
     }
     
@@ -240,6 +255,8 @@ public class Level implements Resetable{
         }
         player.move(unDir);
         score--;
+        String logMsg = String.format("Undone last movement(%c)", dir);
+        logger.trace(levelMarker, logMsg);
         return true;
     }
     

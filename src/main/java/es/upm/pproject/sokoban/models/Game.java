@@ -2,6 +2,11 @@ package es.upm.pproject.sokoban.models;
 
 import java.io.FileNotFoundException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
+
 import es.upm.pproject.sokoban.exceptions.WrongLevelFormatException;
 import es.upm.pproject.sokoban.interfaces.Resetable;
 import es.upm.pproject.sokoban.models.level.Level;
@@ -15,7 +20,10 @@ import es.upm.pproject.sokoban.models.level.Level;
 * @since 11/06/2022
 */
 public class Game implements Resetable{
-    
+
+    private static final Logger logger = LoggerFactory.getLogger(Game.class);
+    private static final Marker gameMarker = MarkerFactory.getMarker("GAME");
+   
     protected Level lvl;
     protected int levelNumber;
     protected boolean gameFinished;
@@ -66,7 +74,8 @@ public class Game implements Resetable{
         try{
             lvl = new Level(String.format(Level.LEVEL_FILE_NAME_FORMAT, levelNumber));
         }catch (FileNotFoundException e){
-            gameFinished = true;
+            logger.info(gameMarker,"Game completed");
+            gameFinished = true;   
         }
     }
 
@@ -83,6 +92,7 @@ public class Game implements Resetable{
     public void newGame() throws WrongLevelFormatException{
         levelNumber = 1;
         gameFinished = false;
+        logger.info(gameMarker, "New game started");
         levelLoad();
     }
 

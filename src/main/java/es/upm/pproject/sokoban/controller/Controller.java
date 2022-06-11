@@ -9,6 +9,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
+
 import es.upm.pproject.sokoban.exceptions.WrongLevelFormatException;
 import es.upm.pproject.sokoban.view.GUI;
 import es.upm.pproject.sokoban.view.GameStatusGUI;
@@ -21,6 +26,12 @@ import es.upm.pproject.sokoban.view.GameStatusGUI;
 * @since 23/05/2022
 */
 public class Controller{
+
+    private static final Logger logger = LoggerFactory.getLogger(Controller.class);
+    private static final Marker loadMarker = MarkerFactory.getMarker("FATAL");
+    private static final Marker loadGameMarker = MarkerFactory.getMarker("LOAD-GAME");
+    private static final Marker saveGameMarker = MarkerFactory.getMarker("SAVE-GAME");
+
     private static final String SAVED_GAMES_FORMAT = "games/%s.xml";
 
     private GUI gui;
@@ -31,6 +42,7 @@ public class Controller{
             game = new GameStatusGUI();
             gui.show(game.getBoardToString());
         } catch (WrongLevelFormatException e) {
+            logger.error(loadMarker, "First level couldnt be loaded", e);
             //TODO implement GUI error message method
         }
     }
@@ -51,6 +63,7 @@ public class Controller{
             }
         }
         catch(WrongLevelFormatException e){
+            logger.error(loadMarker, "Next level couldnt be loaded", e);
             //TODO implement GUI error message method
         }
     }
@@ -67,8 +80,11 @@ public class Controller{
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             marshaller.marshal(game, new FileWriter(String.format(SAVED_GAMES_FORMAT, name)));
         }catch(JAXBException | IOException e){
+            logger.warn(saveGameMarker, "Current game couldnt be saved", e);
             return false;
         }
+        String logMsg = String.format( "Current game has been saved as %s.xml", name);
+        logger.info(saveGameMarker, logMsg);
         return true;
     }
 
@@ -78,13 +94,18 @@ public class Controller{
      * @return If the game could be loaded
      */
     public boolean loadGame(String name){
+        String logMsg;
         try{
             JAXBContext context = JAXBContext.newInstance(GameStatusGUI.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             game = (GameStatusGUI) unmarshaller.unmarshal(new File(String.format(SAVED_GAMES_FORMAT, name)));
         }catch(JAXBException e){
+            logMsg = String.format( "Was imposible to load %s game ", name);
+            logger.warn(loadGameMarker, logMsg, e);
             return false;
         }
+        logMsg = String.format( "%s game has been loaded", name);
+        logger.info(loadGameMarker, logMsg);
         repaint();
         return true;
     }
