@@ -27,11 +27,11 @@ import es.upm.pproject.sokoban.models.utils.Coordinates;
 * @author Alvaro Alonso Miguel
 * @author Rafael Alonso Sirera
 * @author Raul Casamayor Navas
-* @version 1.8
-* @since 07/06/2022
+* @version 1.9
+* @since 11/06/2022
 */
 @XmlRootElement(name="level")
-@XmlType(propOrder = {"player","board","boxList","name","movements"})
+@XmlType(propOrder = {"player","board","boxList","name","movements","score"})
 public class Level implements Resetable{
     public static final String LEVEL_FILE_NAME_FORMAT = "src/resources/levels/level_%d.txt";
     
@@ -364,5 +364,9 @@ public class Level implements Resetable{
     
     public int getScore(){
         return score;
+    }
+
+    public void setScore(int score){
+        this.score = score;
     }
 }
