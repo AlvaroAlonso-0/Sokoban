@@ -36,7 +36,7 @@ import es.upm.pproject.sokoban.models.utils.Coordinates;
 * @since 11/06/2022
 */
 @XmlRootElement(name="level")
-@XmlType(propOrder = {"player","board","boxList","name","movements","score"})
+@XmlType(propOrder = {"player","board","boxList","name","movements","undoneMovements","score"})
 public class Level implements Resetable{
     private static final Logger logger = LoggerFactory.getLogger(Level.class);
     private static final Marker levelMarker = MarkerFactory.getMarker("LEVEL");
@@ -53,6 +53,7 @@ public class Level implements Resetable{
     private List<Box> boxList;
     private String name;
     private Deque<Character> movements;
+    private Deque<Character> undoneMovements;
     private int score;
     
     public Level(){}
@@ -121,6 +122,7 @@ public class Level implements Resetable{
             throw new WrongLevelFormatException("The number of goals must be equal to the number of boxes");
         }
         movements = new ArrayDeque<>();
+        undoneMovements = new ArrayDeque<>();
         score = 0;
         String logMsg = String.format("New level (%s) has been loaded ", name);
         logger.info(levelMarker, logMsg);
@@ -225,6 +227,7 @@ public class Level implements Resetable{
         }else if(Boolean.FALSE.equals(mob.canMove)) return false;
         player.move(dir);
         movements.push(dir);
+        undoneMovements.clear();
         score++;
         String logMsg = String.format("Warehouse man has been move into tile [%d,%d]",
         newCoords.getX(), newCoords.getY());
@@ -254,8 +257,33 @@ public class Level implements Resetable{
             }
         }
         player.move(unDir);
+        undoneMovements.push(dir);
         score--;
         String logMsg = String.format("Undone last movement(%c)", dir);
+        logger.trace(levelMarker, logMsg);
+        return true;
+    }
+
+    public boolean redoMove(){
+        if(undoneMovements.isEmpty()) return false;
+        char dir = undoneMovements.pop();
+        if(Character.isLowerCase(dir)){
+            Coordinates boxCoords = generateNewCoords(player.currentPos(), dir);
+            Iterator<Box> it = boxList.iterator();
+            boolean found = false;
+            while(it.hasNext() && !found){
+                Box b = it.next();
+                if(b.currentPos().equals(boxCoords)){
+                    b.move(dir);
+                    b.setOnGoal(board[b.currentPos().getX()][b.currentPos().getY()] == Tile.GOAL);
+                    found = true;
+                }
+            }
+        }
+        player.move(dir);
+        movements.push(dir);
+        score++;
+        String logMsg = String.format("Redone movement(%c)", dir);
         logger.trace(levelMarker, logMsg);
         return true;
     }
@@ -377,7 +405,16 @@ public class Level implements Resetable{
     
     public void setMovements(Deque<Character> movements) {
         this.movements = movements;
-    }   
+    }
+
+    @XmlElementWrapper(name="undoneMovements")
+    public Deque<Character> getUndoneMovements() {
+        return undoneMovements;
+    }
+    
+    public void setUndoneMovements(Deque<Character> undoneMovements) {
+        this.undoneMovements = undoneMovements;
+    }    
     
     public int getScore(){
         return score;

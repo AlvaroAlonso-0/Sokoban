@@ -22,8 +22,8 @@ import es.upm.pproject.sokoban.view.GameStatusGUI;
 * Class for the Controller of the application.
 * @author Rafael Alonso Sirera
 * @author Raul Casamayor Navas
-* @version 1.1
-* @since 23/05/2022
+* @version 1.2
+* @since 11/06/2022
 */
 public class Controller{
 
@@ -55,6 +55,7 @@ public class Controller{
             case 'S': dir='D'; break;
             case 'D': dir='R'; break;
             case 'U': undo(); return;
+            case 'R': redo(); return;
             default: dir='E';  break;
         }
         try{
@@ -112,6 +113,12 @@ public class Controller{
 
     private void undo(){
         if(game.undo()){
+            repaint();
+        }
+    }
+
+    private void redo(){
+        if(game.redo()){
             repaint();
         }
     }

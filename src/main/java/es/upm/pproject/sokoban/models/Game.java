@@ -16,7 +16,7 @@ import es.upm.pproject.sokoban.models.level.Level;
 * @author Raul Casamayor Navas
 * @author Rafael Alonso Sirera
 * @author Alvaro Alonso Miguel
-* @version 1.5.2
+* @version 1.6
 * @since 11/06/2022
 */
 public class Game implements Resetable{
@@ -49,13 +49,23 @@ public class Game implements Resetable{
         }
         return true;
     }
+
     /**
-     * Method used to revert the las movement of the warehouse man in the current level.
+     * Method used to revert the last movement of the warehouse man in the current level.
      * @return If a move has been undone
      */
     public boolean undo(){
         if(gameFinished) return false;
         return lvl.undoMove();
+    }
+
+    /**
+     * Method used to revert the last undone movement of the warehouse man in the current level.
+     * @return If a move has been redone
+     */
+    public boolean redo(){
+        if(gameFinished) return false;
+        return lvl.redoMove();
     }
 
     /**

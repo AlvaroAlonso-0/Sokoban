@@ -458,6 +458,131 @@ class LevelTest {
     }
 
     @Nested
+    @TestInstance(Lifecycle.PER_CLASS)
+    @DisplayName("Redo method test")
+    class RedoTest{
+        Level lvl;
+        String defaultLevel, oneStep, twoSteps, threeSteps, prevBoxMove,
+        boxMove;
+        
+        @BeforeAll
+        void init(){
+            defaultLevel = (new StringBuilder()).append("++++    \n")
+            .append("+  +    \n")
+            .append("+  +++++\n")
+            .append("+      +\n")
+            .append("++W*+# +\n")
+            .append("+   +  +\n")
+            .append("+   ++++\n")
+            .append("+++++   ")
+            .toString();
+            oneStep = (new StringBuilder()).append("++++    \n")
+            .append("+  +    \n")
+            .append("+  +++++\n")
+            .append("+      +\n")
+            .append("++ *+# +\n")
+            .append("+ W +  +\n")
+            .append("+   ++++\n")
+            .append("+++++   ")
+            .toString();
+            twoSteps = (new StringBuilder()).append("++++    \n")
+            .append("+  +    \n")
+            .append("+  +++++\n")
+            .append("+      +\n")
+            .append("++ *+# +\n")
+            .append("+  W+  +\n")
+            .append("+   ++++\n")
+            .append("+++++   ")
+            .toString();
+            threeSteps = (new StringBuilder()).append("++++    \n")
+            .append("+  +    \n")
+            .append("+  +++++\n")
+            .append("+      +\n")
+            .append("++ W+# +\n")
+            .append("+   +  +\n")
+            .append("+   ++++\n")
+            .append("+++++   ")
+            .toString();
+            prevBoxMove = (new StringBuilder()).append("++++    \n")
+            .append("+  +    \n")
+            .append("+  +++++\n")
+            .append("+    W +\n")
+            .append("++ *+# +\n")
+            .append("+   +  +\n")
+            .append("+   ++++\n")
+            .append("+++++   ")
+            .toString();
+            boxMove = (new StringBuilder()).append("++++    \n")
+            .append("+  +    \n")
+            .append("+  +++++\n")
+            .append("+      +\n")
+            .append("++ *+W +\n")
+            .append("+   +# +\n")
+            .append("+   ++++\n")
+            .append("+++++   ")
+            .toString();
+        }
+        
+        @BeforeEach
+        void restart() throws IOException, WrongLevelFormatException{
+            lvl = new Level("src/main/resources/levels/level_1.txt");
+        }
+        
+        @Test
+        @DisplayName("Redo with one step")
+        void firstMove(){
+            assertFalse(lvl.redoMove());
+            lvl.movePlayer('d');
+            assertTrue(lvl.undoMove() && lvl.redoMove());
+            assertEquals(oneStep, lvl.toString());
+        }
+        
+        @Test
+        @DisplayName("Redo with multiple steps")
+        void multipleMoves(){
+            for (char dir : new char[]{'d','r','u','l'}) {
+                lvl.movePlayer(dir);
+            }
+            assertEquals(defaultLevel, lvl.toString());
+            for(int i = 0; i < 4;i++){
+                lvl.undoMove();
+            }
+            assertEquals(defaultLevel, lvl.toString());
+            assertTrue(lvl.redoMove());
+            assertEquals(oneStep, lvl.toString());
+            assertTrue(lvl.redoMove() && lvl.redoMove() && lvl.redoMove());
+            assertEquals(defaultLevel, lvl.toString());
+            assertFalse(lvl.redoMove());
+        }
+        
+        @Test
+        @DisplayName("Redo with box moving")
+        void boxMoving(){
+            char[] moves = {'u', 'r', 'r', 'r','d'};
+            for (char c : moves) {
+                lvl.movePlayer(c);
+            }
+            assertEquals(boxMove, lvl.toString());
+            assertTrue(lvl.undoMove());
+            assertEquals(prevBoxMove, lvl.toString());
+            assertTrue(lvl.redoMove());
+            assertEquals(boxMove, lvl.toString());
+        }
+        
+        @Test
+        @DisplayName("Redo with multiple boxes level")
+        void multipleBoxes() throws IOException, WrongLevelFormatException{
+            lvl = new Level("src/main/resources/levels4Testing/levelTwoBoxes.txt");
+            assertTrue(lvl.movePlayer('r'));
+            assertTrue(lvl.movePlayer('d'));
+            assertTrue(lvl.movePlayer('r'));
+            assertTrue(lvl.movePlayer('u'));
+            assertTrue(lvl.undoMove());
+            assertTrue(lvl.redoMove());
+        }
+    }
+
+    @Nested
     @DisplayName("Score test")
     class ScoreTest{
         @Test
