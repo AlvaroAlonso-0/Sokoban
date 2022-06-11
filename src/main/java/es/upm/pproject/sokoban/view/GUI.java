@@ -18,6 +18,7 @@ import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import es.upm.pproject.sokoban.controller.Controller;
+import es.upm.pproject.sokoban.view.frames.AlertSaveFrame;
 import es.upm.pproject.sokoban.view.frames.LoadFrame;
 import es.upm.pproject.sokoban.view.frames.SaveFrame;
 import es.upm.pproject.sokoban.view.panels.ImagePanel;
@@ -48,6 +49,7 @@ public class GUI {
     private JLabel loadItem; 
     private JLabel saveItem;
     private JLabel undoLabel;
+    private JLabel redoLabel;
     private JLabel exitItem;
     private JLabel resetItem;
     private JLabel tutorialItem;
@@ -196,6 +198,8 @@ public class GUI {
         addFrameListeners();
         addSaveAndLoadListeners();
         addUndoAndResetListeners();
+        addRedoListeners();
+        addExitAndHelpListeners();
     }
 
     private void addFrameListeners(){
@@ -303,9 +307,9 @@ public class GUI {
 
         resetItem.addMouseListener(new MouseAdapter(){
             @Override
-            public void mouseReleased(MouseEvent e){  
+            public void mouseReleased(MouseEvent e){ 
+                controller.reset();
                 resetItem.setBackground(ConstantsGUI.LABEL_COLOR);
-
             } 
             @Override
             public void mousePressed(MouseEvent e){
@@ -325,6 +329,57 @@ public class GUI {
         });
     }
 
+    private void addRedoListeners(){
+        redoLabel.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseReleased(MouseEvent e){
+                controller.keyTyped('R');
+                redoLabel.setBackground(ConstantsGUI.LABEL_COLOR);
+            } 
+            @Override
+            public void mousePressed(MouseEvent e){
+                redoLabel.setOpaque(true);
+                redoLabel.setBackground(ConstantsGUI.PRESSED_COLOR);
+            }
+            @Override
+            public void mouseEntered(MouseEvent e){
+                redoLabel.setOpaque(true);
+                redoLabel.setBorder(ConstantsGUI.DEFAULT_BORDER);
+            }
+            @Override
+            public void mouseExited(MouseEvent e){
+                redoLabel.setOpaque(false);
+                redoLabel.setBorder(ConstantsGUI.EMPTY_BORDER);
+            }
+        });
+    }
+
+    private void addExitAndHelpListeners(){
+        exitItem.addMouseListener(new MouseAdapter(){  
+            @Override
+            public void mouseReleased(MouseEvent e){ 
+                new AlertSaveFrame(controller, frame);
+                exitItem.setBackground(ConstantsGUI.LABEL_COLOR);
+            } 
+            @Override
+            public void mousePressed(MouseEvent e){
+                exitItem.setOpaque(true);
+                exitItem.setBackground(ConstantsGUI.PRESSED_COLOR);
+            }
+            @Override
+            public void mouseEntered(MouseEvent e){
+                exitItem.setOpaque(true);
+                exitItem.setBorder(ConstantsGUI.DEFAULT_BORDER);
+            }
+            @Override
+            public void mouseExited(MouseEvent e){
+                exitItem.setOpaque(false);
+                exitItem.setBorder(ConstantsGUI.EMPTY_BORDER);
+            }
+        });
+        //TODO: Add help listener
+    }
+
     private void giveStyleToComponents(){
         Font menuBarFont = new Font("Arial", Font.PLAIN, 12);
         
@@ -336,6 +391,7 @@ public class GUI {
         tutorialItem.setFont(menuBarFont);
         aboutItem.setFont(menuBarFont);
         undoLabel.setFont(menuBarFont);
+        redoLabel.setFont(menuBarFont);
         resetItem.setFont(menuBarFont);
 
         menuBar.setBorder(ConstantsGUI.MENU_BAR_BORDER);
@@ -345,8 +401,12 @@ public class GUI {
         saveItem.setBorder(ConstantsGUI.EMPTY_BORDER);
         undoLabel.setBackground(ConstantsGUI.LABEL_COLOR);
         undoLabel.setBorder(ConstantsGUI.EMPTY_BORDER);
+        redoLabel.setBackground(ConstantsGUI.LABEL_COLOR);
+        redoLabel.setBorder(ConstantsGUI.EMPTY_BORDER);
         resetItem.setBackground(ConstantsGUI.LABEL_COLOR);
         resetItem.setBorder(ConstantsGUI.EMPTY_BORDER);
+        exitItem.setBackground(ConstantsGUI.LABEL_COLOR);
+        exitItem.setBorder(ConstantsGUI.EMPTY_BORDER);
     }
 
     private void setupMenuBar(){
@@ -359,6 +419,7 @@ public class GUI {
         exitItem =  new JLabel("  Exit  ");
         resetItem = new JLabel("  Reset  ");
         undoLabel = new JLabel("  Undo  ");
+        redoLabel = new JLabel("  Redo  ");
         tutorialItem = new JLabel("How to play Sokoban");
         aboutItem = new JLabel("About...");
         giveStyleToComponents();
@@ -367,13 +428,15 @@ public class GUI {
         menuBar.add(loadItem);
         menuBar.add(saveItem);
         menuBar.add(undoLabel);
+        menuBar.add(redoLabel);
         menuBar.add(resetItem);
+        menuBar.add(exitItem);
         menuBar.add(helpMenu);
         frame.setJMenuBar(menuBar);
     }
 
     private void launchSaveMenu(){
-        new SaveFrame(frame, controller);
+        new SaveFrame(frame, controller, false);
     }
 
     private void launchLoadMenu(){
