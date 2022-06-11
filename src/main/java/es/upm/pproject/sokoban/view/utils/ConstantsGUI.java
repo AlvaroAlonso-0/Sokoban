@@ -1,4 +1,4 @@
-package es.upm.pproject.sokoban.view;
+package es.upm.pproject.sokoban.view.utils;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -16,7 +16,7 @@ public class ConstantsGUI {
     public static final String FLOOR_SPRITE = SPRITE_FOLDER_PATH + "/default/floor.jpg";
     public static final String GOAL_SPRITE = SPRITE_FOLDER_PATH + "/default/goal.jpg";
     public static final String BOX_SPRITE = SPRITE_FOLDER_PATH + "/default/box.jpg";
-    public static final String ROCK_SPRITE = SPRITE_FOLDER_PATH + "/default/rock.jpg";
+    public static final String WALL_SPRITE = SPRITE_FOLDER_PATH + "/default/rock.jpg";
 
     public static final Color INFO_PANEL_COLOR = new Color (187, 162, 232);
     public static final Color LABEL_COLOR = new Color(229, 243, 255);

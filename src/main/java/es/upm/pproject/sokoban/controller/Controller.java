@@ -123,6 +123,11 @@ public class Controller{
         }
     }
 
+    public void reset(){
+        game.reset();
+        gui.repaint(game.getBoardToString());
+    }
+
     private void repaint(){
         gui.repaint(game.getBoardToString());
     }

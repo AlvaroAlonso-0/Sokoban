@@ -18,10 +18,11 @@ import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import es.upm.pproject.sokoban.controller.Controller;
-import es.upm.pproject.sokoban.view.frames.AlertSaveFrame;
+import es.upm.pproject.sokoban.view.frames.AlertFrame;
 import es.upm.pproject.sokoban.view.frames.LoadFrame;
 import es.upm.pproject.sokoban.view.frames.SaveFrame;
 import es.upm.pproject.sokoban.view.panels.ImagePanel;
+import es.upm.pproject.sokoban.view.utils.ConstantsGUI;
 
 /**
 * Class for the GUI of the application.
@@ -107,7 +108,7 @@ public class GUI {
     public void show(String boardLvl){
         paint(boardLvl);
         frame.pack();
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         frame.setVisible(true);  
     }
     
@@ -143,7 +144,7 @@ public class GUI {
                             sprites[x][y] = new ImagePanel(ConstantsGUI.GOAL_SPRITE);
                             break;
                         case '+':
-                            sprites[x][y] = new ImagePanel(ConstantsGUI.ROCK_SPRITE);
+                            sprites[x][y] = new ImagePanel(ConstantsGUI.WALL_SPRITE);
                             break;
                         case 'W':
                             sprites[x][y] = new ImagePanel(ConstantsGUI.WAREHOUSEMAN_SPRITE);
@@ -153,6 +154,10 @@ public class GUI {
                             break;
                         case ' ':
                             sprites[x][y] = new ImagePanel(ConstantsGUI.FLOOR_SPRITE);
+                            break;
+                        case 'O':
+                            //TODO: Change this sprite
+                            sprites[x][y] = new ImagePanel(ConstantsGUI.FLOOR_SPRITE); 
                             break;
                         /**
                          * it is '\n' so we dont increse the counter 
@@ -198,7 +203,7 @@ public class GUI {
         addFrameListeners();
         addSaveAndLoadListeners();
         addUndoAndResetListeners();
-        addRedoListeners();
+        addRedoAndWindowListeners();
         addExitAndHelpListeners();
     }
 
@@ -329,7 +334,7 @@ public class GUI {
         });
     }
 
-    private void addRedoListeners(){
+    private void addRedoAndWindowListeners(){
         redoLabel.addMouseListener(new MouseAdapter(){
             @Override
             public void mouseReleased(MouseEvent e){
@@ -352,13 +357,20 @@ public class GUI {
                 redoLabel.setBorder(ConstantsGUI.EMPTY_BORDER);
             }
         });
+
+        frame.addWindowListener(new WindowAdapter(){
+            @Override
+            public void windowClosing(WindowEvent e){
+                new AlertFrame(controller, frame, null, null);
+            }
+        });
     }
 
     private void addExitAndHelpListeners(){
         exitItem.addMouseListener(new MouseAdapter(){  
             @Override
             public void mouseReleased(MouseEvent e){ 
-                new AlertSaveFrame(controller, frame);
+                new AlertFrame(controller, frame, null, null);
                 exitItem.setBackground(ConstantsGUI.LABEL_COLOR);
             } 
             @Override
@@ -436,7 +448,7 @@ public class GUI {
     }
 
     private void launchSaveMenu(){
-        new SaveFrame(frame, controller, false);
+        new SaveFrame(frame, controller);
     }
 
     private void launchLoadMenu(){

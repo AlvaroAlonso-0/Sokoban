@@ -12,22 +12,24 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import es.upm.pproject.sokoban.controller.Controller;
-import es.upm.pproject.sokoban.view.ConstantsGUI;
+import es.upm.pproject.sokoban.view.utils.ConstantsGUI;
 import es.upm.pproject.sokoban.view.utils.UtilsGUI;
 
 /**
 * Class that represents a frame for saving a game.
 * @author Idir Carlos Aliane Crespo
-* @version 1.0
-* @since 6/06/2022
+* @version 1.1
+* @since 11/06/2022
 */
 public class SaveFrame {
 
     private static final int MAX_WIDTH = 400;
     private static final int MAX_HEIGHT = 150;
 
-    private Controller controller;
     private JFrame mainFrame;
+
+    private Controller controller;
+    private JFrame backFrame;
 
     private JFrame frame;
     private JPanel background;
@@ -36,11 +38,11 @@ public class SaveFrame {
     private JLabel cancel;
     private JLabel accept;
 
-    public SaveFrame(JFrame mainFrame, Controller controller){
+    public SaveFrame(JFrame backFrame, Controller controller){
         frame = UtilsGUI.createAndSetupFrame("Save game", MAX_WIDTH, MAX_HEIGHT);
         this.controller = controller;
-        this.mainFrame  = mainFrame;
-        mainFrame.setEnabled(false);
+        this.backFrame  = backFrame;
+        backFrame.setEnabled(false);
         background = new JPanel();
         background.setBounds(0,0, MAX_WIDTH, MAX_HEIGHT);
         background.setLayout(null);
@@ -82,21 +84,24 @@ public class SaveFrame {
             @Override
             public void mouseReleased(MouseEvent e){
                 accept.setBackground(ConstantsGUI.LABEL_COLOR);
-                if (!nameText.getText().isBlank()){
-                    if (nameAlreadyExists(nameText.getText()+".xml")){
-                        new OverwriteFrame(controller, mainFrame, frame, nameText.getText());
-                    }
-                    else {
-                        if(controller.saveGame(nameText.getText())){
-                            mainFrame.setEnabled(true);
-                            mainFrame.toFront();
-                            frame.setVisible(false);
-                            frame.dispose();
-                        }
-                    }
+                if (nameText.getText().isBlank()){
+                    new BlankFrame(frame);
+                    return;
+                }
+                if (nameAlreadyExists(nameText.getText()+".xml")){
+                    new AlertFrame(controller, backFrame, frame, nameText.getText());
                 }
                 else {
-                    new BlankFrame(frame);
+                    if(controller.saveGame(nameText.getText())){
+                        backFrame.setEnabled(true);
+                        backFrame.toFront();
+                        frame.setVisible(false);
+                        frame.dispose();
+                        if (mainFrame != null){
+                            mainFrame.setVisible(false);
+                            mainFrame.dispose();
+                        }
+                    }
                 }
             } 
             @Override
@@ -117,8 +122,8 @@ public class SaveFrame {
             @Override 
             public void mouseReleased(MouseEvent e){
                 cancel.setBackground(ConstantsGUI.LABEL_COLOR);
-                mainFrame.setEnabled(true);
-                mainFrame.toFront();
+                backFrame.setEnabled(true);
+                backFrame.toFront();
                 frame.setVisible(false);
                 frame.dispose();
             } 
@@ -139,8 +144,8 @@ public class SaveFrame {
         frame.addWindowListener(new WindowAdapter(){
             @Override
             public void windowClosing(WindowEvent e){
-                mainFrame.setEnabled(true);
-                mainFrame.toFront();
+                backFrame.setEnabled(true);
+                backFrame.toFront();
             }
         });
     }
@@ -155,6 +160,10 @@ public class SaveFrame {
             }
         }
         return exists;
+    }
+
+    public void setMainFrame(JFrame mainFrame){
+        this.mainFrame = mainFrame;
     }
 }
 

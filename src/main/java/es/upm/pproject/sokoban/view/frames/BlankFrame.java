@@ -7,14 +7,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import es.upm.pproject.sokoban.view.ConstantsGUI;
+import es.upm.pproject.sokoban.view.utils.ConstantsGUI;
 import es.upm.pproject.sokoban.view.utils.UtilsGUI;
 
 /**
 * Class that represents an alert frame when the user attempts to save a level with an empty name.
 * @author Idir Carlos Aliane Crespo
-* @version 1.0
-* @since 6/06/2022
+* @version 1.1
+* @since 11/06/2022
 */
 public class BlankFrame {
 
@@ -59,6 +59,13 @@ public class BlankFrame {
     }
 
     public void setupListeners(){
+        informationFrame.addWindowListener(new WindowAdapter(){
+            @Override
+            public void windowClosing(WindowEvent e){
+                saveFrame.setEnabled(true);
+                saveFrame.toFront();
+            }
+        });
         acceptLabel.addMouseListener(new MouseAdapter(){  
             @Override
             public void mouseReleased(MouseEvent e){

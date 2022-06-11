@@ -189,21 +189,22 @@ public class Level implements Resetable{
     @Override
     public String toString() {
         StringBuilder res = new StringBuilder();
-        Integer[] playnbox = new Integer[board.length*board[0].length];
+        char[] playnbox = new char[board.length*board[0].length];
         for(int b=0; b<boxList.size();b++){
             Box box = boxList.get(b);
-            playnbox[box.currentPos().getX()*board[0].length+box.currentPos().getY()] = 1;
+            char boxChar = board[box.currentPos().getX()][box.currentPos().getY()] == Tile.GOAL ? 'O' : '#';
+            playnbox[box.currentPos().getX()*board[0].length+box.currentPos().getY()] = boxChar;
         }
-        playnbox[player.currentPos().getX()*board[0].length+player.currentPos().getY()] = 0;
+        playnbox[player.currentPos().getX()*board[0].length+player.currentPos().getY()] = 'W';
         for(int i=0; i<playnbox.length; i++){
             if(i!=0 && (i%board[0].length)==0){
                 res.append("\n");
             }
-            if(playnbox[i]!=null){
-                res.append(playnbox[i]==1 ? "#":"W");
+            if(playnbox[i]==0){
+                res.append(getStringRepresentation(board[i/board[0].length][i%board[0].length]));
                 continue;
             }
-            res.append(getStringRepresentation(board[i/board[0].length][i%board[0].length]));
+            res.append(playnbox[i]);
         }
         return res.toString();
     }

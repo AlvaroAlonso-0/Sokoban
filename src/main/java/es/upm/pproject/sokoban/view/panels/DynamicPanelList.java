@@ -13,7 +13,7 @@ import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 
 import es.upm.pproject.sokoban.controller.Controller;
-import es.upm.pproject.sokoban.view.ConstantsGUI;
+import es.upm.pproject.sokoban.view.utils.ConstantsGUI;
 
 /**
 * Class that represents a dynamic panel of every saved game for loading.

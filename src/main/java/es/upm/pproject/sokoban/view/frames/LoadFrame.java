@@ -13,8 +13,8 @@ import es.upm.pproject.sokoban.view.utils.UtilsGUI;
 /**
 * Class that represents a frame with a dynamic panel inside of every saved game.
 * @author Idir Carlos Aliane Crespo
-* @version 1.0
-* @since 6/06/2022
+* @version 1.1
+* @since 11/06/2022
 */
 public class LoadFrame {
     
@@ -31,5 +31,6 @@ public class LoadFrame {
         frame.setLocation(dim.width/2-frame.getSize().width/2, dim.height/2-frame.getSize().height/2 - 35);
         games = new DynamicPanelList(controller, mainFrame, frame);
         frame.add(games);
+        mainFrame.setEnabled(false);
     }
 }
