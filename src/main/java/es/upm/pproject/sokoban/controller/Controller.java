@@ -22,8 +22,8 @@ import es.upm.pproject.sokoban.view.GameStatusGUI;
 * Class for the Controller of the application.
 * @author Rafael Alonso Sirera
 * @author Raul Casamayor Navas
-* @version 1.2
-* @since 11/06/2022
+* @version 1.3
+* @since 12/06/2022
 */
 public class Controller{
 
@@ -109,6 +109,22 @@ public class Controller{
         logger.info(loadGameMarker, logMsg);
         repaint();
         return true;
+    }
+
+    /**
+     * Method used to retrieve the score of the current game.
+     * @return Game score
+     */
+    public int getGameScore(){
+        return game.getTotalScore();
+    }
+
+    /**
+     * Method used to retrieve the level score of the current game.
+     * @return Level score
+     */
+    public int getLevelScore(){
+        return game.getLevelScore();
     }
 
     private void undo(){

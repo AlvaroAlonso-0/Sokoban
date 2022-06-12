@@ -1,23 +1,18 @@
 package es.upm.pproject.sokoban.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import es.upm.pproject.sokoban.exceptions.WrongLevelFormatException;
 import es.upm.pproject.sokoban.models.Game;
 import es.upm.pproject.sokoban.models.level.Level;
-import es.upm.pproject.sokoban.models.props.Box;
-import es.upm.pproject.sokoban.models.utils.Coordinates;
 
 /**
 * Class that represents a Sokoban game used by the controller of the app.
 * @author Raul Casamayor Navas
 * @author Alvaro Alonso Miguel
-* @version 1.3.2
-* @since 11/06/2022
+* @version 1.4
+* @since 12/06/2022
 */
 @XmlRootElement(name="game")
 public class GameStatusGUI extends Game{
@@ -43,20 +38,12 @@ public class GameStatusGUI extends Game{
         return this.score + lvl.getScore();
     }
 
-    public List<Coordinates> getBoxesCoords(){
-        List<Coordinates> boxesCoords = new ArrayList<>();
-        for (Box box : lvl.getBoxList()) {
-            boxesCoords.add(box.currentPos());
-        }
-        return boxesCoords;
-    }
-
-    public Coordinates getPlayerCoords(){
-        return lvl.getPlayer().currentPos();
-    }
-
-    public boolean isFloor(Coordinates coords){
-        return lvl.getBoard()[coords.getX()][coords.getY()] == null;
+    /**
+     * Method needed by the gui to retrieve the level score.
+     * @return The level score
+     */
+    public int getLevelScore(){
+        return lvl.getScore();
     }
 
     /* Getters and setters needed for xml binding*/

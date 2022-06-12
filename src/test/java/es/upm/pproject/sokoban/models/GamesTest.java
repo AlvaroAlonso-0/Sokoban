@@ -176,5 +176,37 @@ class GamesTest {
             .toString();
             assertEquals(levelBoard, g.getBoardToString());
         }
+
+        @Test
+        @DisplayName("Testing game score getter")
+        void gameScoreTest() throws WrongLevelFormatException{
+            g.movePlayer('d');
+            g.movePlayer('d');
+            assertEquals(2, g.getTotalScore());
+            g.undo();
+            assertEquals(1, g.getTotalScore());
+            g.redo();
+            assertEquals(2, g.getTotalScore());
+            g.reset();
+            assertEquals(0, g.getTotalScore());
+        }
+
+        @Test
+        @DisplayName("Testing level score getter")
+        void levelScoreTest() throws WrongLevelFormatException{
+            char[] moves = {'u', 'r', 'r', 'r', 'r', 'd', 'd',
+            'l', 'u', 'r', 'u', 'l', 'l', 'l', 'd',
+            'l', 'u', 'l', 'u', 'u', 'r', 'd', 'd',
+            'd', 'r', 'd', 'd', 'l', 'l', 'u', 'r',
+            'd', 'r', 'u'};
+            for (char dir : moves) {
+                g.movePlayer(dir);
+            }
+            assertEquals(moves.length, g.getTotalScore());
+            assertEquals(0, g.getLevelScore());
+            g.movePlayer('l');
+            assertEquals(moves.length + 1, g.getTotalScore());
+            assertEquals(1, g.getLevelScore());
+        }
     }
 }
