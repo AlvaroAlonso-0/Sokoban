@@ -33,7 +33,6 @@ public class GameStatusGUI extends Game{
      * Method needed by the gui to retrieve the total game score.
      * @return The game score
      */
-    @Override
     public int getTotalScore(){
         return this.score + lvl.getScore();
     }
@@ -44,6 +43,14 @@ public class GameStatusGUI extends Game{
      */
     public int getLevelScore(){
         return lvl.getScore();
+    }
+
+    /**
+     * Method needed by the gui to retrieve the level name.
+     * @return The level score
+     */
+    public String getLevelName(){
+        return lvl.getName();
     }
 
     /* Getters and setters needed for xml binding*/

@@ -16,8 +16,8 @@ import es.upm.pproject.sokoban.models.level.Level;
 * @author Raul Casamayor Navas
 * @author Rafael Alonso Sirera
 * @author Alvaro Alonso Miguel
-* @version 1.6
-* @since 11/06/2022
+* @version 1.7
+* @since 14/06/2022
 */
 public class Game implements Resetable{
 
@@ -76,6 +76,28 @@ public class Game implements Resetable{
         return gameFinished;
     }
 
+    @Override
+    public String toString() {
+        return String.format("Level %d%n%s", levelNumber, lvl);
+    }
+
+    @Override
+    public void reset() {
+        lvl.reset();
+    }
+
+    /**
+     * Starts a new game from the beginning level.
+     * @throws WrongLevelFormatException When the first level file doesnt follow the format required
+     */
+    public void newGame() throws WrongLevelFormatException{
+        levelNumber = 1;
+        gameFinished = false;
+        score = 0;
+        logger.info(gameMarker, "New game started");
+        levelLoad();
+    }
+
     /**
      * Private method used to load the level of the game.
      * @throws WrongLevelFormatException When the level file doesnt follow the format required
@@ -87,26 +109,5 @@ public class Game implements Resetable{
             logger.info(gameMarker,"Game completed");
             gameFinished = true;   
         }
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Level %d%n%s", levelNumber, lvl);
-    }
-
-    @Override
-    public void reset() {
-        lvl.reset();
-    }
-
-    public void newGame() throws WrongLevelFormatException{
-        levelNumber = 1;
-        gameFinished = false;
-        logger.info(gameMarker, "New game started");
-        levelLoad();
-    }
-
-    public int getTotalScore(){
-        return this.score + lvl.getScore();
     }
 }
