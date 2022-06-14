@@ -1,13 +1,6 @@
 package es.upm.pproject.sokoban.controller;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,38 +8,47 @@ import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
 import es.upm.pproject.sokoban.exceptions.WrongLevelFormatException;
+import es.upm.pproject.sokoban.models.sgfactory.SaveGameFactory;
 import es.upm.pproject.sokoban.view.GUI;
 import es.upm.pproject.sokoban.view.GameStatusGUI;
+
 
 /**
 * Class for the Controller of the application.
 * @author Rafael Alonso Sirera
 * @author Raul Casamayor Navas
-* @version 1.3
-* @since 12/06/2022
+* @version 1.4
+* @since 14/06/2022
 */
 public class Controller{
 
+    private static final String SAVED_GAMES_FORMAT = "games/%s.xml";
     private static final Logger logger = LoggerFactory.getLogger(Controller.class);
     private static final Marker loadMarker = MarkerFactory.getMarker("FATAL");
-    private static final Marker loadGameMarker = MarkerFactory.getMarker("LOAD-GAME");
-    private static final Marker saveGameMarker = MarkerFactory.getMarker("SAVE-GAME");
-
-    private static final String SAVED_GAMES_FORMAT = "games/%s.xml";
+    private static final Marker sgMarker = MarkerFactory.getMarker("SGFACTORY");
 
     private GUI gui;
     private GameStatusGUI game;
+    private SaveGameFactory sgFactory;
+
     public Controller(){
         gui = new GUI(this);
         try {
             game = new GameStatusGUI();
             gui.init(game.getBoardToString());
+            sgFactory = new SaveGameFactory();
         } catch (WrongLevelFormatException e) {
             logger.error(loadMarker, "First level couldnt be loaded", e);
             //TODO implement GUI error message method
+        } catch(JAXBException e){
+            logger.error(sgMarker, "An error ocurred while creating the SaveGameFactory", e);
         }
     }
 
+    /**
+     * Method used to interact with the model from the GUI
+     * @param key Key pressed
+     */
     public void keyTyped(char key){
         char dir;
         switch(key){
@@ -75,18 +77,7 @@ public class Controller{
      * @return If the game could be saved
      */
     public boolean saveGame(String name){
-        try{
-            JAXBContext context = JAXBContext.newInstance(GameStatusGUI.class);
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            marshaller.marshal(game, new FileWriter(String.format(SAVED_GAMES_FORMAT, name)));
-        }catch(JAXBException | IOException e){
-            logger.warn(saveGameMarker, "Current game couldnt be saved", e);
-            return false;
-        }
-        String logMsg = String.format( "Current game has been saved as %s.xml", name);
-        logger.info(saveGameMarker, logMsg);
-        return true;
+        return sgFactory.saveGame(game, String.format(SAVED_GAMES_FORMAT, name));
     }
 
     /**
@@ -95,19 +86,10 @@ public class Controller{
      * @return If the game could be loaded
      */
     public boolean loadGame(String name){
-        String logMsg;
-        try{
-            JAXBContext context = JAXBContext.newInstance(GameStatusGUI.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            game = (GameStatusGUI) unmarshaller.unmarshal(new File(String.format(SAVED_GAMES_FORMAT, name)));
-        }catch(JAXBException e){
-            logMsg = String.format( "Was imposible to load %s game ", name);
-            logger.warn(loadGameMarker, logMsg, e);
-            return false;
-        }
-        logMsg = String.format( "%s game has been loaded", name);
-        logger.info(loadGameMarker, logMsg);
-        show();
+        GameStatusGUI loadedGame;
+        if((loadedGame = sgFactory.loadGame(String.format(SAVED_GAMES_FORMAT, name))) == null) return false;
+        game = loadedGame;
+        repaint();
         return true;
     }
 
@@ -145,6 +127,14 @@ public class Controller{
         return game.getLevelName();
     }
 
+    /**
+     * Method used to reset the current level of the game.
+     */
+    public void reset(){
+        game.reset();
+        show();
+    }
+
     private void undo(){
         if(game.undo()){
             repaint();
@@ -155,11 +145,6 @@ public class Controller{
         if(game.redo()){
             repaint();
         }
-    }
-
-    public void reset(){
-        game.reset();
-        show();
     }
 
     private void repaint(){
