@@ -34,12 +34,13 @@ class CoordinatesTest {
     @Test
     @DisplayName("Overrride equals test")
     void equalsTest(){
-        assertNotEquals(null, coords);
-        assertNotEquals(new int[2], coords);
+        int[] coordenadasInt = new int[2];
+        Coordinates nil = null;
+        assertNotEquals(coords,nil);
+        assertNotEquals(coords, coordenadasInt);
         assertEquals(coords, coords);
         assertEquals(coords, new Coordinates(5, 9));
         Coordinates coords2 = new Coordinates(4, 8);
         assertNotEquals(coords, coords2);
-        assertEquals(coords2, coords2);
     }
 }

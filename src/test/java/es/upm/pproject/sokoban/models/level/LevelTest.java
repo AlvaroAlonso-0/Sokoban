@@ -25,9 +25,11 @@ import es.upm.pproject.sokoban.models.props.Box;
 import es.upm.pproject.sokoban.models.props.Player;
 import es.upm.pproject.sokoban.models.utils.Coordinates;
 
-@DisplayName("Class to test hte level")
+@DisplayName("Class to test the level")
 class LevelTest {
     private Level level;
+    private final String levelTwoBoxes = "src/main/resources/levels4Testing/levelTwoBoxes.txt";
+    private final String levelTwoBoxesMove = "src/main/resources/levels4Testing/levelTwoBoxesMove.txt";
     
     @Nested
     @DisplayName("Empty constructor test")
@@ -40,11 +42,16 @@ class LevelTest {
         }
         
         @Test
-        @DisplayName("Getters and setters")
-        void gsTest(){
+        @DisplayName("Player getter and setter")
+        void playerGS(){
             Player pl = new Player(1, 2);
             level.setPlayer(pl);
             assertEquals(pl, level.getPlayer());
+        }
+        
+        @Test
+        @DisplayName("Tiles getter and setter")
+        void tilesGS(){
             Tile[][] board = new Tile[2][2];
             board[0][0] = Tile.WALL;
             board[0][1] = Tile.GOAL;
@@ -52,17 +59,51 @@ class LevelTest {
             board[1][1] = Tile.WALL;
             level.setBoard(board);
             assertEquals(board, level.getBoard());
+        }
+        
+        @Test
+        @DisplayName("Boxes getter and setter")
+        void boxesGS(){
             List<Box> boxes = new ArrayList<>();
             boxes.add(new Box());
             level.setBoxList(boxes);
             assertEquals(boxes, level.getBoxList());
+        }
+        
+        @Test
+        @DisplayName("Level name getter and setter")
+        void levelNameGS(){
             level.setName("Test");
             assertEquals("Test", level.getName());
+        }
+        
+        @Test
+        @DisplayName("Moves getter and setter")
+        void movesGS(){
             Deque<Character> moves = new ArrayDeque<>();
             moves.add('C');
             level.setMovements(moves);
             assertEquals(moves, level.getMovements());
         }
+
+        @Test
+        @DisplayName("Undone moves getter and setter")
+        void undoneMovesGS(){
+            Deque<Character> undoneMovements = new ArrayDeque<>();
+            undoneMovements.add('C');
+            level.setUndoneMovements(undoneMovements);
+            assertEquals(undoneMovements, level.getUndoneMovements());
+        }
+
+        @Test
+        @DisplayName("Score getter and setter")
+        void scoreGS(){
+            int score = 5;
+            level.setScore(score);
+            assertEquals(score, level.getScore());
+        }
+        
+        
     }
     
     @BeforeEach
@@ -244,10 +285,8 @@ class LevelTest {
         @Test
         @DisplayName("Testing unhandled directions")
         void someUnhandledDirections(){
-            assertFalse(lvl.movePlayer('o'));
-            assertEquals(defaultLevel, lvl.toString());
+            assertFalse(lvl.movePlayer('l'));
             assertFalse(lvl.movePlayer('q'));
-            assertEquals(defaultLevel, lvl.toString());
             assertFalse(lvl.movePlayer('O'));
             assertEquals(defaultLevel, lvl.toString());
         }
@@ -255,30 +294,49 @@ class LevelTest {
         @Test
         @DisplayName("Testing simple moves without touching boxes")
         void movesWithoutBoxes(){
-            assertFalse(lvl.movePlayer('l'));
-            assertEquals(defaultLevel, lvl.toString());
-            assertTrue(lvl.movePlayer('D'));
+            boolean hasMoved = lvl.movePlayer('D');
             assertEquals(oneStep, lvl.toString());
-            assertTrue(lvl.movePlayer('R'));
+            hasMoved = hasMoved && lvl.movePlayer('R');
             assertEquals(twoSteps, lvl.toString());
-            assertFalse(lvl.movePlayer('r'));
-            assertEquals(twoSteps, lvl.toString());
-            assertTrue(lvl.movePlayer('u'));
+            hasMoved = hasMoved && lvl.movePlayer('u');
             assertEquals(threeSteps, lvl.toString());
+            assertTrue(hasMoved && lvl.movePlayer('l'));
+            assertEquals(defaultLevel, lvl.toString());
+        }
+        
+        @Test
+        @DisplayName("Testing simple moving against wall")
+        void movesAgainstWall(){
+            assertFalse(lvl.movePlayer('l'));
+            lvl.movePlayer('D');
+            lvl.movePlayer('R');
+            assertFalse(lvl.movePlayer('r'));
+            lvl.movePlayer('u');
+            lvl.movePlayer('l');
+            assertEquals(defaultLevel, lvl.toString());
+            
         }
         
         @Test
         @DisplayName("Testing moves with boxes")
         void movingBoxes(){
-            assertTrue(lvl.movePlayer('u'));
-            assertTrue(lvl.movePlayer('r'));
-            assertTrue(lvl.movePlayer('r'));
-            assertTrue(lvl.movePlayer('r'));
+            lvl.movePlayer('u');
+            lvl.movePlayer('r');
+            lvl.movePlayer('r');
+            lvl.movePlayer('r');
             assertEquals(prevBoxMove, lvl.toString());
             assertTrue(lvl.movePlayer('d'),lvl.toString());
             assertEquals(boxMove, lvl.toString());
             assertFalse(lvl.movePlayer('D'));
             assertEquals(boxMove, lvl.toString());
+        }
+        
+        @Test
+        @DisplayName("Testing moving with two boxes")
+        void movingTwoBoxes() throws FileNotFoundException, WrongLevelFormatException{
+            lvl = new Level(levelTwoBoxesMove);
+            assertTrue(lvl.movePlayer('r'));
+            assertFalse(lvl.movePlayer('r'));
         }
     }
     
@@ -410,10 +468,10 @@ class LevelTest {
         @Test
         @DisplayName("Undo with multiple steps")
         void multipleMoves(){
-            assertTrue(lvl.movePlayer('d'));
-            assertTrue(lvl.movePlayer('r'));
-            assertTrue(lvl.movePlayer('u'));
-            assertTrue(lvl.movePlayer('l'));
+            lvl.movePlayer('d');
+            lvl.movePlayer('r');
+            lvl.movePlayer('u');
+            lvl.movePlayer('l');
             assertEquals(defaultLevel, lvl.toString());
             assertTrue(lvl.undoMove());
             assertEquals(threeSteps, lvl.toString());
@@ -446,17 +504,33 @@ class LevelTest {
         }
         
         @Test
-        @DisplayName("Undo with multiple boxes level")
-        void multipleBoxes() throws IOException, WrongLevelFormatException{
-            lvl = new Level("src/main/resources/levels4Testing/levelTwoBoxes.txt");
+        @DisplayName("Undo move to put box on goal")
+        void boxToGoalUndo() throws IOException, WrongLevelFormatException{
+            lvl = new Level(levelTwoBoxes);
             assertTrue(lvl.movePlayer('r'));
             assertTrue(lvl.movePlayer('d'));
             assertTrue(lvl.movePlayer('r'));
             assertTrue(lvl.movePlayer('u'));
             assertTrue(lvl.undoMove());
         }
+        
+        @Test
+        @DisplayName("Undo with multiple boxes moved level")
+        void multipleBoxesMoved() throws IOException, WrongLevelFormatException{
+            lvl = new Level(levelTwoBoxes);
+            String original = lvl.toString();
+            lvl.movePlayer('r');
+            lvl.movePlayer('l');
+            lvl.movePlayer('l');
+            lvl.movePlayer('l');
+            for(int i = 0; i < 4; i++){
+                assertTrue(lvl.undoMove());
+            }
+            assertFalse(lvl.undoMove());
+            assertEquals(original, lvl.toString());
+        }
     }
-
+    
     @Nested
     @TestInstance(Lifecycle.PER_CLASS)
     @DisplayName("Redo method test")
@@ -572,16 +646,22 @@ class LevelTest {
         @Test
         @DisplayName("Redo with multiple boxes level")
         void multipleBoxes() throws IOException, WrongLevelFormatException{
-            lvl = new Level("src/main/resources/levels4Testing/levelTwoBoxes.txt");
-            assertTrue(lvl.movePlayer('r'));
-            assertTrue(lvl.movePlayer('d'));
-            assertTrue(lvl.movePlayer('r'));
-            assertTrue(lvl.movePlayer('u'));
-            assertTrue(lvl.undoMove());
-            assertTrue(lvl.redoMove());
+            lvl = new Level(levelTwoBoxes);
+            lvl.movePlayer('r');
+            lvl.movePlayer('l');
+            lvl.movePlayer('l');
+            lvl.movePlayer('l');
+            String moved = lvl.toString();
+            for(int i = 0; i < 4;i++){
+                lvl.undoMove();
+            }
+            for(int i = 0; i < 4;i++){
+                lvl.redoMove();
+            }
+            assertEquals(moved, lvl.toString());
         }
     }
-
+    
     @Nested
     @DisplayName("Score test")
     class ScoreTest{
@@ -593,7 +673,7 @@ class LevelTest {
             level.movePlayer('r');
             assertEquals(3, level.getScore());
         }
-
+        
         @Test
         @DisplayName("Bad move score test")
         void noScoreTest(){
@@ -602,7 +682,7 @@ class LevelTest {
             level.movePlayer('w');
             assertEquals(1, level.getScore());
         }
-
+        
         @Test
         @DisplayName("Test undo and score")
         void undoScore(){
@@ -612,7 +692,7 @@ class LevelTest {
             level.undoMove();
             assertEquals(2, level.getScore());
         }
-
+        
         @Test
         @DisplayName("Test score with all moves undone plus one")
         void allMovesUndo(){
@@ -621,5 +701,7 @@ class LevelTest {
             level.undoMove();
             assertEquals(0, level.getScore());
         }
+        
+        
     }
 }
