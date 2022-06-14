@@ -18,8 +18,8 @@ import es.upm.pproject.sokoban.view.utils.UtilsGUI;
 /**
 * Class that represents a frame for saving a game.
 * @author Idir Carlos Aliane Crespo
-* @version 1.1
-* @since 11/06/2022
+* @version 1.2
+* @since 14/06/2022
 */
 public class SaveFrame {
 
@@ -38,10 +38,15 @@ public class SaveFrame {
     private JLabel cancel;
     private JLabel accept;
 
-    public SaveFrame(JFrame backFrame, Controller controller){
+    private boolean wantExit;
+    private int mode;
+
+    public SaveFrame(JFrame backFrame, Controller controller, boolean wantExit, int mode){
         frame = UtilsGUI.createAndSetupFrame("Save game", MAX_WIDTH, MAX_HEIGHT);
         this.controller = controller;
         this.backFrame  = backFrame;
+        this.wantExit = wantExit;
+        this.mode = mode;
         backFrame.setEnabled(false);
         background = new JPanel();
         background.setBounds(0,0, MAX_WIDTH, MAX_HEIGHT);
@@ -88,21 +93,22 @@ public class SaveFrame {
                     new BlankFrame(frame);
                     return;
                 }
-                if (nameAlreadyExists(nameText.getText()+".xml")){
-                    new AlertFrame(controller, backFrame, frame, nameText.getText());
+                if (nameAlreadyExists(nameText.getText() + ".xml")){
+                    new AlertFrame(controller, backFrame, frame, nameText.getText(), wantExit, mode);
+                    return;
                 }
-                else {
-                    if(controller.saveGame(nameText.getText())){
+                if(controller.saveGame(nameText.getText())){
                         backFrame.setEnabled(true);
                         backFrame.toFront();
+                        backFrame.setTitle(String.format("%s - %s",ConstantsGUI.SOKOBAN_TITLE, nameText.getText()));
                         frame.setVisible(false);
                         frame.dispose();
                         if (mainFrame != null){
                             mainFrame.setVisible(false);
                             mainFrame.dispose();
                         }
-                    }
                 }
+                decideAction(mode);
             } 
             @Override
             public void mousePressed(MouseEvent e){
@@ -126,6 +132,7 @@ public class SaveFrame {
                 backFrame.toFront();
                 frame.setVisible(false);
                 frame.dispose();
+                decideAction(mode);
             } 
             @Override
             public void mousePressed(MouseEvent e){
@@ -146,6 +153,7 @@ public class SaveFrame {
             public void windowClosing(WindowEvent e){
                 backFrame.setEnabled(true);
                 backFrame.toFront();
+                decideAction(mode);
             }
         });
     }
@@ -164,6 +172,19 @@ public class SaveFrame {
 
     public void setMainFrame(JFrame mainFrame){
         this.mainFrame = mainFrame;
+    }
+
+    private void decideAction(int mode){
+        switch(mode){
+            case 1:
+                new LoadFrame(backFrame, controller);
+                break;
+            case 2:
+                controller.createNewGame();
+                backFrame.setTitle(ConstantsGUI.DEFAULT_FRAME_TITLE);
+                break;
+            default:
+        }
     }
 }
 

@@ -40,7 +40,7 @@ public class Controller{
         gui = new GUI(this);
         try {
             game = new GameStatusGUI();
-            gui.show(game.getBoardToString());
+            gui.init(game.getBoardToString());
         } catch (WrongLevelFormatException e) {
             logger.error(loadMarker, "First level couldnt be loaded", e);
             //TODO implement GUI error message method
@@ -65,7 +65,7 @@ public class Controller{
         }
         catch(WrongLevelFormatException e){
             logger.error(loadMarker, "Next level couldnt be loaded", e);
-            //TODO implement GUI error message method
+            gui.dispose();
         }
     }
 
@@ -107,8 +107,18 @@ public class Controller{
         }
         logMsg = String.format( "%s game has been loaded", name);
         logger.info(loadGameMarker, logMsg);
-        repaint();
+        show();
         return true;
+    }
+
+    public void createNewGame(){
+        try {
+            game.newGame();
+            show();
+        } catch (WrongLevelFormatException e) {
+            logger.error(loadMarker, "First level couldnt be loaded", e);
+            gui.dispose();
+        }
     }
 
     /**
@@ -127,6 +137,14 @@ public class Controller{
         return game.getLevelScore();
     }
 
+     /**
+     * Method used to retrieve the level name of the current game.
+     * @return Level name
+     */
+    public String getLevelName(){
+        return game.getLevelName();
+    }
+
     private void undo(){
         if(game.undo()){
             repaint();
@@ -141,10 +159,14 @@ public class Controller{
 
     public void reset(){
         game.reset();
-        gui.repaint(game.getBoardToString());
+        show();
     }
 
     private void repaint(){
         gui.repaint(game.getBoardToString());
+    }
+
+    private void show(){
+        gui.show(game.getBoardToString());
     }
 }

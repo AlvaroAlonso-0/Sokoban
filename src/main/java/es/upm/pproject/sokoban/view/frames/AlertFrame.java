@@ -17,8 +17,8 @@ import es.upm.pproject.sokoban.view.utils.UtilsGUI;
 /**
 * Class that represents an alert frame when the user attempts to save a level with an existing name.
 * @author Idir Carlos Aliane Crespo
-* @version 1.0
-* @since 11/06/2022
+* @version 1.1
+* @since 14/06/2022
 */
 public class AlertFrame {
 
@@ -36,11 +36,17 @@ public class AlertFrame {
     private JLabel cancel;
     private JLabel accept;
 
-    public AlertFrame(Controller controller, JFrame mainFrame, JFrame saveFrame, String levelName){
+    private boolean wantExit;
+    private int mode;
+
+    public AlertFrame(Controller controller, JFrame mainFrame, JFrame saveFrame, 
+                    String levelName, boolean wantExit, int mode){
         this.controller = controller;
         this.mainFrame = mainFrame;
         this.saveFrame = saveFrame;
         this.levelName = levelName;
+        this.wantExit = wantExit;
+        this.mode = mode;
         frame = UtilsGUI.createAndSetupFrame(saveFrame != null ? "Name in use" :
                                                                  "Are you sure?", MAX_WIDTH, MAX_HEIGHT);
         background = new JPanel();
@@ -75,6 +81,7 @@ public class AlertFrame {
         
         frame.getContentPane().add(background);
         setupListeners();
+        blockBackFrame();
 
     }
 
@@ -95,10 +102,12 @@ public class AlertFrame {
                 cancel.setBackground(ConstantsGUI.LABEL_COLOR);
                 if(saveFrame != null){
                     saveFrame.setVisible(true);
+                    saveFrame.setEnabled(true);
                     saveFrame.toFront();
                 }
                 else{
                     mainFrame.setVisible(false);
+                    mainFrame.setEnabled(true);
                     mainFrame.dispose();
                 }
                 frame.setVisible(false);
@@ -117,8 +126,14 @@ public class AlertFrame {
         frame.addWindowListener(new WindowAdapter(){
             @Override
             public void windowClosing(WindowEvent e){
-                saveFrame.setEnabled(true);
-                saveFrame.toFront();
+                if (saveFrame != null){
+                    saveFrame.setEnabled(true);
+                    saveFrame.toFront();
+                }
+                else{
+                    mainFrame.setEnabled(true);
+                    mainFrame.toFront();
+                }
             }
         });
     }
@@ -133,12 +148,27 @@ public class AlertFrame {
             public void mouseReleased(MouseEvent e){
                 accept.setBackground(ConstantsGUI.LABEL_COLOR);
                 if(controller.saveGame(levelName)){
-                    mainFrame.setEnabled(true);
-                    mainFrame.toFront();
-                    saveFrame.setVisible(false);
-                    saveFrame.dispose();
-                    frame.setVisible(false);
-                    frame.dispose();
+                    if(wantExit){
+                        frame.setVisible(false);
+                        frame.dispose();
+                        saveFrame.setVisible(false);
+                        saveFrame.dispose();
+                        mainFrame.setVisible(false);
+                        mainFrame.dispose();
+                    }
+                    else{
+                        frame.setVisible(false);
+                        frame.dispose();
+                        saveFrame.setVisible(false);
+                        saveFrame.dispose();
+                        mainFrame.setEnabled(true);
+                        mainFrame.toFront();
+                        mainFrame.setTitle(mode == 2 ? ConstantsGUI.DEFAULT_FRAME_TITLE : 
+                                        String.format("%s - %s",ConstantsGUI.SOKOBAN_TITLE, levelName));
+                        if (mode == 2){
+                            controller.createNewGame();
+                        }
+                    }
                 }
             } 
             @Override
@@ -162,7 +192,7 @@ public class AlertFrame {
             @Override
             public void mouseReleased(MouseEvent e){
                 accept.setBackground(ConstantsGUI.LABEL_COLOR);
-                SaveFrame sf = new SaveFrame(frame, controller);
+                SaveFrame sf = new SaveFrame(mainFrame, controller, wantExit, 0);
                 frame.setVisible(false);
                 frame.dispose();
                 sf.setMainFrame(mainFrame);
@@ -177,5 +207,14 @@ public class AlertFrame {
                 accept.setBackground(ConstantsGUI.LABEL_COLOR);
             }
         });
+    }
+
+    private void blockBackFrame(){
+        if (saveFrame != null){
+            saveFrame.setEnabled(false);
+        }
+        else{
+            mainFrame.setEnabled(false);
+        }
     }
 }

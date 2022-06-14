@@ -18,8 +18,8 @@ import es.upm.pproject.sokoban.view.utils.ConstantsGUI;
 /**
 * Class that represents a dynamic panel of every saved game for loading.
 * @author Idir Carlos Aliane Crespo
-* @version 1.0
-* @since 6/06/2022
+* @version 1.1
+* @since 14/06/2022
 */
 public class DynamicPanelList extends JPanel{
 
@@ -71,6 +71,7 @@ public class DynamicPanelList extends JPanel{
                     loadFrame.setVisible(false);
                     loadFrame.dispose();
                     controller.loadGame(game.getText());
+                    mainFrame.setTitle("Sokoban - " + game.getText());
                 } 
                 @Override
                 public void mousePressed(MouseEvent e){
