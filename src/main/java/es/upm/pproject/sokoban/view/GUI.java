@@ -9,7 +9,6 @@ import java.time.LocalTime;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
@@ -113,8 +112,7 @@ public class GUI {
         
         levelDimension = new Dimension();
 
-        ImageIcon icon = new ImageIcon(ConstantsGUI.MAIN_ICON);
-        frame.setIconImage(icon.getImage());
+        UtilsGUI.addIcon(frame);
 
         isWarehouseManSprite = true;
 
@@ -139,7 +137,7 @@ public class GUI {
         levelDimension = controller.getLevelDimension();
         sprites = new ImagePanel [(int)levelDimension.getHeight()]
                                 [(int)levelDimension.getWidth()];
-        frame.setTitle(frame.getTitle().substring(0, frame.getTitle().length()-1));
+        frame.setTitle(frame.getTitle().substring(0, frame.getTitle().length()));
         repaintScreen(boardLvl);
         
     }
@@ -460,7 +458,7 @@ public class GUI {
         frame.addWindowListener(new WindowAdapter(){
             @Override
             public void windowClosing(WindowEvent e){
-                if (controller.hasBeenModified()){
+                if (controller.hasBeenModified() && !controller.isFinished()){
                     new AlertFrame(controller, frame, null, null, true, 0);
                 }
                 else{

@@ -55,6 +55,7 @@ public class AcceptFrame {
         background.add(informationLabel);
         background.add(acceptLabel);
         informationFrame.getContentPane().add(background);
+        UtilsGUI.addIcon(informationFrame);
         setupListeners();
     }
 

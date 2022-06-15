@@ -81,6 +81,7 @@ public class SaveFrame {
         background.add(cancel);
         background.add(accept);
         frame.getContentPane().add(background);
+        UtilsGUI.addIcon(frame);
         setupListeners();
     }
 

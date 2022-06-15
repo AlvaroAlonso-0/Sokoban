@@ -78,6 +78,8 @@ public class AlertFrame {
         background.add(infoLabel);
         background.add(cancel);
         background.add(accept);
+
+        UtilsGUI.addIcon(frame);
         
         frame.getContentPane().add(background);
         setupListeners();

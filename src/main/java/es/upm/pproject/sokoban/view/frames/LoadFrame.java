@@ -35,6 +35,7 @@ public class LoadFrame {
         games = new DynamicPanelList(controller, mainFrame, frame);
         frame.add(games);
         mainFrame.setEnabled(false);
+        UtilsGUI.addIcon(frame);
         addListener();
     }
 

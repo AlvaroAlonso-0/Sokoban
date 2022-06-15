@@ -58,6 +58,8 @@ public class HelpFrame {
 
         frame.getContentPane().add(background);
 
+        UtilsGUI.addIcon(frame);
+
         addListeners();
 
     }
