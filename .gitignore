@@ -198,10 +198,7 @@ buildNumber.properties
 # Ignore all local history of files
 .history
 
-# Ignore all xml testing files
-.src/main/resources/xml4testing/
-
-# Ignore all xml saved games
-.games/
+# Ignore all xml files used for testing and saved games
+*.xml
 
 # End of https://www.gitignore.io/api/java,maven,eclipse,intellij+all,visualstudiocode
