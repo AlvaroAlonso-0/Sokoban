@@ -48,7 +48,5 @@ public class LoadFrame {
                 frame.dispose();
             }
         });
-    }
-
-    
+    }    
 }

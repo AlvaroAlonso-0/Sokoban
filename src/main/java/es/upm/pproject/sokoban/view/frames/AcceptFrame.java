@@ -42,7 +42,7 @@ public class AcceptFrame {
         informationLabel.setFont(ConstantsGUI.DEAULT_FONT);
         acceptLabel.setFont(ConstantsGUI.DEAULT_FONT);
 
-        informationLabel.setBounds(0, 12, MAX_WIDTH, 25);
+        informationLabel.setBounds(0, 10, MAX_WIDTH, 30);
         informationLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         acceptLabel.setBounds(MAX_WIDTH/4, MAX_HEIGHT/2, MAX_WIDTH/2, 30);

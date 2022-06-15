@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.*;
+import java.time.LocalTime;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
@@ -19,12 +20,14 @@ import javax.swing.border.EmptyBorder;
 
 import es.upm.pproject.sokoban.controller.Controller;
 import es.upm.pproject.sokoban.view.frames.AlertFrame;
+import es.upm.pproject.sokoban.view.frames.HelpFrame;
 import es.upm.pproject.sokoban.view.frames.AcceptFrame;
 import es.upm.pproject.sokoban.view.frames.LoadFrame;
 import es.upm.pproject.sokoban.view.frames.SaveFrame;
 import es.upm.pproject.sokoban.view.panels.ImagePanel;
 import es.upm.pproject.sokoban.view.panels.Rectangle;
 import es.upm.pproject.sokoban.view.utils.ConstantsGUI;
+import es.upm.pproject.sokoban.view.utils.UtilsGUI;
 
 /**
 * Class for the GUI of the application.
@@ -37,8 +40,10 @@ public class GUI {
 
     private static final ImagePanel WAREHOUSEMAN_SPRITE = new ImagePanel(ConstantsGUI.WAREHOUSEMAN_SPRITE);
     private static final ImagePanel AMONGUS_SPRITE = new ImagePanel(ConstantsGUI.AMONGUS_SPRITE);
+    private static final ImagePanel WAREHOUSEMAN_GOAL_SPRITE = new ImagePanel(ConstantsGUI.WAREHOUSEMAN_GOAL_SPRITE);
+    private static final ImagePanel AMONGUS_GOAL_SPRITE = new ImagePanel(ConstantsGUI.AMOGUS_GOAL_SPRITE);
     private static final ImagePanel BACKGROUND_SPRITE = new ImagePanel(
-        ConstantsGUI.BACKGROUND_SPRITE, ConstantsGUI.MAIN_FRAME_MAX_WIDTH,ConstantsGUI.MAIN_FRAME_MAX_HEIGHT);
+        ConstantsGUI.BACKGROUND, ConstantsGUI.MAIN_FRAME_MAX_WIDTH,ConstantsGUI.MAIN_FRAME_MAX_HEIGHT);
     
 
     private JFrame frame;
@@ -52,7 +57,6 @@ public class GUI {
     private JLabel redoLabel;
     private JLabel exitItem;
     private JLabel resetItem;
-    private JLabel tutorialItem;
     private JLabel helpLabel;
 
     private JPanel info;
@@ -67,12 +71,15 @@ public class GUI {
 
     private Dimension levelDimension;
 
-    private ImagePanel currentWarehouseman;
+    private boolean isWarehouseManSprite;
+
+    private double offset;
     
     /**
     * Constructor of the class.
     */
     public GUI(Controller control){
+        offset = LocalTime.now().getSecond() / 60.0;
         controller = control;
         frame = new JFrame(ConstantsGUI.DEFAULT_FRAME_TITLE);
         frame.setSize(new Dimension(ConstantsGUI.MAIN_FRAME_MAX_WIDTH, ConstantsGUI.MAIN_FRAME_MAX_HEIGHT));
@@ -106,11 +113,10 @@ public class GUI {
         
         levelDimension = new Dimension();
 
-        ImageIcon icon = new ImageIcon(ConstantsGUI.WAREHOUSEMAN_NO_BACK_SPRITE);
+        ImageIcon icon = new ImageIcon(ConstantsGUI.MAIN_ICON);
         frame.setIconImage(icon.getImage());
 
-        currentWarehouseman = WAREHOUSEMAN_SPRITE;
-
+        isWarehouseManSprite = true;
 
         setupMenuBar();
         addListeners();
@@ -203,6 +209,13 @@ public class GUI {
         int heigth = (int)levelDimension.getHeight()*ConstantsGUI.SPRITE_SIZE;
         int initialX = (ConstantsGUI.MAIN_FRAME_MAX_WIDTH - width)/2;
         int initialY = (ConstantsGUI.MAIN_FRAME_MAX_HEIGHT - heigth)/2;
+
+        ImagePanel currentPlayer = WAREHOUSEMAN_SPRITE;
+        ImagePanel currentPlayerOnGoal = WAREHOUSEMAN_GOAL_SPRITE;
+        if (!isWarehouseManSprite){
+            currentPlayer = AMONGUS_SPRITE;
+            currentPlayerOnGoal = AMONGUS_GOAL_SPRITE;
+        }
         
         boolean isNewLine = false;
         grid.setBounds(ConstantsGUI.INFO_PANEL_WIDTH, ConstantsGUI.INFO_PANEL_HEIGHT, 
@@ -220,7 +233,7 @@ public class GUI {
                             sprites[x][y] = new ImagePanel(ConstantsGUI.WALL_SPRITE);
                             break;
                         case 'W':
-                            sprites[x][y] = currentWarehouseman;
+                            sprites[x][y] = currentPlayer;
                             break;
                         case '#':
                             sprites[x][y] = new ImagePanel(ConstantsGUI.BOX_SPRITE);
@@ -229,10 +242,10 @@ public class GUI {
                             sprites[x][y] = new ImagePanel(ConstantsGUI.FLOOR_SPRITE);
                             break;
                         case 'O':
-                            sprites[x][y] = new ImagePanel(ConstantsGUI.BOX_GOAL_PICKAXE_SPRITE);
+                            sprites[x][y] = new ImagePanel(UtilsGUI.getRandomSprite(x, y, offset));
                             break;
                         case 'X':
-                            sprites[x][y] = new ImagePanel(ConstantsGUI.WAREHOUSEMAN_GOAL_SPRITE); 
+                            sprites[x][y] = currentPlayerOnGoal;
                             break;
                         /**
                          * it is '\n' so we dont increse the counter 
@@ -322,7 +335,7 @@ public class GUI {
         loadItem.addMouseListener(new MouseAdapter(){  
             @Override
             public void mouseReleased(MouseEvent e){
-                if(controller.hasBeenModified()){
+                if(controller.hasBeenModified() && !controller.isFinished()){
                     launchSaveMenu(1);
                 }
                 else{
@@ -487,7 +500,35 @@ public class GUI {
                 exitItem.setBorder(ConstantsGUI.EMPTY_BORDER);
             }
         });
-        //TODO: Add help listener
+        helpLabel.addMouseListener(new MouseAdapter(){  
+            @Override
+            public void mouseReleased(MouseEvent e){
+                if (helpLabel.isEnabled()){
+                    helpLabel.setEnabled(false);
+                    new HelpFrame(helpLabel);
+                    helpLabel.setBackground(ConstantsGUI.LABEL_COLOR);
+                }
+            } 
+            @Override
+            public void mousePressed(MouseEvent e){
+                if (helpLabel.isEnabled()){
+                    helpLabel.setOpaque(true);
+                    helpLabel.setBackground(ConstantsGUI.PRESSED_COLOR);
+                }
+            }
+            @Override
+            public void mouseEntered(MouseEvent e){
+                if (helpLabel.isEnabled()){
+                    helpLabel.setOpaque(true);
+                    helpLabel.setBorder(ConstantsGUI.DEFAULT_BORDER);
+                }
+            }
+            @Override
+            public void mouseExited(MouseEvent e){
+                helpLabel.setOpaque(false);
+                helpLabel.setBorder(ConstantsGUI.EMPTY_BORDER);
+            }
+        });
     }
 
     private void giveStyleToComponents(){
@@ -497,11 +538,11 @@ public class GUI {
         loadItem.setFont(menuBarFont);
         saveItem.setFont(menuBarFont);
         exitItem.setFont(menuBarFont);
-        tutorialItem.setFont(menuBarFont);
         helpLabel.setFont(menuBarFont);
         undoLabel.setFont(menuBarFont);
         redoLabel.setFont(menuBarFont);
         resetItem.setFont(menuBarFont);
+        helpLabel.setFont(menuBarFont);
 
         menuBar.setBorder(ConstantsGUI.MENU_BAR_BORDER);
         newGameLabel.setBackground(ConstantsGUI.LABEL_COLOR);
@@ -518,6 +559,8 @@ public class GUI {
         resetItem.setBorder(ConstantsGUI.EMPTY_BORDER);
         exitItem.setBackground(ConstantsGUI.LABEL_COLOR);
         exitItem.setBorder(ConstantsGUI.EMPTY_BORDER);
+        helpLabel.setBackground(ConstantsGUI.LABEL_COLOR);
+        helpLabel.setBorder(ConstantsGUI.EMPTY_BORDER);
     }
 
     private void setupMenuBar(){
@@ -530,8 +573,7 @@ public class GUI {
         resetItem = new JLabel("  Reset  ");
         undoLabel = new JLabel("  Undo  ");
         redoLabel = new JLabel("  Redo  ");
-        tutorialItem = new JLabel("How to play Sokoban");
-        helpLabel = new JLabel("About...");
+        helpLabel = new JLabel("  Help  ");
         giveStyleToComponents();
         menuBar.add(newGameLabel);
         menuBar.add(loadItem);
@@ -540,6 +582,7 @@ public class GUI {
         menuBar.add(redoLabel);
         menuBar.add(resetItem);
         menuBar.add(exitItem);
+        menuBar.add(helpLabel);
         frame.setJMenuBar(menuBar);
     }
 
@@ -549,8 +592,10 @@ public class GUI {
     }
 
     public void win(){
-        currentWarehouseman = AMONGUS_SPRITE;
-        new AcceptFrame(frame,"Congratulations!","You win!");
+        isWarehouseManSprite = false;
+        new AcceptFrame(frame,"Congratulations!",
+        String.format("<html><div align=\"center\">You win!<br>Your score: %d</div></html>",
+             controller.getGameScore()));
     }
 
     private void launchSaveMenu(int mode){
@@ -562,7 +607,7 @@ public class GUI {
     }
 
     private void launchNewGame(){
-        if (controller.hasBeenModified()){
+        if (controller.hasBeenModified() && !controller.isFinished()){
             launchSaveMenu(2);
         }
         else{

@@ -10,24 +10,34 @@ public class ConstantsGUI {
 
     private ConstantsGUI(){ }
 
-    public static final String SPRITE_FOLDER_PATH = "src/main/resources/sprites";
+    public static final String DEFAULT_SPRITE_FOLDER_PATH = "src/main/resources/sprites/default/";
+    public static final String ICON_FOLDER_PATH = "src/main/resources/icons/";
+    public static final String BACKGROUND_FOLDER_PATH = "src/main/resources/backgrounds/";
     public static final String DEFAULT_FRAME_TITLE = "Sokoban - untitled";
     public static final String SOKOBAN_TITLE = "Sokoban";
 
-    public static final String WAREHOUSEMAN_NO_BACK_SPRITE = SPRITE_FOLDER_PATH + "/default/ware.png";
+    public static final String MAIN_ICON = ICON_FOLDER_PATH + "main_icon.png";
 
-    public static final String AMONGUS_SPRITE = SPRITE_FOLDER_PATH + "/default/amongus.png";
-    public static final String WAREHOUSEMAN_SPRITE = SPRITE_FOLDER_PATH + "/default/warehouse.png";
-    public static final String WAREHOUSEMAN_GOAL_SPRITE = SPRITE_FOLDER_PATH + "/default/warehouseongoal.png";
-    public static final String FLOOR_SPRITE = SPRITE_FOLDER_PATH + "/default/nuevosuelo.png";
-    public static final String GOAL_SPRITE = SPRITE_FOLDER_PATH + "/default/meta.png";
-    public static final String BOX_SPRITE = SPRITE_FOLDER_PATH + "/default/crafting.png";
-    public static final String WALL_SPRITE = SPRITE_FOLDER_PATH + "/default/walltest.png";
-    public static final String BOX_GOAL_PICKAXE_SPRITE = SPRITE_FOLDER_PATH + "/default/craftingpicaxe.png";
-    public static final String BOX_GOAL_CHESTPLATE_SPRITE = SPRITE_FOLDER_PATH + "/default/craftingpechera.png";
-    public static final String BACKGROUND_SPRITE = SPRITE_FOLDER_PATH + "/default/fondo.png";
+    public static final String AMONGUS_SPRITE = DEFAULT_SPRITE_FOLDER_PATH + "amongus.png";
+    public static final String AMOGUS_GOAL_SPRITE = DEFAULT_SPRITE_FOLDER_PATH + "amogusongoal.png";
+    public static final String WAREHOUSEMAN_SPRITE = DEFAULT_SPRITE_FOLDER_PATH + "warehouse.png";
+    public static final String WAREHOUSEMAN_GOAL_SPRITE = DEFAULT_SPRITE_FOLDER_PATH + "warehouseongoal.png";
+    public static final String FLOOR_SPRITE = DEFAULT_SPRITE_FOLDER_PATH + "floor.png";
+    public static final String GOAL_SPRITE = DEFAULT_SPRITE_FOLDER_PATH + "goal.png";
+    public static final String BOX_SPRITE = DEFAULT_SPRITE_FOLDER_PATH + "box.png";
+    public static final String WALL_SPRITE = DEFAULT_SPRITE_FOLDER_PATH + "wall.png";
+    public static final String BACKGROUND = BACKGROUND_FOLDER_PATH + "main_background.png";
 
-    protected static final String [] BOX_GOALS = {BOX_GOAL_PICKAXE_SPRITE, BOX_GOAL_CHESTPLATE_SPRITE};
+    public static final String BOX_GOAL_PICKAXE_SPRITE = DEFAULT_SPRITE_FOLDER_PATH + "pickaxe.png";
+    public static final String BOX_GOAL_CHESTPLATE_SPRITE = DEFAULT_SPRITE_FOLDER_PATH + "d_chestplate.png";
+    public static final String BOX_GOAL_MAGMA_SPRITE = DEFAULT_SPRITE_FOLDER_PATH + "magma.png";
+    public static final String BOX_GOAL_NAUTILUS_SPRITE = DEFAULT_SPRITE_FOLDER_PATH + "nautilus.png";
+    public static final String BOX_GOAL_GOLDEN_APPLE_SPRITE = DEFAULT_SPRITE_FOLDER_PATH + "goldenapple.png";
+    public static final String BOX_GOAL_EMERALD_SPRITE = DEFAULT_SPRITE_FOLDER_PATH + "e_chestplate.png";
+
+    protected static final String [] BOX_GOALS = {BOX_GOAL_PICKAXE_SPRITE, BOX_GOAL_CHESTPLATE_SPRITE,
+                                                    BOX_GOAL_MAGMA_SPRITE, BOX_GOAL_NAUTILUS_SPRITE, 
+                                                    BOX_GOAL_GOLDEN_APPLE_SPRITE, BOX_GOAL_EMERALD_SPRITE};
 
     public static final Color INFO_PANEL_COLOR = new Color (187, 162, 232);
     public static final Color LABEL_COLOR = new Color(229, 243, 255);
