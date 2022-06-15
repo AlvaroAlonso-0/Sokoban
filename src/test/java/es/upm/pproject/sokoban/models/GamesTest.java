@@ -176,6 +176,35 @@ class GamesTest {
             assertFalse(g.redo());
         }
 
+        @Test
+        @DisplayName("Test has been modified")
+        void hasBeenModified() throws WrongLevelFormatException{
+            assertFalse(g.hasBeenModified);
+            assertFalse(!g.movePlayer('l') && g.hasBeenModified);
+            assertTrue(g.movePlayer('u') && g.hasBeenModified);
+            g.reset();
+            assertFalse(g.hasBeenModified);
+            movePlayer(g, movesLevelOne);
+            g.movePlayer('u');
+            g.movePlayer('l');
+            g.reset();
+            assertTrue(g.hasBeenModified);
+        }
+
+        @Test
+        @DisplayName("Test has been modified for undo and redo")
+        void hasBeenModifiedForced() throws WrongLevelFormatException{
+            g.movePlayer('u');
+            assertTrue(g.undo() && g.hasBeenModified);
+            assertTrue(g.redo() && g.hasBeenModified);
+            g.movePlayer('r');
+            g.undo();
+            g.gameSaved();
+            assertTrue(g.redo() && g.hasBeenModified);
+            g.gameSaved();
+            assertTrue(g.undo() && g.hasBeenModified);
+        }
+
         
     }
     
@@ -225,6 +254,14 @@ class GamesTest {
             movePlayer(g, movesLevelOne);
             g.movePlayer('u');
             assertEquals("Level Two", g.getLevelName());
+        }
+
+        @Test
+        @DisplayName("Testing level name getter")
+        void hasbeenModifiedTest() {
+            assertFalse(g.hasBeenModified());
+            g.hasBeenModified = true;
+            assertTrue(g.hasBeenModified());
         }
     }
 }

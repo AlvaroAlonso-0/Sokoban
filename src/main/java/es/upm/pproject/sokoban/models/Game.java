@@ -28,6 +28,7 @@ public class Game implements Resetable{
     protected int levelNumber;
     protected boolean gameFinished;
     protected int score;
+    protected boolean hasBeenModified; 
 
     public Game() throws WrongLevelFormatException{
         newGame();
@@ -47,6 +48,7 @@ public class Game implements Resetable{
             score += lvl.getScore();
             levelLoad();
         }
+        hasBeenModified = true;
         return true;
     }
 
@@ -55,8 +57,9 @@ public class Game implements Resetable{
      * @return If a move has been undone
      */
     public boolean undo(){
-        if(gameFinished) return false;
-        return lvl.undoMove();
+        if(gameFinished || !lvl.undoMove()) return false;
+        hasBeenModified = true;
+        return true;
     }
 
     /**
@@ -64,8 +67,9 @@ public class Game implements Resetable{
      * @return If a move has been redone
      */
     public boolean redo(){
-        if(gameFinished) return false;
-        return lvl.redoMove();
+        if(gameFinished || !lvl.redoMove()) return false;
+        hasBeenModified = true;
+        return true;
     }
 
     /**
@@ -76,6 +80,13 @@ public class Game implements Resetable{
         return gameFinished;
     }
 
+    /**
+     * Method used to update the status after saved
+     */
+    public void gameSaved(){
+        hasBeenModified = false;
+    }
+
     @Override
     public String toString() {
         return String.format("Level %d%n%s", levelNumber, lvl);
@@ -84,6 +95,9 @@ public class Game implements Resetable{
     @Override
     public void reset() {
         lvl.reset();
+        if(levelNumber == 1){
+            hasBeenModified = false;
+        }
     }
 
     /**
@@ -94,6 +108,7 @@ public class Game implements Resetable{
         levelNumber = 1;
         gameFinished = false;
         score = 0;
+        hasBeenModified = false;
         logger.info(gameMarker, "New game started");
         levelLoad();
     }

@@ -53,6 +53,14 @@ public class GameStatusGUI extends Game{
         return lvl.getName();
     }
 
+    /**
+     * Method needed by the gui to check if the game has been modified.
+     * @return If has been modified
+     */
+    public boolean hasBeenModified(){
+        return hasBeenModified;
+    }
+
     /* Getters and setters needed for xml binding*/
     
     @XmlElement(name="level")
