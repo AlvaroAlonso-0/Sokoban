@@ -2,7 +2,6 @@ package es.upm.pproject.sokoban.models;
 
 import java.awt.Dimension;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
-import es.upm.pproject.sokoban.exceptions.WrongLevelFormatException;
 import es.upm.pproject.sokoban.view.GameStatusGUI;
 
 @DisplayName("Class to test the games objects")
@@ -29,7 +27,7 @@ class GamesTest {
             'l', 'd', 'l', 'l', 'l', 'd', 'd', 'r', 'u', 'l', 'u', 'r', 'r', 'l', 'u', 
             'u', 'r', 'r', 'd', 'd', 'l', 'l', 'u', 'r'};
 
-    private boolean movePlayer(Game game, char[] moves) throws WrongLevelFormatException{
+    private boolean movePlayer(Game game, char[] moves){
         boolean hasMoved = true;
         for(char c : moves){
             hasMoved = hasMoved && game.movePlayer(c);
@@ -77,7 +75,7 @@ class GamesTest {
         
         @BeforeEach
         void restart(){
-            assertDoesNotThrow(() -> {g = new Game();});
+            g = new Game();
         }
 
         @Test
@@ -88,7 +86,7 @@ class GamesTest {
 
         @Test
         @DisplayName("Move player test")
-        void possibleMoves() throws WrongLevelFormatException{
+        void possibleMoves() {
             assertTrue(g.movePlayer('U'));
             assertTrue(g.movePlayer('r'));
             assertTrue(g.movePlayer('R'));
@@ -98,7 +96,7 @@ class GamesTest {
 
         @Test
         @DisplayName("Check that the game cant do impossible moves")
-        void impossibleMoves() throws WrongLevelFormatException{
+        void impossibleMoves() {
             assertFalse(g.movePlayer('o'));
             assertFalse(g.movePlayer('l'));
             movePlayer(g, new char[]{'U', 'r', 'R', 'r', 'r'});
@@ -109,7 +107,7 @@ class GamesTest {
 
         @Test
         @DisplayName("Test the game object playing and solving the first level")
-        void changeLevel() throws WrongLevelFormatException{
+        void changeLevel() {
             assertTrue(movePlayer(g, new char[]{'u', 'r', 'R', 'r', 'r', 'd', 'D', 'l', 'U', 'r'}));
             assertTrue(movePlayer(g, new char[]{'u', 'l', 'l', 'l', 'd', 'l', 'u', 'l', 'u', 'u',
             'r', 'd', 'd', 'd', 'r', 'd', 'd', 'l', 'l', 'u','r', 'd', 'r'}));
@@ -118,10 +116,19 @@ class GamesTest {
             assertEquals(String.format(levelTwo), g.toString());
             assertEquals(34, g.score);
         }
+
+        @Test
+        @DisplayName("Test loading a wrong level")
+        void wrongLoad(){
+            g.levelPathFormat = "src/main/resources/levels4Testing/level_%d.txt";
+            movePlayer(g, movesLevelOne);
+            g.movePlayer('u');
+            assertEquals(3, g.levelNumber);
+        }
         
         @Test
         @DisplayName("Undo method test")
-        void undoTest() throws WrongLevelFormatException{
+        void undoTest() {
             assertFalse(g.undo());
             movePlayer(g, movesLevelOne);
             assertTrue(g.undo());
@@ -133,7 +140,7 @@ class GamesTest {
 
         @Test
         @DisplayName("Redo method test")
-        void redoTest() throws WrongLevelFormatException{
+        void redoTest() {
             assertFalse(g.redo());
             movePlayer(g, movesLevelOne);
             assertFalse(g.redo());
@@ -146,7 +153,7 @@ class GamesTest {
         
         @Test
         @DisplayName("Test reset")
-        void testReset() throws WrongLevelFormatException{
+        void testReset() {
             g.movePlayer('u');
             g.movePlayer('r');
             g.movePlayer('r');
@@ -158,7 +165,7 @@ class GamesTest {
 
         @Test
         @DisplayName("New game method test")
-        void newGameTest() throws WrongLevelFormatException{
+        void newGameTest() {
             movePlayer(g, movesLevelOne);
             g.movePlayer('u');
             assertEquals(String.format(levelTwo), g.toString());
@@ -170,7 +177,7 @@ class GamesTest {
 
         @Test
         @DisplayName("Game finished and its blocking capabilities")
-        void finished() throws WrongLevelFormatException{
+        void finished() {
             assertTrue(movePlayer(g, movesLevelOne) && g.movePlayer('u') &&
              movePlayer(g, movesLevelTwo) && movePlayer(g, movesLevelThree));
             assertTrue(g.isFinished());
@@ -181,7 +188,7 @@ class GamesTest {
 
         @Test
         @DisplayName("Test has been modified")
-        void hasBeenModified() throws WrongLevelFormatException{
+        void hasBeenModified() {
             assertFalse(g.hasBeenModified);
             assertFalse(!g.movePlayer('l') && g.hasBeenModified);
             assertTrue(g.movePlayer('u') && g.hasBeenModified);
@@ -196,7 +203,7 @@ class GamesTest {
 
         @Test
         @DisplayName("Test has been modified for undo and redo")
-        void hasBeenModifiedForced() throws WrongLevelFormatException{
+        void hasBeenModifiedForced() {
             g.movePlayer('u');
             assertTrue(g.undo() && g.hasBeenModified);
             assertTrue(g.redo() && g.hasBeenModified);
@@ -218,7 +225,7 @@ class GamesTest {
         
         @BeforeEach
         void init(){
-            assertDoesNotThrow(() -> {g = new GameStatusGUI();});
+            g = new GameStatusGUI();
         }
         
         @Test
@@ -238,7 +245,7 @@ class GamesTest {
 
         @Test
         @DisplayName("Testing game score getter")
-        void gameScoreTest() throws WrongLevelFormatException{
+        void gameScoreTest() {
             g.movePlayer('d');
             g.movePlayer('d');
             assertEquals(2, g.getTotalScore());
@@ -252,7 +259,7 @@ class GamesTest {
 
         @Test
         @DisplayName("Testing level name getter")
-        void levelScoreTest() throws WrongLevelFormatException{
+        void levelScoreTest() {
             assertEquals("Level One", g.getLevelName());
             movePlayer(g, movesLevelOne);
             g.movePlayer('u');
@@ -269,7 +276,7 @@ class GamesTest {
 
         @Test
         @DisplayName("Testing the dimension of the level")
-        void getDimension() throws WrongLevelFormatException {
+        void getDimension()  {
             assertEquals(new Dimension(8, 8), g.getDimension());
             movePlayer(g, movesLevelOne);
             g.movePlayer('U');
