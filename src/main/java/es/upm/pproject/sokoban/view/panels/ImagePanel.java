@@ -13,7 +13,7 @@ import java.awt.Graphics;
 * Class that extends a JPanel to display a sprite on it.
 * @author Idir Carlos Aliane Crespo
 * @version 1.4
-* @since 16/06/2022
+* @since 15/06/2022
 */
 public class ImagePanel extends JPanel{
     private transient Image img;
