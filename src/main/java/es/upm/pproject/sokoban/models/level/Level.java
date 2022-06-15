@@ -32,8 +32,8 @@ import es.upm.pproject.sokoban.models.utils.Coordinates;
 * @author Alvaro Alonso Miguel
 * @author Rafael Alonso Sirera
 * @author Raul Casamayor Navas
-* @version 1.9
-* @since 11/06/2022
+* @version 1.10
+* @since 15/06/2022
 */
 @XmlRootElement(name="level")
 @XmlType(propOrder = {"player","board","boxList","name","movements","undoneMovements","score"})
@@ -266,6 +266,10 @@ public class Level implements Resetable{
         return true;
     }
 
+    /**
+     * Method that reverts the last undone movement of the warehouse man
+     * @return If a move was previously undone
+     */
     public boolean redoMove(){
         if(undoneMovements.isEmpty()) return false;
         char dir = undoneMovements.pop();
@@ -339,6 +343,11 @@ public class Level implements Resetable{
         }
     }
     
+    /**
+     * Private method that converts from tile to String representation
+     * @param tile The converted tile (null,GOAL,WALL)
+     * @return The String representation of the given tile
+     */
     private String getStringRepresentation (Tile tile){
         if(tile==null){
             return " ";
