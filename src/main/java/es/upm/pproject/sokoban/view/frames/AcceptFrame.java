@@ -11,10 +11,10 @@ import es.upm.pproject.sokoban.view.utils.ConstantsGUI;
 import es.upm.pproject.sokoban.view.utils.UtilsGUI;
 
 /**
-* Class that represents an alert frame when the user attempts to save a level with an empty name.
+* Class that represents an accept frame for displaying an info or warning message.
 * @author Idir Carlos Aliane Crespo
-* @version 1.1
-* @since 11/06/2022
+* @version 1.2
+* @since 15/06/2022
 */
 public class AcceptFrame {
 
@@ -28,6 +28,12 @@ public class AcceptFrame {
     private JLabel informationLabel;
     private JLabel acceptLabel;
 
+    /**
+     * Constructor of the class.
+     * @param backFrame The previous frame
+     * @param frameTitle The title of the frame
+     * @param information The information to display
+     */
     public AcceptFrame(JFrame backFrame, String frameTitle, String information) {
         this.backFrame = backFrame;
         backFrame.setEnabled(false);
@@ -59,6 +65,9 @@ public class AcceptFrame {
         setupListeners();
     }
 
+    /*
+     * Sets up the listeners for the frame.
+     */
     public void setupListeners(){
         informationFrame.addWindowListener(new WindowAdapter(){
             @Override
@@ -90,5 +99,4 @@ public class AcceptFrame {
             }
         });
     }
-    
 }

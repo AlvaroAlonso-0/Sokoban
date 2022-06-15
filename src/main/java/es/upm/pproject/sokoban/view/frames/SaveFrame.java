@@ -18,8 +18,8 @@ import es.upm.pproject.sokoban.view.utils.UtilsGUI;
 /**
 * Class that represents a frame for saving a game.
 * @author Idir Carlos Aliane Crespo
-* @version 1.2
-* @since 14/06/2022
+* @version 1.3
+* @since 15/06/2022
 */
 public class SaveFrame {
 
@@ -40,7 +40,14 @@ public class SaveFrame {
 
     private boolean wantExit;
     private int mode;
-
+    
+    /**
+     * Constructor of the class.
+     * @param backFrame The frame that called this frame.
+     * @param controller The controller of the game.
+     * @param wantExit True if the user wants to exit the game.
+     * @param mode The mode. If 2, the user wants to create a new game. If 1, the user wants to load the level.
+     */
     public SaveFrame(JFrame backFrame, Controller controller, boolean wantExit, int mode){
         frame = UtilsGUI.createAndSetupFrame("Save game", MAX_WIDTH, MAX_HEIGHT);
         this.controller = controller;

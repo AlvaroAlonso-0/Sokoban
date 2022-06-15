@@ -15,6 +15,12 @@ import es.upm.pproject.sokoban.view.utils.UtilsGUI;
 
 
 
+/**
+ * Class that creates a frame for display a instructions of how to play Sokoban.
+* @author Idir Carlos Aliane Crespo
+* @version 1.0
+* @since 15/06/2022
+*/
 public class HelpFrame {
 
     private static final int MAX_WIDTH = 450;
@@ -28,6 +34,10 @@ public class HelpFrame {
     private JLabel information;
     private JLabel acceptLabel;
     
+    /**
+     * Constructor of the class.
+     * @param helpLabel The label used to enable when this frame is closed.
+     */
     public HelpFrame(JLabel helpLabel){
         this.helpLabel = helpLabel;
         acceptLabel = new JLabel("Understood!");
@@ -64,6 +74,9 @@ public class HelpFrame {
 
     }
 
+    /**
+     * Add the listeners to the frame.
+     */
     public void addListeners(){
         frame.addWindowListener(new WindowAdapter(){
             @Override
@@ -97,6 +110,10 @@ public class HelpFrame {
         });
     }
 
+    /**
+     * Create the text to be displayed in the frame.
+     * @return The text to be displayed in the frame.
+     */
     public String createHelpText(){
         StringBuilder builder = new StringBuilder();
         builder.append("<html>• The objective of the game is to move the boxes to the goals.<br>")

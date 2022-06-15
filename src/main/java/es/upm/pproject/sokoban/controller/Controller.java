@@ -18,7 +18,8 @@ import es.upm.pproject.sokoban.view.GameStatusGUI;
 * Class for the Controller of the application.
 * @author Rafael Alonso Sirera
 * @author Raul Casamayor Navas
-* @version 1.5
+* @author Idir Carlos Aliane Crespo
+* @version 1.7
 * @since 15/06/2022
 */
 public class Controller{
@@ -30,7 +31,10 @@ public class Controller{
     private GUI gui;
     private GameStatusGUI game;
     private SaveGameFactory sgFactory;
-    
+
+    /**
+     * Constructor of the class.
+     */
     public Controller(){
         gui = new GUI(this);
         try {
@@ -84,6 +88,9 @@ public class Controller{
         return true;
     }
     
+    /**
+     * Method used to create a new game.
+     */
     public void createNewGame(){
         game.newGame();
         show();
@@ -113,14 +120,26 @@ public class Controller{
         return game.getLevelName();
     }
     
+    /**
+     * Method used to get the dimension of the board.
+     * @return The dimension of the board
+     */
     public Dimension getLevelDimension(){
         return game.getDimension();
     }
-    
+
+    /**
+     * Method used to check if the game has been modified
+     * @return If the game has been modified
+     */
     public boolean hasBeenModified(){
         return game.hasBeenModified();
     }
     
+    /**
+     * Method used to check if the game is finished
+     * @return If the game is finished
+     */
     public boolean isFinished(){
         return game.isFinished();
     }
@@ -135,18 +154,27 @@ public class Controller{
         }
     }
     
+    /**
+    * Method for undo.
+    */
     private void undo(){
         if(game.undo()){
             repaint();
         }
     }
     
+    /**
+    * Method for redo.
+    */
     private void redo(){
         if(game.redo()){
             repaint();
         }
     }
     
+    /**
+     * Method used to repaint the board.
+     */
     private void repaint(){
         gui.repaint(game.getBoardToString());
         if(game.isFinished()){
@@ -154,6 +182,9 @@ public class Controller{
         }
     }
     
+    /**
+     * Method used to show the board of a new level.
+     */
     private void show(){
         gui.show(game.getBoardToString());
     }

@@ -6,6 +6,12 @@ import java.awt.Font;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
+/**
+* Auxiliar class for storing constants used in the GUI.
+* @author Idir Carlos Aliane Crespo
+* @version 1.5
+* @since 15/06/2022 
+ */
 public class ConstantsGUI {
 
     private ConstantsGUI(){ }

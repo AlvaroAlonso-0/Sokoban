@@ -14,8 +14,8 @@ import es.upm.pproject.sokoban.view.utils.UtilsGUI;
 /**
 * Class that represents a frame with a dynamic panel inside of every saved game.
 * @author Idir Carlos Aliane Crespo
-* @version 1.2
-* @since 14/06/2022
+* @version 1.4
+* @since 16/06/2022
 */
 public class LoadFrame {
     
@@ -27,6 +27,11 @@ public class LoadFrame {
 
     private JPanel games;
 
+    /**
+     * Constructor of the class.
+     * @param mainFrame The main frame
+     * @param controller The controller
+     */
     public LoadFrame(JFrame mainFrame, Controller controller){
         this.mainFrame = mainFrame;
         frame = UtilsGUI.createAndSetupFrame("Load game", MAX_WIDTH, MAX_HEIGHT);
@@ -39,6 +44,9 @@ public class LoadFrame {
         addListener();
     }
 
+    /**
+     * Adds the listener to the frame.
+     */
     private void addListener(){
         frame.addWindowListener(new WindowAdapter(){
             @Override

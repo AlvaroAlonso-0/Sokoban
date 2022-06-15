@@ -19,7 +19,7 @@ import es.upm.pproject.sokoban.view.utils.ConstantsGUI;
 * Class that represents a dynamic panel of every saved game for loading.
 * @author Idir Carlos Aliane Crespo
 * @version 1.1
-* @since 14/06/2022
+* @since 15/06/2022
 */
 public class DynamicPanelList extends JPanel{
 
@@ -30,6 +30,12 @@ public class DynamicPanelList extends JPanel{
 
     private JPanel mainList;
     
+    /**
+     * Constructor of the class.
+     * @param controller The controller of the game.
+     * @param mainFrame The main frame of the application.
+     * @param loadFrame The load frame.
+     */
     public DynamicPanelList(Controller controller, JFrame mainFrame, JFrame loadFrame) {
         this.controller = controller;
         this.mainFrame = mainFrame;
@@ -45,6 +51,10 @@ public class DynamicPanelList extends JPanel{
         setupSavedGames();
     }
 
+    /**
+     * Method that sets up and displays the saved games on the panel.
+     * Also, it setup listeners for every label and give style.
+     */
     private void setupSavedGames(){
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
