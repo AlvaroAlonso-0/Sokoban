@@ -44,6 +44,7 @@ public class SaveGameFactory {
         }
         String logMsg = String.format( "Current game has been saved as %s.xml", name);
         logger.info(saveGameMarker, logMsg);
+        game.gameSaved();
         return true;
     }
 
