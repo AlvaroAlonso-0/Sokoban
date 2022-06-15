@@ -183,7 +183,7 @@ This will be displayed on a new window.
 
 <div style="text-align: center;">
 
-  ![Sokoban](https://i.imgur.com/zIntDzp.png)
+  ![Sokoban](https://i.imgur.com/BVmTZDs.png)
 
 </div>
 
@@ -205,7 +205,10 @@ The game can be saved and loaded from a file, available at the *games* folder. T
 
 ## Authors ##
 
-190300 - Álvaro Alonso Miguel      </br>
-190243 - Raúl Casamayor Navas      </br>
-190182 - Rafael Alonso Sirera      </br>
-190384 - Idir Carlos Aliane Crespo </br>
+190300 - Álvaro Alonso Miguel
+
+190243 - Raúl Casamayor Navas
+
+190182 - Rafael Alonso Sirera
+
+190384 - Idir Carlos Aliane Crespo
