@@ -10,14 +10,18 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 
 /**
-* Class that extends a JPanel for displaying a sprite in it.
+* Class that extends a JPanel to display a sprite on it.
 * @author Idir Carlos Aliane Crespo
-* @version 1.3
-* @since 14/06/2022
+* @version 1.4
+* @since 16/06/2022
 */
 public class ImagePanel extends JPanel{
     private transient Image img;
 
+    /**
+     * The class constructor
+     * @param spritePath The path of the sprite to display
+     */
     public ImagePanel(String spritePath) {
         img = new ImageIcon(spritePath).getImage();
         Dimension size = new Dimension(ConstantsGUI.SPRITE_SIZE,ConstantsGUI.SPRITE_SIZE);
@@ -28,6 +32,12 @@ public class ImagePanel extends JPanel{
         setLayout(null);    
     }
 
+    /**
+     * The class constructor
+     * @param spritePath The sprite to display
+     * @param width Sprite dimension (width)
+     * @param height Sprite dimension (height)
+     */
     public ImagePanel(String spritePath, int width, int height) {
         img = new ImageIcon(spritePath).getImage();
         Dimension size = new Dimension(width,height);
