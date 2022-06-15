@@ -16,13 +16,16 @@ import es.upm.pproject.sokoban.models.level.Level;
 * @author Raul Casamayor Navas
 * @author Rafael Alonso Sirera
 * @author Alvaro Alonso Miguel
-* @version 1.7
-* @since 14/06/2022
+* @version 1.8
+* @since 15/06/2022
 */
 public class Game implements Resetable{
 
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
     private static final Marker gameMarker = MarkerFactory.getMarker("GAME");
+    private static final Marker loadMarker = MarkerFactory.getMarker("FATAL");
+    
+    protected String levelPathFormat;
    
     protected Level lvl;
     protected int levelNumber;
@@ -30,18 +33,17 @@ public class Game implements Resetable{
     protected int score;
     protected boolean hasBeenModified; 
 
-    public Game() throws WrongLevelFormatException{
+    public Game(){
+        levelPathFormat = Level.LEVEL_FILE_NAME_FORMAT;
         newGame();
     }
 
     /**
      * Method used to move the warehouse man in each level of the game.
      * @param dir Direction in which the warehouse man has to move in the current level of the game
-     * @return If the movement has been done
-     * @throws WrongLevelFormatException When the level has been completed and the next one to load doesnt follow 
-     * the format required
+     * @return If the movement has been done 
      */
-    public boolean movePlayer(char dir) throws WrongLevelFormatException{
+    public boolean movePlayer(char dir){
         if(gameFinished || !lvl.movePlayer(dir)) return false;
         if(lvl.checkStatus()){
             levelNumber++;
@@ -102,9 +104,8 @@ public class Game implements Resetable{
 
     /**
      * Starts a new game from the beginning level.
-     * @throws WrongLevelFormatException When the first level file doesnt follow the format required
      */
-    public void newGame() throws WrongLevelFormatException{
+    public void newGame(){
         levelNumber = 1;
         gameFinished = false;
         score = 0;
@@ -115,14 +116,17 @@ public class Game implements Resetable{
 
     /**
      * Private method used to load the level of the game.
-     * @throws WrongLevelFormatException When the level file doesnt follow the format required
      */
-    private void levelLoad() throws WrongLevelFormatException{
+    private void levelLoad(){
         try{
-            lvl = new Level(String.format(Level.LEVEL_FILE_NAME_FORMAT, levelNumber));
+            lvl = new Level(String.format(levelPathFormat, levelNumber));
         }catch (FileNotFoundException e){
             logger.info(gameMarker,"Game completed");
             gameFinished = true;   
+        }catch(WrongLevelFormatException e){
+            logger.error(loadMarker, String.format("Level %d couldnt be loaded", levelNumber), e);
+            levelNumber++;
+            levelLoad();
         }
     }
 }

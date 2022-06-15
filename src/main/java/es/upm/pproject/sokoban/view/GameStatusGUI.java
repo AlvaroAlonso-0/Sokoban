@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import es.upm.pproject.sokoban.exceptions.WrongLevelFormatException;
 import es.upm.pproject.sokoban.models.Game;
 import es.upm.pproject.sokoban.models.level.Level;
 
@@ -13,13 +12,13 @@ import es.upm.pproject.sokoban.models.level.Level;
 * Class that represents a Sokoban game used by the controller of the app.
 * @author Raul Casamayor Navas
 * @author Alvaro Alonso Miguel
-* @version 1.4
-* @since 12/06/2022
+* @version 1.5
+* @since 15/06/2022
 */
 @XmlRootElement(name="game")
 public class GameStatusGUI extends Game{
 
-    public GameStatusGUI() throws WrongLevelFormatException {
+    public GameStatusGUI(){
         super();
     }
 
