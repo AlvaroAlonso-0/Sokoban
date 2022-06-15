@@ -189,6 +189,23 @@ class LevelTest {
         .append("+++++   ");
         assertEquals(sb.toString(), level.toString());
     }
+
+    @Test
+    @DisplayName("Test toString with waregouse on goal")
+    void toStringTest2(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("++++    \n")
+        .append("+  +    \n")
+        .append("+  +++++\n")
+        .append("+      +\n")
+        .append("++ X+# +\n")
+        .append("+   +  +\n")
+        .append("+   ++++\n")
+        .append("+++++   ");
+        level.getPlayer().setCurrentPositionX(4);
+        level.getPlayer().setCurrentPositionY(3);
+        assertEquals(sb.toString(), level.toString());
+    }
     
     @Test
     @DisplayName("Test reset")
@@ -252,7 +269,7 @@ class LevelTest {
             .append("+  +    \n")
             .append("+  +++++\n")
             .append("+      +\n")
-            .append("++ W+# +\n")
+            .append("++ X+# +\n")
             .append("+   +  +\n")
             .append("+   ++++\n")
             .append("+++++   ")
@@ -424,7 +441,7 @@ class LevelTest {
             .append("+  +    \n")
             .append("+  +++++\n")
             .append("+      +\n")
-            .append("++ W+# +\n")
+            .append("++ X+# +\n")
             .append("+   +  +\n")
             .append("+   ++++\n")
             .append("+++++   ")
@@ -572,7 +589,7 @@ class LevelTest {
             .append("+  +    \n")
             .append("+  +++++\n")
             .append("+      +\n")
-            .append("++ W+# +\n")
+            .append("++ X+# +\n")
             .append("+   +  +\n")
             .append("+   ++++\n")
             .append("+++++   ")

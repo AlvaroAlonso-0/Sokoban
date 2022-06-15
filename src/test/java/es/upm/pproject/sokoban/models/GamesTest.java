@@ -1,5 +1,7 @@
 package es.upm.pproject.sokoban.models;
 
+import java.awt.Dimension;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -22,6 +24,11 @@ class GamesTest {
     'l', 'l', 'l', 'd','l', 'u', 'l', 'u', 'u', 'r', 'd', 'd', 'd', 'r', 'd', 'd', 'l', 
     'l', 'u', 'r', 'd', 'r'}; //last move of level is 'u'
 
+    private char[] movesLevelTwo = {'l', 'l', 'd', 'd', 'r', 'u', 'l', 'u', 'r', 'r', 
+            'u', 'u', 'l', 'd', 'd', 'u', 'r', 'r', 'r', 'd', 'd', 'l', 'u', 'r', 'u', 
+            'l', 'd', 'l', 'l', 'l', 'd', 'd', 'r', 'u', 'l', 'u', 'r', 'r', 'l', 'u', 
+            'u', 'r', 'r', 'd', 'd', 'l', 'l', 'u', 'r'};
+
     private boolean movePlayer(Game game, char[] moves) throws WrongLevelFormatException{
         boolean hasMoved = true;
         for(char c : moves){
@@ -37,7 +44,6 @@ class GamesTest {
         private Game g;
         private String levelBoardFormat;
         private String levelTwo;
-        private char[] movesLevelTwo;
         private char[] movesLevelThree;
 
         @BeforeAll
@@ -63,10 +69,7 @@ class GamesTest {
             .append("++++   ")
             .toString(); 
             
-            movesLevelTwo = new char[]{'l', 'l', 'd', 'd', 'r', 'u', 'l', 'u', 'r', 'r', 
-            'u', 'u', 'l', 'd', 'd', 'u', 'r', 'r', 'r', 'd', 'd', 'l', 'u', 'r', 'u', 
-            'l', 'd', 'l', 'l', 'l', 'd', 'd', 'r', 'u', 'l', 'u', 'r', 'r', 'l', 'u', 
-            'u', 'r', 'r', 'd', 'd', 'l', 'l', 'u', 'r'};
+            
             movesLevelThree = new char[]{'d', 'r', 'u', 'r', 'r', 'd', 'l', 'l', 'u', 'l', 
             'u', 'u', 'r', 'd', 'l', 'd', 'r', 'd', 'd', 'l', 'u', 'u', 'u', 'd', 'd', 'r', 'r', 
             'r', 'u', 'l', 'l', 'd', 'l', 'u'};
@@ -262,6 +265,16 @@ class GamesTest {
             assertFalse(g.hasBeenModified());
             g.hasBeenModified = true;
             assertTrue(g.hasBeenModified());
+        }
+
+        @Test
+        @DisplayName("Testing the dimension of the level")
+        void getDimension() throws WrongLevelFormatException {
+            assertEquals(new Dimension(8, 8), g.getDimension());
+            movePlayer(g, movesLevelOne);
+            g.movePlayer('U');
+            movePlayer(g, movesLevelTwo);
+            assertEquals(new Dimension(6, 7), g.getDimension());
         }
     }
 }
