@@ -32,7 +32,7 @@ import es.upm.pproject.sokoban.view.utils.UtilsGUI;
 * Class for the GUI of the application.
 * @author Idir Carlos Aliane Crespo
 * @author Rafael Alonso Sirera
-* @version 2.3
+* @version 2.4
 * @since 15/06/2022
 */
 public class GUI {
@@ -50,12 +50,12 @@ public class GUI {
     private JMenuBar menuBar;
 
     private JLabel newGameLabel;
-    private JLabel loadItem; 
-    private JLabel saveItem;
+    private JLabel loadLabel; 
+    private JLabel saveLabel;
     private JLabel undoLabel;
     private JLabel redoLabel;
-    private JLabel exitItem;
-    private JLabel resetItem;
+    private JLabel exitLabel;
+    private JLabel resetLabel;
     private JLabel helpLabel;
 
     private JPanel info;
@@ -395,7 +395,7 @@ public class GUI {
      * Save and load listeners
      */
     private void addLoadAndSaveListeners(){
-        loadItem.addMouseListener(new MouseAdapter(){  
+        loadLabel.addMouseListener(new MouseAdapter(){  
             @Override
             public void mouseReleased(MouseEvent e){
                 if(controller.hasBeenModified() && !controller.isFinished()){
@@ -404,45 +404,45 @@ public class GUI {
                 else{
                     launchLoadMenu();
                 }
-                loadItem.setBackground(ConstantsGUI.LABEL_COLOR);
+                loadLabel.setBackground(ConstantsGUI.LABEL_COLOR);
             } 
             @Override
             public void mousePressed(MouseEvent e){
-                loadItem.setOpaque(true);
-                loadItem.setBackground(ConstantsGUI.PRESSED_COLOR);
+                loadLabel.setOpaque(true);
+                loadLabel.setBackground(ConstantsGUI.PRESSED_COLOR);
             }
             @Override
             public void mouseEntered(MouseEvent e){
-                loadItem.setOpaque(true);
-                loadItem.setBorder(ConstantsGUI.DEFAULT_BORDER);
+                loadLabel.setOpaque(true);
+                loadLabel.setBorder(ConstantsGUI.DEFAULT_BORDER);
             }
             @Override
             public void mouseExited(MouseEvent e){
-                loadItem.setOpaque(false);
-                loadItem.setBorder(ConstantsGUI.EMPTY_BORDER);
+                loadLabel.setOpaque(false);
+                loadLabel.setBorder(ConstantsGUI.EMPTY_BORDER);
             }
         });
 
-        saveItem.addMouseListener(new MouseAdapter(){  
+        saveLabel.addMouseListener(new MouseAdapter(){  
             @Override
             public void mouseReleased(MouseEvent e){ 
                 launchSaveMenu(0);
-                saveItem.setBackground(ConstantsGUI.LABEL_COLOR);
+                saveLabel.setBackground(ConstantsGUI.LABEL_COLOR);
             } 
             @Override
             public void mousePressed(MouseEvent e){
-                saveItem.setOpaque(true);
-                saveItem.setBackground(ConstantsGUI.PRESSED_COLOR);
+                saveLabel.setOpaque(true);
+                saveLabel.setBackground(ConstantsGUI.PRESSED_COLOR);
             }
             @Override
             public void mouseEntered(MouseEvent e){
-                saveItem.setOpaque(true);
-                saveItem.setBorder(ConstantsGUI.DEFAULT_BORDER);
+                saveLabel.setOpaque(true);
+                saveLabel.setBorder(ConstantsGUI.DEFAULT_BORDER);
             }
             @Override
             public void mouseExited(MouseEvent e){
-                saveItem.setOpaque(false);
-                saveItem.setBorder(ConstantsGUI.EMPTY_BORDER);
+                saveLabel.setOpaque(false);
+                saveLabel.setBorder(ConstantsGUI.EMPTY_BORDER);
             }
         });
     }
@@ -502,29 +502,29 @@ public class GUI {
      * Redo listeners
      */
     private void addResetAndExitListeners(){
-        resetItem.addMouseListener(new MouseAdapter(){
+        resetLabel.addMouseListener(new MouseAdapter(){
             @Override
             public void mouseReleased(MouseEvent e){ 
                 controller.reset();
-                resetItem.setBackground(ConstantsGUI.LABEL_COLOR);
+                resetLabel.setBackground(ConstantsGUI.LABEL_COLOR);
             } 
             @Override
             public void mousePressed(MouseEvent e){
-                resetItem.setOpaque(true);
-                resetItem.setBackground(ConstantsGUI.PRESSED_COLOR);
+                resetLabel.setOpaque(true);
+                resetLabel.setBackground(ConstantsGUI.PRESSED_COLOR);
             }
             @Override
             public void mouseEntered(MouseEvent e){
-                resetItem.setOpaque(true);
-                resetItem.setBorder(ConstantsGUI.DEFAULT_BORDER);
+                resetLabel.setOpaque(true);
+                resetLabel.setBorder(ConstantsGUI.DEFAULT_BORDER);
             }
             @Override
             public void mouseExited(MouseEvent e){
-                resetItem.setOpaque(false);
-                resetItem.setBorder(ConstantsGUI.EMPTY_BORDER);
+                resetLabel.setOpaque(false);
+                resetLabel.setBorder(ConstantsGUI.EMPTY_BORDER);
             }
         });
-        exitItem.addMouseListener(new MouseAdapter(){  
+        exitLabel.addMouseListener(new MouseAdapter(){  
             @Override
             public void mouseReleased(MouseEvent e){
                 if (controller.hasBeenModified() && !controller.isFinished()){
@@ -534,22 +534,22 @@ public class GUI {
                     frame.setEnabled(false);
                     frame.dispose();
                 }
-                exitItem.setBackground(ConstantsGUI.LABEL_COLOR);
+                exitLabel.setBackground(ConstantsGUI.LABEL_COLOR);
             } 
             @Override
             public void mousePressed(MouseEvent e){
-                exitItem.setOpaque(true);
-                exitItem.setBackground(ConstantsGUI.PRESSED_COLOR);
+                exitLabel.setOpaque(true);
+                exitLabel.setBackground(ConstantsGUI.PRESSED_COLOR);
             }
             @Override
             public void mouseEntered(MouseEvent e){
-                exitItem.setOpaque(true);
-                exitItem.setBorder(ConstantsGUI.DEFAULT_BORDER);
+                exitLabel.setOpaque(true);
+                exitLabel.setBorder(ConstantsGUI.DEFAULT_BORDER);
             }
             @Override
             public void mouseExited(MouseEvent e){
-                exitItem.setOpaque(false);
-                exitItem.setBorder(ConstantsGUI.EMPTY_BORDER);
+                exitLabel.setOpaque(false);
+                exitLabel.setBorder(ConstantsGUI.EMPTY_BORDER);
             }
         });
     }
@@ -561,30 +561,30 @@ public class GUI {
         Font menuBarFont = new Font("Arial", Font.PLAIN, 12);
         
         newGameLabel.setFont(menuBarFont);
-        loadItem.setFont(menuBarFont);
-        saveItem.setFont(menuBarFont);
-        exitItem.setFont(menuBarFont);
+        loadLabel.setFont(menuBarFont);
+        saveLabel.setFont(menuBarFont);
+        exitLabel.setFont(menuBarFont);
         helpLabel.setFont(menuBarFont);
         undoLabel.setFont(menuBarFont);
         redoLabel.setFont(menuBarFont);
-        resetItem.setFont(menuBarFont);
+        resetLabel.setFont(menuBarFont);
         helpLabel.setFont(menuBarFont);
 
         menuBar.setBorder(ConstantsGUI.MENU_BAR_BORDER);
         newGameLabel.setBackground(ConstantsGUI.LABEL_COLOR);
         newGameLabel.setBorder(ConstantsGUI.EMPTY_BORDER);
-        loadItem.setBackground(ConstantsGUI.LABEL_COLOR);
-        loadItem.setBorder(ConstantsGUI.EMPTY_BORDER);
-        saveItem.setBackground(ConstantsGUI.LABEL_COLOR);
-        saveItem.setBorder(ConstantsGUI.EMPTY_BORDER);
+        loadLabel.setBackground(ConstantsGUI.LABEL_COLOR);
+        loadLabel.setBorder(ConstantsGUI.EMPTY_BORDER);
+        saveLabel.setBackground(ConstantsGUI.LABEL_COLOR);
+        saveLabel.setBorder(ConstantsGUI.EMPTY_BORDER);
         undoLabel.setBackground(ConstantsGUI.LABEL_COLOR);
         undoLabel.setBorder(ConstantsGUI.EMPTY_BORDER);
         redoLabel.setBackground(ConstantsGUI.LABEL_COLOR);
         redoLabel.setBorder(ConstantsGUI.EMPTY_BORDER);
-        resetItem.setBackground(ConstantsGUI.LABEL_COLOR);
-        resetItem.setBorder(ConstantsGUI.EMPTY_BORDER);
-        exitItem.setBackground(ConstantsGUI.LABEL_COLOR);
-        exitItem.setBorder(ConstantsGUI.EMPTY_BORDER);
+        resetLabel.setBackground(ConstantsGUI.LABEL_COLOR);
+        resetLabel.setBorder(ConstantsGUI.EMPTY_BORDER);
+        exitLabel.setBackground(ConstantsGUI.LABEL_COLOR);
+        exitLabel.setBorder(ConstantsGUI.EMPTY_BORDER);
         helpLabel.setBackground(ConstantsGUI.LABEL_COLOR);
         helpLabel.setBorder(ConstantsGUI.EMPTY_BORDER);
     }
@@ -596,21 +596,21 @@ public class GUI {
         menuBar = new JMenuBar();
         menuBar.setBackground(Color.WHITE);
         newGameLabel = new JLabel("  New game  ");
-        loadItem =  new JLabel("  Load  ");
-        saveItem =  new JLabel("  Save  ");
-        exitItem =  new JLabel("  Exit  ");
-        resetItem = new JLabel("  Reset  ");
+        loadLabel =  new JLabel("  Load  ");
+        saveLabel =  new JLabel("  Save  ");
+        exitLabel =  new JLabel("  Exit  ");
+        resetLabel = new JLabel("  Reset  ");
         undoLabel = new JLabel("  Undo  ");
         redoLabel = new JLabel("  Redo  ");
         helpLabel = new JLabel("  Help  ");
         giveStyleToComponents();
         menuBar.add(newGameLabel);
-        menuBar.add(loadItem);
-        menuBar.add(saveItem);
+        menuBar.add(loadLabel);
+        menuBar.add(saveLabel);
         menuBar.add(undoLabel);
         menuBar.add(redoLabel);
-        menuBar.add(resetItem);
-        menuBar.add(exitItem);
+        menuBar.add(resetLabel);
+        menuBar.add(exitLabel);
         menuBar.add(helpLabel);
         frame.setJMenuBar(menuBar);
     }
