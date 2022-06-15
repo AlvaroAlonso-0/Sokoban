@@ -7,10 +7,10 @@ import java.awt.Toolkit;
 import java.awt.event.*;
 import java.awt.GridLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -19,9 +19,11 @@ import javax.swing.border.EmptyBorder;
 
 import es.upm.pproject.sokoban.controller.Controller;
 import es.upm.pproject.sokoban.view.frames.AlertFrame;
+import es.upm.pproject.sokoban.view.frames.AcceptFrame;
 import es.upm.pproject.sokoban.view.frames.LoadFrame;
 import es.upm.pproject.sokoban.view.frames.SaveFrame;
 import es.upm.pproject.sokoban.view.panels.ImagePanel;
+import es.upm.pproject.sokoban.view.panels.Rectangle;
 import es.upm.pproject.sokoban.view.utils.ConstantsGUI;
 
 /**
@@ -32,11 +34,16 @@ import es.upm.pproject.sokoban.view.utils.ConstantsGUI;
 * @since 14/06/2022
 */
 public class GUI {
+
+    private static final ImagePanel WAREHOUSEMAN_SPRITE = new ImagePanel(ConstantsGUI.WAREHOUSEMAN_SPRITE);
+    private static final ImagePanel AMONGUS_SPRITE = new ImagePanel(ConstantsGUI.AMONGUS_SPRITE);
+    private static final ImagePanel BACKGROUND_SPRITE = new ImagePanel(
+        ConstantsGUI.BACKGROUND_SPRITE, ConstantsGUI.MAIN_FRAME_MAX_WIDTH,ConstantsGUI.MAIN_FRAME_MAX_HEIGHT);
     
+
     private JFrame frame;
 
     private JMenuBar menuBar;
-    private JMenu helpMenu;
 
     private JLabel newGameLabel;
     private JLabel loadItem; 
@@ -46,7 +53,7 @@ public class GUI {
     private JLabel exitItem;
     private JLabel resetItem;
     private JLabel tutorialItem;
-    private JLabel aboutItem;
+    private JLabel helpLabel;
 
     private JPanel info;
     private JPanel grid;
@@ -56,9 +63,11 @@ public class GUI {
     private JLabel levelName;
     
     private Controller controller;
-    private ImagePanel [][] sprites;  // Floor
+    private ImagePanel [][] sprites;
 
-    private boolean askSaveGame;
+    private Dimension levelDimension;
+
+    private ImagePanel currentWarehouseman;
     
     /**
     * Constructor of the class.
@@ -66,17 +75,16 @@ public class GUI {
     public GUI(Controller control){
         controller = control;
         frame = new JFrame(ConstantsGUI.DEFAULT_FRAME_TITLE);
-        frame.setSize(new Dimension(ConstantsGUI.MAIN_FRAME_MAX_WIDTH, ConstantsGUI.MAIN_FRAME_MAX_WIDTH));
+        frame.setSize(new Dimension(ConstantsGUI.MAIN_FRAME_MAX_WIDTH, ConstantsGUI.MAIN_FRAME_MAX_HEIGHT));
         frame.setResizable(false);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setLocation(dim.width/2-frame.getSize().width/2, dim.height/2-frame.getSize().height/2 - 35);
         grid = new JPanel();
-        sprites = new ImagePanel [ConstantsGUI.MAIN_FRAME_MAX_WIDTH/ConstantsGUI.SPRITE_SIZE]
-                                [ConstantsGUI.MAIN_FRAME_MAX_WIDTH/ConstantsGUI.SPRITE_SIZE];
+        
         frame.getContentPane().setPreferredSize(
-                new Dimension(ConstantsGUI.MAIN_FRAME_MAX_WIDTH, ConstantsGUI.MAIN_FRAME_MAX_WIDTH));
+                new Dimension(ConstantsGUI.MAIN_FRAME_MAX_WIDTH, ConstantsGUI.MAIN_FRAME_MAX_HEIGHT));
         grid.setBounds(0, ConstantsGUI.INFO_PANEL_HEIGHT, ConstantsGUI.MAIN_FRAME_MAX_WIDTH, 
-                    ConstantsGUI.MAIN_FRAME_MAX_WIDTH - ConstantsGUI.INFO_PANEL_HEIGHT);
+                    ConstantsGUI.MAIN_FRAME_MAX_HEIGHT - ConstantsGUI.INFO_PANEL_HEIGHT);
         info = new JPanel(new GridLayout(1,3));
         info.setBorder(new EmptyBorder(10, 20, 0, 20));
         grid.setLayout(null);
@@ -91,14 +99,19 @@ public class GUI {
         score.setBounds(0,25,0,0);
         levelName.setFont(ConstantsGUI.SCORE_FONT);
         levelName.setBounds(0,25,0,0);
-        
+
+
         frame.getContentPane().add(info);
         frame.getContentPane().add(grid);
         
-        ImageIcon icon = new ImageIcon(ConstantsGUI.WAREHOUSEMAN_SPRITE);
+        levelDimension = new Dimension();
+
+        ImageIcon icon = new ImageIcon(ConstantsGUI.WAREHOUSEMAN_NO_BACK_SPRITE);
         frame.setIconImage(icon.getImage());
 
-        askSaveGame = false;
+        currentWarehouseman = WAREHOUSEMAN_SPRITE;
+
+
         setupMenuBar();
         addListeners();
         
@@ -108,33 +121,46 @@ public class GUI {
     * Displays a frame with the current state of the GUI
     */
     public void init(String boardLvl){
-        paint(boardLvl);
-        repaintInfo();
-        frame.pack();
+        show(boardLvl);
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         frame.setVisible(true);  
     }
 
-        /**
-    * Displays a frame with the current state of the GUI
+    /**
+    * Repaints the frame with the new state of the GUI
     */
     public void show(String boardLvl){
+        levelDimension = controller.getLevelDimension();
+        sprites = new ImagePanel [(int)levelDimension.getHeight()]
+                                [(int)levelDimension.getWidth()];
+        frame.setTitle(frame.getTitle().substring(0, frame.getTitle().length()-1));
         repaintScreen(boardLvl);
-        askSaveGame = false;
+        
     }
     
     /**
     * Repaints the frame with the new state of the GUI
     */
     public void repaint(String boardLvl){
+        String title = frame.getTitle();
+        if (!levelDimension.equals(controller.getLevelDimension())){
+            levelDimension = controller.getLevelDimension();
+            sprites = new ImagePanel [(int)levelDimension.getHeight()]
+                                [(int)levelDimension.getWidth()];
+        }
+        if (title.charAt(title.length()-1) != '*'){
+            frame.setTitle(frame.getTitle()+"*");
+        }
         repaintScreen(boardLvl);
-        askSaveGame = true;
     }
 
     private void repaintScreen(String boardLvl){
+        levelDimension = controller.getLevelDimension();
         grid.removeAll();
         repaintInfo();
         paint(boardLvl);
+        repaintBorder();
+        repaintBackground();
         grid.repaint();
         frame.pack();   
     }
@@ -143,11 +169,28 @@ public class GUI {
         info.removeAll();
         score.setText("Score: " + controller.getGameScore());
         levelScore.setText("Level score: " + controller.getLevelScore());
-        levelName.setText("Level: " + controller.getLevelName());
+        levelName.setText(controller.getLevelName());
         info.add(score);
         info.add(levelName);
         info.add(levelScore);
         info.repaint();
+    }
+
+    private void repaintBackground(){
+        BACKGROUND_SPRITE.setBounds(0, 0,
+             BACKGROUND_SPRITE.getWidth(), BACKGROUND_SPRITE.getHeight());
+        grid.add(BACKGROUND_SPRITE);
+    }
+
+    private void repaintBorder(){
+        int width = (int)levelDimension.getWidth()*ConstantsGUI.SPRITE_SIZE;
+        int heigth = (int)levelDimension.getHeight()*ConstantsGUI.SPRITE_SIZE;
+        int initialX = (ConstantsGUI.MAIN_FRAME_MAX_WIDTH/2 - width/2);
+        int initialY = (ConstantsGUI.MAIN_FRAME_MAX_HEIGHT/2 - heigth/2);
+        Rectangle rect = new Rectangle(width+10,heigth+10);
+        rect.setBorder(BorderFactory.createMatteBorder(10, 10,10, 10, Color.WHITE));
+        rect.setBounds(initialX-5, initialY-4, rect.getWidth(), rect.getHeight());
+        grid.add(rect);
     }
     
     /**
@@ -156,12 +199,18 @@ public class GUI {
     */
     private void paint(String boardLvl){
         int i = 0;
+        int width = (int)levelDimension.getWidth()*ConstantsGUI.SPRITE_SIZE;
+        int heigth = (int)levelDimension.getHeight()*ConstantsGUI.SPRITE_SIZE;
+        int initialX = (ConstantsGUI.MAIN_FRAME_MAX_WIDTH - width)/2;
+        int initialY = (ConstantsGUI.MAIN_FRAME_MAX_HEIGHT - heigth)/2;
+        
+        boolean isNewLine = false;
         grid.setBounds(ConstantsGUI.INFO_PANEL_WIDTH, ConstantsGUI.INFO_PANEL_HEIGHT, 
                         ConstantsGUI.MAIN_FRAME_MAX_WIDTH - ConstantsGUI.INFO_PANEL_WIDTH, 
                        ConstantsGUI.MAIN_FRAME_MAX_WIDTH - ConstantsGUI.INFO_PANEL_HEIGHT);
 
-        for (int x = 0; x < ConstantsGUI.MAIN_FRAME_MAX_WIDTH/ConstantsGUI.SPRITE_SIZE; x++){
-            for (int y = 0; y < ConstantsGUI.MAIN_FRAME_MAX_WIDTH/ConstantsGUI.SPRITE_SIZE; y++){
+        for (int x = 0; x < sprites.length; x++){
+            for (int y = 0; y < sprites[0].length; y++){
                 if (boardLvl.length()-1 >= i){
                     switch(boardLvl.charAt(i)){
                         case '*':
@@ -171,7 +220,7 @@ public class GUI {
                             sprites[x][y] = new ImagePanel(ConstantsGUI.WALL_SPRITE);
                             break;
                         case 'W':
-                            sprites[x][y] = new ImagePanel(ConstantsGUI.WAREHOUSEMAN_SPRITE);
+                            sprites[x][y] = currentWarehouseman;
                             break;
                         case '#':
                             sprites[x][y] = new ImagePanel(ConstantsGUI.BOX_SPRITE);
@@ -180,34 +229,34 @@ public class GUI {
                             sprites[x][y] = new ImagePanel(ConstantsGUI.FLOOR_SPRITE);
                             break;
                         case 'O':
-                            sprites[x][y] = new ImagePanel(ConstantsGUI.BOX_GOAL_SPRITE); 
+                            sprites[x][y] = new ImagePanel(ConstantsGUI.BOX_GOAL_PICKAXE_SPRITE);
+                            break;
+                        case 'X':
+                            sprites[x][y] = new ImagePanel(ConstantsGUI.WAREHOUSEMAN_GOAL_SPRITE); 
                             break;
                         /**
                          * it is '\n' so we dont increse the counter 
                          * and wait until the entire row is painted with floor sprites
                          * */ 
                         default:  
-                            sprites[x][y] = new ImagePanel(ConstantsGUI.FLOOR_SPRITE);
+                            isNewLine = true;
                             i--;
                     }
                     i++;
-                    sprites[x][y].setBounds((y)*ConstantsGUI.SPRITE_SIZE,
-                                (x+ConstantsGUI.INFO_PANEL_HEIGHT/ConstantsGUI.SPRITE_SIZE)*ConstantsGUI.SPRITE_SIZE,
+                    if(isNewLine){
+                        isNewLine = false;
+                        break;
+                    }
+                    sprites[x][y].setBounds(initialX,
+                                (initialY+ConstantsGUI.INFO_PANEL_HEIGHT/ConstantsGUI.SPRITE_SIZE),
                                             sprites[x][y].getWidth(),sprites[x][y].getHeight());
-                    // Floor or Floor + Goal
-                    grid.add(sprites[x][y]); 
+                    grid.add(sprites[x][y]);
                 }
-                // rest of the floor sprites
-                else{   
-                    sprites[x][y] = new ImagePanel(ConstantsGUI.FLOOR_SPRITE);
-                    sprites[x][y].setBounds((y)*ConstantsGUI.SPRITE_SIZE,
-                                (x+ConstantsGUI.INFO_PANEL_HEIGHT/ConstantsGUI.SPRITE_SIZE)*ConstantsGUI.SPRITE_SIZE,
-                                            sprites[x][y].getWidth(),sprites[x][y].getHeight());
-                    // Floor or Floor + Goal
-                    grid.add(sprites[x][y]); 
-                }
+                initialX = initialX + ConstantsGUI.SPRITE_SIZE;
             }
             i++;
+            initialX = (ConstantsGUI.MAIN_FRAME_MAX_WIDTH/2 - width/2);
+            initialY = initialY + ConstantsGUI.SPRITE_SIZE;
         }
     }
 
@@ -221,31 +270,25 @@ public class GUI {
     }
 
     private void addFrameListeners(){
-        frame.addKeyListener(new KeyListener(){
+        frame.addKeyListener(new KeyAdapter(){ 
             @Override
             public void keyTyped(KeyEvent e) {
                 if (e.isControlDown()){
                     switch(e.getKeyChar()){
                         // CTRL + Z -> Undo 
-                        case 26: controller.keyTyped('U'); break;
+                        case 26: controller.keyTyped(e.isShiftDown() ? 'R' : 'U'); break;
                         // CTRL + S -> Save
                         case 19: launchSaveMenu(0); break;
                         // CTRL + L -> Load
                         case 12: launchLoadMenu(); break;
+                        // CTRL + N -> New game
+                        case 14: launchNewGame(); break;
                         default: controller.keyTyped(Character.toUpperCase(e.getKeyChar()));
                     }
                 }
                 else {
                     controller.keyTyped(Character.toUpperCase(e.getKeyChar()));
                 }
-            }
-            @Override
-            public void keyReleased(KeyEvent e) {
-                //This method is not required
-            }
-            @Override
-            public void keyPressed(KeyEvent e) {
-                //This method is not required
             }
         });
     }
@@ -254,13 +297,7 @@ public class GUI {
         newGameLabel.addMouseListener(new MouseAdapter(){
             @Override
             public void mouseReleased(MouseEvent e){
-                if (askSaveGame){
-                    launchSaveMenu(2);
-                }
-                else{
-                    controller.createNewGame();
-                    frame.setTitle(ConstantsGUI.DEFAULT_FRAME_TITLE);
-                }
+                launchNewGame();
                 newGameLabel.setBackground(ConstantsGUI.LABEL_COLOR);
             } 
             @Override
@@ -285,7 +322,7 @@ public class GUI {
         loadItem.addMouseListener(new MouseAdapter(){  
             @Override
             public void mouseReleased(MouseEvent e){
-                if(askSaveGame){
+                if(controller.hasBeenModified()){
                     launchSaveMenu(1);
                 }
                 else{
@@ -315,7 +352,6 @@ public class GUI {
             public void mouseReleased(MouseEvent e){ 
                 launchSaveMenu(0);
                 saveItem.setBackground(ConstantsGUI.LABEL_COLOR);
-                askSaveGame = false;
             } 
             @Override
             public void mousePressed(MouseEvent e){
@@ -411,7 +447,7 @@ public class GUI {
         frame.addWindowListener(new WindowAdapter(){
             @Override
             public void windowClosing(WindowEvent e){
-                if (askSaveGame){
+                if (controller.hasBeenModified()){
                     new AlertFrame(controller, frame, null, null, true, 0);
                 }
                 else{
@@ -426,7 +462,7 @@ public class GUI {
         exitItem.addMouseListener(new MouseAdapter(){  
             @Override
             public void mouseReleased(MouseEvent e){
-                if (askSaveGame){
+                if (controller.hasBeenModified() && !controller.isFinished()){
                     new AlertFrame(controller, frame, null, null, true,0);
                 }
                 else{
@@ -461,14 +497,12 @@ public class GUI {
         loadItem.setFont(menuBarFont);
         saveItem.setFont(menuBarFont);
         exitItem.setFont(menuBarFont);
-        helpMenu.setFont(menuBarFont);
         tutorialItem.setFont(menuBarFont);
-        aboutItem.setFont(menuBarFont);
+        helpLabel.setFont(menuBarFont);
         undoLabel.setFont(menuBarFont);
         redoLabel.setFont(menuBarFont);
         resetItem.setFont(menuBarFont);
 
-        
         menuBar.setBorder(ConstantsGUI.MENU_BAR_BORDER);
         newGameLabel.setBackground(ConstantsGUI.LABEL_COLOR);
         newGameLabel.setBorder(ConstantsGUI.EMPTY_BORDER);
@@ -489,7 +523,6 @@ public class GUI {
     private void setupMenuBar(){
         menuBar = new JMenuBar();
         menuBar.setBackground(Color.WHITE);
-        helpMenu =  new JMenu("  Help  ");
         newGameLabel = new JLabel("  New game  ");
         loadItem =  new JLabel("  Load  ");
         saveItem =  new JLabel("  Save  ");
@@ -498,10 +531,8 @@ public class GUI {
         undoLabel = new JLabel("  Undo  ");
         redoLabel = new JLabel("  Redo  ");
         tutorialItem = new JLabel("How to play Sokoban");
-        aboutItem = new JLabel("About...");
+        helpLabel = new JLabel("About...");
         giveStyleToComponents();
-        helpMenu.add(tutorialItem);
-        helpMenu.add(aboutItem);
         menuBar.add(newGameLabel);
         menuBar.add(loadItem);
         menuBar.add(saveItem);
@@ -509,7 +540,6 @@ public class GUI {
         menuBar.add(redoLabel);
         menuBar.add(resetItem);
         menuBar.add(exitItem);
-        menuBar.add(helpMenu);
         frame.setJMenuBar(menuBar);
     }
 
@@ -518,11 +548,26 @@ public class GUI {
         frame.dispose();
     }
 
+    public void win(){
+        currentWarehouseman = AMONGUS_SPRITE;
+        new AcceptFrame(frame,"Congratulations!","You win!");
+    }
+
     private void launchSaveMenu(int mode){
         new SaveFrame(frame, controller, false, mode);
     }
 
     private void launchLoadMenu(){
         new LoadFrame(frame, controller);
+    }
+
+    private void launchNewGame(){
+        if (controller.hasBeenModified()){
+            launchSaveMenu(2);
+        }
+        else{
+            controller.createNewGame();
+            frame.setTitle(ConstantsGUI.DEFAULT_FRAME_TITLE);
+        }
     }
 }

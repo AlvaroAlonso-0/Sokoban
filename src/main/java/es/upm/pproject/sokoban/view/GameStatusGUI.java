@@ -1,5 +1,7 @@
 package es.upm.pproject.sokoban.view;
 
+import java.awt.Dimension;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -60,6 +62,15 @@ public class GameStatusGUI extends Game{
     public boolean hasBeenModified(){
         return hasBeenModified;
     }
+
+     /**
+     * Method needed by the gui to get the dimensions of the level.
+     * @return The Dimension of the level
+     */
+    public Dimension getDimension(){
+        return new Dimension(lvl.getBoard()[0].length, lvl.getBoard().length);
+    }
+
 
     /* Getters and setters needed for xml binding*/
     

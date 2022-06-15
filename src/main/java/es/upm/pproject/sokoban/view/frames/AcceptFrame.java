@@ -16,28 +16,28 @@ import es.upm.pproject.sokoban.view.utils.UtilsGUI;
 * @version 1.1
 * @since 11/06/2022
 */
-public class BlankFrame {
+public class AcceptFrame {
 
     private static final int MAX_WIDTH = 350;
     private static final int MAX_HEIGHT = 100;
 
-    private JFrame saveFrame;
+    private JFrame backFrame;
 
     private JFrame informationFrame;
     private JPanel background;
     private JLabel informationLabel;
     private JLabel acceptLabel;
 
-    public BlankFrame(JFrame saveFrame) {
-        this.saveFrame = saveFrame;
-        saveFrame.setEnabled(false);
+    public AcceptFrame(JFrame backFrame, String frameTitle, String information) {
+        this.backFrame = backFrame;
+        backFrame.setEnabled(false);
         
-        informationFrame = UtilsGUI.createAndSetupFrame("Invalid name", MAX_WIDTH, MAX_HEIGHT);
+        informationFrame = UtilsGUI.createAndSetupFrame(frameTitle, MAX_WIDTH, MAX_HEIGHT);
         informationFrame.toFront();
         background = new JPanel();
         background.setBounds(0,0, MAX_WIDTH, MAX_HEIGHT);
         background.setLayout(null);
-        informationLabel = new JLabel("Name cannot be blank!");
+        informationLabel = new JLabel(information);
         acceptLabel = new JLabel("Accept");
         informationLabel.setFont(ConstantsGUI.DEAULT_FONT);
         acceptLabel.setFont(ConstantsGUI.DEAULT_FONT);
@@ -62,16 +62,16 @@ public class BlankFrame {
         informationFrame.addWindowListener(new WindowAdapter(){
             @Override
             public void windowClosing(WindowEvent e){
-                saveFrame.setEnabled(true);
-                saveFrame.toFront();
+                backFrame.setEnabled(true);
+                backFrame.toFront();
             }
         });
         acceptLabel.addMouseListener(new MouseAdapter(){  
             @Override
             public void mouseReleased(MouseEvent e){
                 acceptLabel.setBackground(ConstantsGUI.LABEL_COLOR);
-                saveFrame.setEnabled(true);
-                saveFrame.toFront();
+                backFrame.setEnabled(true);
+                backFrame.toFront();
                 informationFrame.setVisible(false);
                 informationFrame.dispose();
             } 

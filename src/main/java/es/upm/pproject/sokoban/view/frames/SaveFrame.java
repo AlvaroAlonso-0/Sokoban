@@ -90,7 +90,7 @@ public class SaveFrame {
             public void mouseReleased(MouseEvent e){
                 accept.setBackground(ConstantsGUI.LABEL_COLOR);
                 if (nameText.getText().isBlank()){
-                    new BlankFrame(frame);
+                    new AcceptFrame(frame, "Invalid name","Name cannot be blank!");
                     return;
                 }
                 if (nameAlreadyExists(nameText.getText() + ".xml")){

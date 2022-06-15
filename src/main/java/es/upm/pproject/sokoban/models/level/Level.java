@@ -195,7 +195,8 @@ public class Level implements Resetable{
             char boxChar = board[box.currentPos().getX()][box.currentPos().getY()] == Tile.GOAL ? 'O' : '#';
             playnbox[box.currentPos().getX()*board[0].length+box.currentPos().getY()] = boxChar;
         }
-        playnbox[player.currentPos().getX()*board[0].length+player.currentPos().getY()] = 'W';
+        playnbox[player.currentPos().getX()*board[0].length+player.currentPos().getY()] = 
+                    board[player.currentPos().getX()][player.currentPos().getY()] == Tile.GOAL ? 'X' : 'W';
         for(int i=0; i<playnbox.length; i++){
             if(i!=0 && (i%board[0].length)==0){
                 res.append("\n");

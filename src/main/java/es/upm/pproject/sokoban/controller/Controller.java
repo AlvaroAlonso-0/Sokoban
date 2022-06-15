@@ -2,6 +2,8 @@ package es.upm.pproject.sokoban.controller;
 
 import javax.xml.bind.JAXBException;
 
+import java.awt.Dimension;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -39,7 +41,7 @@ public class Controller{
             sgFactory = new SaveGameFactory();
         } catch (WrongLevelFormatException e) {
             logger.error(loadMarker, "First level couldnt be loaded", e);
-            //TODO implement GUI error message method
+            gui.dispose();
         } catch(JAXBException e){
             logger.error(sgMarker, "An error ocurred while creating the SaveGameFactory", e);
         }
@@ -127,12 +129,26 @@ public class Controller{
         return game.getLevelName();
     }
 
+    public Dimension getLevelDimension(){
+        return game.getDimension();
+    }
+
+    public boolean hasBeenModified(){
+        return game.hasBeenModified();
+    }
+
+    public boolean isFinished(){
+        return game.isFinished();
+    }
+
     /**
      * Method used to reset the current level of the game.
      */
     public void reset(){
-        game.reset();
-        show();
+        if(!game.isFinished() && game.getLevelScore() != 0){
+            game.reset();
+            repaint();
+        }
     }
 
     private void undo(){
@@ -149,6 +165,9 @@ public class Controller{
 
     private void repaint(){
         gui.repaint(game.getBoardToString());
+        if(game.isFinished()){
+            gui.win();
+        }
     }
 
     private void show(){

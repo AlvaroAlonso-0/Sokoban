@@ -27,6 +27,16 @@ public class ImagePanel extends JPanel{
         setSize(size);
         setLayout(null);    
     }
+
+    public ImagePanel(String spritePath, int width, int height) {
+        img = new ImageIcon(spritePath).getImage();
+        Dimension size = new Dimension(width,height);
+        setPreferredSize(size);
+        setMinimumSize(size);
+        setMaximumSize(size);
+        setSize(size);
+        setLayout(null);  
+    }
     
     @Override
     public void paintComponent(Graphics g) {
