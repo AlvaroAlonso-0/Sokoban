@@ -61,7 +61,7 @@ public class SaveFrame {
         nameLabel = new JLabel("Level name");
         nameText = new JTextField();
         accept = new JLabel("Save");
-        cancel = new JLabel("Cancel");
+        cancel = new JLabel(mode == 2 ? "Don't save" : "Cancel");
         nameLabel.setFont(ConstantsGUI.DEAULT_FONT);
         nameText.setFont(ConstantsGUI.DEAULT_FONT);
         accept.setFont(ConstantsGUI.DEAULT_FONT);
@@ -131,7 +131,6 @@ public class SaveFrame {
                 accept.setBackground(ConstantsGUI.LABEL_COLOR);
             }
         });
-
         cancel.addMouseListener(new MouseAdapter(){ 
             @Override 
             public void mouseReleased(MouseEvent e){
@@ -155,13 +154,14 @@ public class SaveFrame {
                 cancel.setBackground(ConstantsGUI.LABEL_COLOR);
             }
         });
-
         frame.addWindowListener(new WindowAdapter(){
             @Override
             public void windowClosing(WindowEvent e){
                 backFrame.setEnabled(true);
                 backFrame.toFront();
-                decideAction(mode);
+                if(mode == 1){
+                    new LoadFrame(backFrame, controller);
+                }
             }
         });
     }
