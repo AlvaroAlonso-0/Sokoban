@@ -15,10 +15,11 @@ import es.upm.pproject.sokoban.view.utils.ConstantsGUI;
 import es.upm.pproject.sokoban.view.utils.UtilsGUI;
 
 /**
-* Class that represents an alert frame when the user attempts to save a level with an existing name.
+* Class that represents an alert frame when the user attempts to save a level with an existing name
+* or exiting the application without saving the game.
 * @author Idir Carlos Aliane Crespo
-* @version 1.1
-* @since 14/06/2022
+* @version 1.2
+* @since 15/06/2022
 */
 public class AlertFrame {
 
@@ -38,7 +39,15 @@ public class AlertFrame {
 
     private boolean wantExit;
     private int mode;
-
+    /**
+     * The class constructor
+     * @param controller The controller
+     * @param mainFrame The main frame of the application
+     * @param saveFrame The save frame (can be null)
+     * @param levelName The level name
+     * @param wantExit If the user wants to exit the level
+     * @param mode Calling mode to build the AlertFrame (mode = 2) NewGame calling
+     */
     public AlertFrame(Controller controller, JFrame mainFrame, JFrame saveFrame, 
                     String levelName, boolean wantExit, int mode){
         this.controller = controller;
@@ -87,6 +96,9 @@ public class AlertFrame {
 
     }
 
+    /**
+     * Method that prepares the listeners to react to different interactions at GUI
+     */
     public void setupListeners(){
         if (saveFrame != null){
             setupAcceptOverwriteListener();
@@ -140,6 +152,9 @@ public class AlertFrame {
         });
     }
 
+    /**
+     * The listeners in case the user wants to save a game
+     */
     private void setupAcceptOverwriteListener(){
         accept.addMouseListener(new MouseAdapter(){  
             @Override
@@ -185,6 +200,9 @@ public class AlertFrame {
         });
     }
 
+    /**
+     * The listeners in case the user wants to exit a game
+     */
     private void setupAcceptExitListener(){
         accept.addMouseListener(new MouseAdapter(){  
             @Override
@@ -211,6 +229,9 @@ public class AlertFrame {
         });
     }
 
+    /**
+     * Method that blocks the back frame (so it doesn't dissapear)
+     */
     private void blockBackFrame(){
         if (saveFrame != null){
             saveFrame.setEnabled(false);
