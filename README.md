@@ -177,7 +177,8 @@ The way we worked on the project was divided in four parts:
 ## Run the game ##
 
 1. Change to the root directory of the repository
-2. Run the game with `mvn exec:java`
+2. Compile the project with: `mvn clean compile`
+3. Run the game with: `mvn exec:java`
 
 This will be displayed on a new window.
 
