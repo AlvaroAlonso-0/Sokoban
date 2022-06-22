@@ -20,7 +20,7 @@ This repository conatains a Java project to play the game **sokoban**. Sokoban i
 
 1. [Install Java](<http://www.oracle.com/java/technologies/downloads/>)
 2. [Install Maven](<https://maven.apache.org/download.cgi>)
-3. Clone the git repository `git clone https://costa.ls.fi.upm.es/gitlab/190300/sokoban.git`
+3. Clone the git repository `git clone https://github.com/AlvaroAlonso-0/Sokoban.git`
 
 ### Run the tests ###
 
